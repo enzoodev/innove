@@ -3,5 +3,5 @@ type AppStackParamsList = {
 };
 
 type AuthStackParamsList = {
-  SignIn: undefined;
+  Login: undefined;
 };

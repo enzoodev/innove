@@ -1,7 +1,13 @@
 import React, { useCallback } from 'react';
-import { Text, View } from 'react-native';
+import { ThemeProvider } from 'styled-components/native';
+import { QueryClientProvider } from '@tanstack/react-query';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
+
+import { theme } from '@/theme';
+import { Routes } from '@/routes';
+import { queryClient } from '@/app/services/queryClient';
+import { AuthContextProvider } from '@/app/contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,7 +19,7 @@ const App = () => {
     'Inter-Regular': require('./src/assets/fonts/Inter-Regular.ttf'),
   });
 
-const onLayoutRootView = useCallback(async () => {
+  const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
       await SplashScreen.hideAsync();
     }
@@ -24,12 +30,14 @@ const onLayoutRootView = useCallback(async () => {
   }
 
   return (
-    <View
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-      onLayout={onLayoutRootView}>
-      <Text>SplashScreen Demo! 👋</Text>
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <AuthContextProvider>
+          <Routes onReady={onLayoutRootView} />
+        </AuthContextProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
-}
+};
 
 export default App;
