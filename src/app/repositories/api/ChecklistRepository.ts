@@ -1,6 +1,6 @@
 import { BaseRepository } from './shared/BaseRepository';
 
-type TGetChecklistsParams = {
+export type TGetChecklistsParams = {
   idclient: string;
   idlocal: string;
   idexecution: string;
@@ -15,7 +15,7 @@ type TGetAnswersTypesParams = {
   idclient: string;
 };
 
-export class ChecklistRepository extends BaseRepository {
+export class ChecklistRepositoryClass extends BaseRepository {
   async getToDoChecklists(params: TGetChecklistsParams) {
     return await super.getAll<TChecklist>({
       url: 'checklisttodo',
@@ -28,6 +28,18 @@ export class ChecklistRepository extends BaseRepository {
       url: 'checklistdone',
       params,
     });
+  }
+
+  async getAllChecklists(params: TGetChecklistsParams) {
+    const [toDoChecklists, doneChecklists] = await Promise.all([
+      this.getToDoChecklists(params),
+      this.getDoneChecklists(params),
+    ]);
+
+    return {
+      toDoChecklists,
+      doneChecklists,
+    };
   }
 
   async getChecklistQuestions(params: TGetChecklistQuestionsParams) {
@@ -44,3 +56,5 @@ export class ChecklistRepository extends BaseRepository {
     });
   }
 }
+
+export const ChecklistRepository = new ChecklistRepositoryClass();
