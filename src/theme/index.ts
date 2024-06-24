@@ -2,8 +2,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const theme = {
   colors: {
-    main: '#162CA9',
-    mainLight: '#5483C4',
+    main: '#005A8D',
+    mainLight: '#325D79',
     mainContrast: '#FFFFFF',
     background: '#EDECEE',
     backgroundAlt: '#F7F7F8',
@@ -14,7 +14,7 @@ export const theme = {
     buttonTextColor: '#FFFFFF',
     buttonBackground: '#4C4B4C',
     buttonBodyTextColor: '#FFFFFF',
-    buttonBodyBackground: '#162CA9',
+    buttonBodyBackground: '#005A8D',
     modalBackgroundColor: '#F7F7F8',
     modalBorderColor: '#D9D8DA',
     menuBackground: '#F7F7F8',

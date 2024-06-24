@@ -19,7 +19,7 @@ export const ForgotPassword = styled.Text`
     font-family: ${theme.fonts.main.medium};
     font-size: ${theme.fontSizes.xs}px;
     color: ${theme.colors.textTertiary};
-    margin-top: ${theme.layout[8]}px;
+    margin-top: ${theme.layout[6]}px;
   `};
 `;
 

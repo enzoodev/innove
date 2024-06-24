@@ -4,10 +4,7 @@ export const parseJsonToFormData = (json?: unknown): FormData | null => {
   }
 
   const formData = new FormData();
-
-  Object.keys(json).forEach(key => {
-    formData.append(key, (json as any)[key]);
-  });
+  formData.append('json', JSON.stringify(json));
 
   return formData;
 };

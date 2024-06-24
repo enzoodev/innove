@@ -35,6 +35,7 @@ export const Login = () => {
     control,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -78,14 +79,20 @@ export const Login = () => {
               <Controller
                 control={control}
                 name="login"
-                render={({ field: { onChange, value } }) => (
+                render={({ field: { onChange, value, onBlur, ref } }) => (
                   <Label title="Usuário">
                     <Input
+                      ref={ref}
                       value={value}
                       onChangeText={onChange}
                       formError={errors.login?.message}
                       placeholder="Usuário"
                       autoCapitalize="none"
+                      onBlur={onBlur}
+                      returnKeyType="next"
+                      onSubmitEditing={() => {
+                        setFocus('password');
+                      }}
                     />
                   </Label>
                 )}
@@ -93,13 +100,15 @@ export const Login = () => {
               <Controller
                 control={control}
                 name="password"
-                render={({ field: { onChange, value } }) => (
+                render={({ field: { onChange, value, onBlur, ref } }) => (
                   <Label title="Senha">
                     <PasswordInput
+                      ref={ref}
                       value={value}
                       onChangeText={onChange}
                       placeholder="Senha"
                       formError={errors.password?.message}
+                      onBlur={onBlur}
                       returnKeyType="send"
                       onSubmitEditing={handleSubmit(onSubmit)}
                     />
