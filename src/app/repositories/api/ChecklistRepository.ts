@@ -1,7 +1,7 @@
 import { BaseRepository } from './shared/BaseRepository';
 
 export type TGetChecklistsParams = {
-  idclient: string;
+  idclient: number;
   idlocal: string;
   idexecution: string;
 };
@@ -12,7 +12,7 @@ type TGetChecklistQuestionsParams = {
 };
 
 type TGetAnswersTypesParams = {
-  idclient: string;
+  idclient: number;
 };
 
 export class ChecklistRepositoryClass extends BaseRepository {

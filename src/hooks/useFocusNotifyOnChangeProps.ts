@@ -1,31 +1,31 @@
-import { useCallback, useRef } from 'react';
-import { NotifyOnChangeProps } from '@tanstack/query-core';
-import { useFocusEffect } from '@react-navigation/native';
+import React from 'react'
+import { NotifyOnChangeProps } from '@tanstack/query-core'
+import { useFocusEffect } from '@react-navigation/native'
 
 export function useFocusNotifyOnChangeProps(
   notifyOnChangeProps?: NotifyOnChangeProps,
 ) {
-  const focusedRef = useRef(true);
+  const focusedRef = React.useRef(true)
 
   useFocusEffect(
-    useCallback(() => {
-      focusedRef.current = true;
+    React.useCallback(() => {
+      focusedRef.current = true
 
       return () => {
-        focusedRef.current = false;
-      };
+        focusedRef.current = false
+      }
     }, []),
-  );
+  )
 
   return () => {
     if (!focusedRef.current) {
-      return [];
+      return [] as any
     }
 
     if (typeof notifyOnChangeProps === 'function') {
-      return notifyOnChangeProps();
+      return notifyOnChangeProps()
     }
 
-    return notifyOnChangeProps;
-  };
+    return notifyOnChangeProps
+  }
 }
