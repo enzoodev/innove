@@ -9,12 +9,12 @@ import { useLocations } from '@/hooks/useLocations';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 
 import { SearchInput } from '@/components/elements/SearchInput';
+import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
 import { LocationItem } from '@/components/modules/LocationItem';
 import { LocationSkeletonItem } from '@/components/modules/LocationSkeletonItem';
 
 import * as S from './styles';
-import { AppStatusBar } from '@/components/elements/AppStatusBar';
 
 export const Home = () => {
   const [searchText, setSearchText] = useState('');
