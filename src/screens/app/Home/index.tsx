@@ -11,6 +11,8 @@ import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 import { SearchInput } from '@/components/elements/SearchInput';
 import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
+import { AppStatusBar } from '@/components/elements/AppStatusBar';
+import { HomeHeader } from '@/components/elements/HomeHeader';
 import { LocationItem } from '@/components/modules/LocationItem';
 import { LocationSkeletonItem } from '@/components/modules/LocationSkeletonItem';
 
@@ -84,10 +86,12 @@ export const Home = () => {
             />
           }
           contentContainerStyle={{
+            paddingTop: theme.layout[4],
             paddingBottom: theme.layout[4] + insets.bottom,
           }}
           ListHeaderComponent={
             <S.ListHeader>
+              <HomeHeader />
               <S.SearchInputWrapper>
                 <SearchInput
                   value={searchText}

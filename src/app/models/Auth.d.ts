@@ -8,10 +8,10 @@ type TAuth = {
   token: string;
   lastlogin: string;
   permissions: Array<TAuthPermission>;
-  client_logo_icon: TClientLogoIcon;
+  client_logo_icon: TFile;
 };
 
-type TClientLogoIcon = {
+type TFile = {
   filename: string;
   extension: string;
   file: string;

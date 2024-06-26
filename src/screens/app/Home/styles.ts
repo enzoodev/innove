@@ -13,7 +13,9 @@ export const ItemSeparator = styled.View`
   margin: ${({ theme }) => theme.layout[2]}px 0;
 `;
 
-export const ListHeader = styled.View``;
+export const ListHeader = styled.View`
+  gap: ${({ theme }) => theme.layout[4]}px;
+`;
 
 export const SearchInputWrapper = styled.View`
   margin-bottom: ${({ theme }) => theme.layout[4]}px;
