@@ -11,7 +11,6 @@ import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 import { SearchInput } from '@/components/elements/SearchInput';
 import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
-import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { HomeHeader } from '@/components/elements/HomeHeader';
 import { LocationItem } from '@/components/modules/LocationItem';
 import { LocationSkeletonItem } from '@/components/modules/LocationSkeletonItem';
