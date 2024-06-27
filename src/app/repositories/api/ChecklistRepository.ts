@@ -2,7 +2,7 @@ import { BaseRepository } from './shared/BaseRepository';
 
 export type TGetChecklistsParams = {
   idclient: number;
-  idlocal: string;
+  idlocal: number;
   idexecution: string;
 };
 

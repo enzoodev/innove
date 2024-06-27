@@ -6,6 +6,7 @@ import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '@/hooks/useAuth';
 import { useLocations } from '@/hooks/useLocations';
+import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 
 import { SearchInput } from '@/components/elements/SearchInput';
@@ -21,8 +22,9 @@ export const Home = () => {
   const [searchText, setSearchText] = useState('');
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const navigation = useAppNavigation();
   const { clientId } = useAuth();
-  const { locations, isLoading, isRefetching, refetch } = useLocations({
+  const { locations, isRefetching, isPending, refetch } = useLocations({
     idclient: clientId,
   });
 
@@ -34,15 +36,13 @@ export const Home = () => {
     );
   }, [locations, searchText]);
 
-  const handleOpenLocation = useCallback((locationId: number) => {
-    console.log('Open location', locationId);
+  const handleOpenLocation = useCallback((location: TLocation) => {
+    navigation.navigate('LocationDetails', { location });
   }, []);
 
   const loadingData = Array.from({ length: 6 }, (_, index) => ({
     id: index,
   }));
-
-  const isPending = isLoading || isRefetching;
 
   const flatListData = isPending ? loadingData : filteredLocations;
 
@@ -55,7 +55,7 @@ export const Home = () => {
       }
 
       return (
-        <LocationItem item={item} onPress={() => handleOpenLocation(item.id)} />
+        <LocationItem item={item} onPress={() => handleOpenLocation(item)} />
       );
     },
     [handleOpenLocation, isPending],
