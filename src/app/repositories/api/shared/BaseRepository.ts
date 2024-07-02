@@ -11,7 +11,7 @@ export class BaseRepository {
     });
   }
 
-  async getById<T>(id: string, params: TRequestConfig): Promise<T> {
+  async get<T>(params: TRequestConfig, id?: string): Promise<T> {
     return await HttpServices.get<T>({
       ...params,
       url: makeUrl(this.appUrl, params.url, id),

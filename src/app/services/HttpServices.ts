@@ -11,9 +11,9 @@ export class HttpServices {
   public static registerInterceptTokenManager: RegisterInterceptTokenManager =
     null;
 
-  public static baseUrl = 'https://safety360.espertibrasil.com.br/api/';
+  private static baseUrl = 'https://safety360.espertibrasil.com.br/api/';
 
-  public static request = async <T = unknown>(
+  private static request = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
     const method = params.method ?? HttpMethod.GET;
