@@ -13,6 +13,7 @@ exemplo: comp_5_4_1.jpeg e comp_5_4_2.jpeg
 Onde o COMP é o identificador de complementar do checklis, usar tamanho reduzido, não ultrapassar 1mb.
 */
 
+import { AuthStorageRepository } from './AuthStorageRepository';
 import { StorageRepository } from './shared/StorageRepository';
 
 export type TChecklistStoragePhoto = {
@@ -23,31 +24,46 @@ export type TChecklistStoragePhoto = {
   photoUri: string;
 };
 
-export type SaveChecklistPhotoParams = {
-  userId: number;
-  data: TChecklistStoragePhoto;
-};
-
-/*
-userId: {
-
-}
-*/
-
 export class ChecklistPhotosStorageRepository {
   private static storageKey = 'CHECKLIST_PHOTOS_';
 
-  public static generateKey(data: TChecklistStoragePhoto): string {
+  private static getUserKey(): string {
+    const userId = AuthStorageRepository.getUserId();
+    return `userId:${userId}`;
+  }
+
+  private static getPhotosByUser(): TChecklistStoragePhoto[] {
+    const keys = StorageRepository.getAllKeys();
+    const userKey = this.getUserKey();
+    const keysByUser = keys.filter(key => key.includes(userKey));
+    const photosByUser = keysByUser.map(key =>
+      StorageRepository.get<TChecklistStoragePhoto>(key),
+    );
+    const photosByUserFiltered = photosByUser.filter(photo => !!photo);
+
+    return photosByUserFiltered as TChecklistStoragePhoto[];
+  }
+
+  public static getHasPhotos(): boolean {
+    const photos = this.getPhotosByUser();
+    return photos.length > 0;
+  }
+
+  private static generateKey(data: TChecklistStoragePhoto): string {
     const array = Object.values(data);
     const prefix = data.questionId ? 'nc' : 'comp';
-    const photoKey = [prefix, ...array].join('_');
+    const userKey = this.getUserKey();
+    const photoKey = [userKey, prefix, ...array].join('_');
     return `${this.storageKey}${photoKey}`;
   }
 
-  public static generateStorageKey() {}
-
-  public static saveChecklistPhoto({ data }: SaveChecklistPhotoParams): void {
+  public static saveChecklistPhoto(data: TChecklistStoragePhoto): void {
     const key = this.generateKey(data);
     StorageRepository.set(key, data);
+  }
+
+  public static deleteChecklistPhoto(data: TChecklistStoragePhoto): void {
+    const key = this.generateKey(data);
+    StorageRepository.delete(key);
   }
 }

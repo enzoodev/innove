@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
 import { AuthRepository } from '@/app/repositories/api/AuthRepository';
@@ -14,7 +14,7 @@ export type AuthContextDataProps = {
 };
 
 interface AuthContextProviderProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export const AuthContext = React.createContext<AuthContextDataProps>(
@@ -56,19 +56,25 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }, [logoutFn]);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        auth,
-        clientId: auth?.idclient ?? 0,
-        isAuthenticated,
-        isLoadingLogin,
-        isLoadingLogout,
-        handleLogin,
-        handleLogout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      auth,
+      clientId: auth?.idclient ?? 0,
+      isAuthenticated,
+      isLoadingLogin,
+      isLoadingLogout,
+      handleLogin,
+      handleLogout,
+    }),
+    [
+      auth,
+      handleLogin,
+      handleLogout,
+      isAuthenticated,
+      isLoadingLogin,
+      isLoadingLogout,
+    ],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

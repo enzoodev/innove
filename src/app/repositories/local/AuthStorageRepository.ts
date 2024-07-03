@@ -23,6 +23,16 @@ export class AuthStorageRepository {
     return auth;
   }
 
+  public static getUserId(): number {
+    const auth = this.getAuth();
+
+    if (!auth) {
+      throw new Error('Usuário não autenticado.');
+    }
+
+    return auth.iduser;
+  }
+
   public static saveAuth(auth: TAuth): void {
     StorageRepository.set(this.authKey, auth);
   }
