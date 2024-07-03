@@ -1,3 +1,4 @@
+/* eslint-disable react/style-prop-object */
 import { useCallback } from 'react';
 import {
   ScrollView,

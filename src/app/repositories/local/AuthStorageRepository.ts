@@ -2,6 +2,7 @@ import { StorageRepository } from './shared/StorageRepository';
 
 export class AuthStorageRepository {
   private static authKey = 'AUTH';
+
   private static tokenKey = `${this.authKey}_TOKEN`;
 
   public static getToken(): string | null {

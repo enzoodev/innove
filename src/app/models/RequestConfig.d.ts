@@ -3,4 +3,4 @@ type TRequestConfig<T = unknown> = {
   method?: HttpMethod;
   data?: T;
   params?: unknown;
-}
+};

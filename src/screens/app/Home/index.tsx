@@ -1,11 +1,22 @@
 import { useCallback, useMemo, useState } from 'react';
-import { FlatList, ListRenderItem, RefreshControl } from 'react-native';
+import {
+  NativeScrollEvent,
+  RefreshControl,
+  ScrollView,
+  NativeSyntheticEvent,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconLocationOff } from 'tabler-react-native/icons';
+import { IconCircleCheck, IconMapOff } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
+import {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useLocations } from '@/hooks/useLocations';
+import { useExecution } from '@/hooks/useExecution';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 
@@ -13,8 +24,10 @@ import { SearchInput } from '@/components/elements/SearchInput';
 import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
 import { HomeHeader } from '@/components/elements/HomeHeader';
-import { LocationItem } from '@/components/modules/LocationItem';
-import { LocationSkeletonItem } from '@/components/modules/LocationSkeletonItem';
+import { ButtonAdd } from '@/components/elements/ButtonAdd';
+import { AnimatedButtonAddWrapper } from '@/components/elements/AnimatedButtonAddWrapper';
+import { ExecutionItem } from '@/components/modules/ExecutionItem';
+import { ExecutionSkeletonItem } from '@/components/modules/ExecutionSkeletonItem';
 
 import * as S from './styles';
 
@@ -23,43 +36,137 @@ export const Home = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
-  const { clientId } = useAuth();
-  const { locations, isRefetching, isPending, refetch } = useLocations({
-    idclient: clientId,
+  const { executions, isRefetching, isPending, refetch } = useExecution();
+
+  const filteredTodoExecutions = useMemo(
+    () =>
+      executions.todo.filter(item =>
+        item.detalhes.nome.toLowerCase().includes(searchText.toLowerCase()),
+      ),
+    [executions.todo, searchText],
+  );
+
+  const filteredDoneExecutions = useMemo(
+    () =>
+      executions.done.filter(item =>
+        item.detalhes.nome.toLowerCase().includes(searchText.toLowerCase()),
+      ),
+    [executions.done, searchText],
+  );
+
+  const handleOpenExecution = useCallback(
+    (execution: TExecution) => {
+      navigation.navigate('ExecutionDetails', { execution });
+    },
+    [navigation],
+  );
+
+  const handleCreateExecution = useCallback(() => {}, []);
+
+  const drag = useSharedValue(0);
+
+  const buttonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: withSpring(
+            interpolate(drag.value, [0, 1], [0, 135], Extrapolate.CLAMP),
+            {
+              damping: 15,
+              stiffness: 200,
+              mass: 0.5,
+              velocity: 1.3,
+            },
+          ),
+        },
+      ],
+      opacity: withSpring(1, undefined),
+    };
   });
 
-  const filteredLocations = useMemo(() => {
-    if (locations.length === 0) return [];
+  const onScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const { contentOffset } = event.nativeEvent;
 
-    return locations.filter(item =>
-      item.nome.toLowerCase().includes(searchText.toLowerCase()),
-    );
-  }, [locations, searchText]);
+      if (contentOffset.y === 0) {
+        drag.value = 1;
+      } else {
+        drag.value = 0;
+      }
+    },
+    [drag],
+  );
 
-  const handleOpenLocation = useCallback((location: TLocation) => {
-    navigation.navigate('LocationDetails', { location });
+  const renderLoadingList = useCallback(() => {
+    return Array.from({ length: 6 }, (_, index) => (
+      <ExecutionSkeletonItem key={index} />
+    ));
   }, []);
 
-  const loadingData = Array.from({ length: 6 }, (_, index) => ({
-    id: index,
-  }));
+  const renderTodoExecutions = useCallback(() => {
+    if (isPending) {
+      return Array.from({ length: 6 }, (_, index) => (
+        <ExecutionSkeletonItem key={index} />
+      ));
+    }
 
-  const flatListData = isPending ? loadingData : filteredLocations;
-
-  const keyExtractor = useCallback((item: TLocation) => item.id.toString(), []);
-
-  const renderItem: ListRenderItem<TLocation> = useCallback(
-    ({ item }) => {
-      if (isPending) {
-        return <LocationSkeletonItem />;
-      }
-
+    if (filteredTodoExecutions.length === 0) {
       return (
-        <LocationItem item={item} onPress={() => handleOpenLocation(item)} />
+        <ListEmptyCard
+          title="Nenhuma execução pendente encontrada."
+          Icon={() => (
+            <IconCircleCheck
+              stroke={1.5}
+              size={theme.iconSizes.md}
+              color={theme.colors.textSecondary}
+            />
+          )}
+        />
       );
-    },
-    [handleOpenLocation, isPending],
-  );
+    }
+
+    return filteredTodoExecutions.map(item => (
+      <ExecutionItem item={item} onPress={() => handleOpenExecution(item)} />
+    ));
+  }, [
+    filteredTodoExecutions,
+    handleOpenExecution,
+    isPending,
+    theme.colors.textSecondary,
+    theme.iconSizes.md,
+  ]);
+
+  const renderDoneExecutions = useCallback(() => {
+    if (isPending) {
+      return renderLoadingList();
+    }
+
+    if (filteredDoneExecutions.length === 0) {
+      return (
+        <ListEmptyCard
+          title="Nenhuma execução finalizada encontrada."
+          Icon={() => (
+            <IconMapOff
+              stroke={1.5}
+              size={theme.iconSizes.md}
+              color={theme.colors.textSecondary}
+            />
+          )}
+        />
+      );
+    }
+
+    return filteredDoneExecutions.map(item => (
+      <ExecutionItem item={item} onPress={() => handleOpenExecution(item)} />
+    ));
+  }, [
+    filteredDoneExecutions,
+    handleOpenExecution,
+    isPending,
+    renderLoadingList,
+    theme.colors.textSecondary,
+    theme.iconSizes.md,
+  ]);
 
   useRefreshOnFocus(refetch);
 
@@ -67,16 +174,15 @@ export const Home = () => {
     <S.Container>
       <AppStatusBar
         translucent
+        // eslint-disable-next-line react/style-prop-object
         style="light"
         backgroundColor={theme.colors.main}
       />
       <S.Content>
-        <FlatList
-          data={flatListData as []}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          ItemSeparatorComponent={S.ItemSeparator}
+        <ScrollView
           showsVerticalScrollIndicator={false}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
           refreshControl={
             <RefreshControl
               tintColor={theme.colors.textSecondary}
@@ -88,31 +194,24 @@ export const Home = () => {
             paddingTop: theme.layout[4],
             paddingBottom: theme.layout[4] + insets.bottom,
           }}
-          ListHeaderComponent={
-            <S.ListHeader>
-              <HomeHeader />
-              <S.SearchInputWrapper>
-                <SearchInput
-                  value={searchText}
-                  onChangeText={setSearchText}
-                  placeholder="Buscar local"
-                />
-              </S.SearchInputWrapper>
-            </S.ListHeader>
-          }
-          ListEmptyComponent={
-            <ListEmptyCard
-              title="Nenhum local encontrado."
-              Icon={() => (
-                <IconLocationOff
-                  stroke={1.5}
-                  size={theme.iconSizes.md}
-                  color={theme.colors.textSecondary}
-                />
-              )}
-            />
-          }
-        />
+        >
+          <S.ListHeader>
+            <HomeHeader />
+            <S.SearchInputWrapper>
+              <SearchInput
+                value={searchText}
+                onChangeText={setSearchText}
+                placeholder="Buscar execução"
+              />
+            </S.SearchInputWrapper>
+          </S.ListHeader>
+          {renderTodoExecutions()}
+        </ScrollView>
+        {!isPending && (
+          <AnimatedButtonAddWrapper style={buttonAnimatedStyle}>
+            <ButtonAdd onPress={handleCreateExecution} />
+          </AnimatedButtonAddWrapper>
+        )}
       </S.Content>
     </S.Container>
   );

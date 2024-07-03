@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import * as S from './styles';
 
-export const LocationSkeletonItem = memo(() => {
+export const ExecutionSkeletonItem = memo(() => {
   return (
     <S.Container>
       <S.Icon />

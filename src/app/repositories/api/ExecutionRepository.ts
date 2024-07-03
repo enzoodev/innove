@@ -2,7 +2,7 @@ import { BaseRepository } from './shared/BaseRepository';
 
 export class ExecutionRepositoryClass extends BaseRepository {
   async getExecutions() {
-    return await super.get<GetExecuntionsResponse>({
+    return super.get<GetExecuntionsResponse>({
       url: 'execution',
     });
   }

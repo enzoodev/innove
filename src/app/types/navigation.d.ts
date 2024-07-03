@@ -1,10 +1,10 @@
-type TLocationDetails = {
-  location: TLocation;
+type TExecutionDetails = {
+  execution: TExecution;
 };
 
 type AppStackParamsList = {
   Home: undefined;
-  LocationDetails: TLocationDetails;
+  ExecutionDetails: TExecutionDetails;
 };
 
 type AuthStackParamsList = {

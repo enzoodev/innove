@@ -17,14 +17,14 @@ type TGetAnswersTypesParams = {
 
 export class ChecklistRepositoryClass extends BaseRepository {
   async getToDoChecklists(params: TGetChecklistsParams) {
-    return await super.getAll<TChecklist>({
+    return super.getAll<TChecklist>({
       url: 'checklisttodo',
       params,
     });
   }
 
   async getDoneChecklists(params: TGetChecklistsParams) {
-    return await super.getAll<TChecklist>({
+    return super.getAll<TChecklist>({
       url: 'checklistdone',
       params,
     });
@@ -43,14 +43,14 @@ export class ChecklistRepositoryClass extends BaseRepository {
   }
 
   async getChecklistQuestions(params: TGetChecklistQuestionsParams) {
-    return await super.getAll<TChecklistQuestion>({
+    return super.getAll<TChecklistQuestion>({
       url: 'checklist',
       params,
     });
   }
 
   async getAnswersTypes(params: TGetAnswersTypesParams) {
-    return await super.getAll<TAnswerType>({
+    return super.getAll<TAnswerType>({
       url: 'answerstypes',
       params,
     });

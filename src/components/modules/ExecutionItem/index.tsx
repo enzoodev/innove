@@ -3,17 +3,14 @@ import { TouchableOpacityProps } from 'react-native';
 import { IconChevronRight, IconHammer } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { formatLocationAddressLabel } from '@/app/utils/formatLocationAddressLabel';
-
 import * as S from './styles';
 
 type Props = TouchableOpacityProps & {
-  item: TLocation;
+  item: TExecution;
 };
 
-export const LocationItem = memo(({ item, ...rest }: Props) => {
+export const ExecutionItem = memo(({ item, ...rest }: Props) => {
   const theme = useTheme();
-  const formattedAddress = formatLocationAddressLabel(item.address[0]);
 
   return (
     <S.Container {...rest}>
@@ -26,15 +23,15 @@ export const LocationItem = memo(({ item, ...rest }: Props) => {
       </S.IconWrapper>
       <S.Content>
         <S.InfoWrapper>
-          <S.Title>{item.nome}</S.Title>
+          <S.Title>{item.detalhes.nome}</S.Title>
           <S.Subtitle>{item.datestart}</S.Subtitle>
-          <S.Location>
-            <S.LocationText>{item.tipo.name}</S.LocationText>
-          </S.Location>
-          <S.LocationInfoWrapper>
-            <S.LocationInfoTitle>Local</S.LocationInfoTitle>
-            <S.LocationInfoSubtitle>{formattedAddress}</S.LocationInfoSubtitle>
-          </S.LocationInfoWrapper>
+          <S.Execution>
+            <S.ExecutionText>{item.tipo.name}</S.ExecutionText>
+          </S.Execution>
+          {/* <S.ExecutionInfoWrapper>
+            <S.ExecutionInfoTitle>Local</S.ExecutionInfoTitle>
+            <S.ExecutionInfoSubtitle>{formattedAddress}</S.ExecutionInfoSubtitle>
+          </S.ExecutionInfoWrapper> */}
         </S.InfoWrapper>
       </S.Content>
       <IconChevronRight

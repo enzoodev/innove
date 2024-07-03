@@ -13,7 +13,7 @@ exemplo: comp_5_4_1.jpeg e comp_5_4_2.jpeg
 Onde o COMP é o identificador de complementar do checklis, usar tamanho reduzido, não ultrapassar 1mb.
 */
 
-import { StorageRepository } from "./shared/StorageRepository";
+import { StorageRepository } from './shared/StorageRepository';
 
 export type TChecklistStoragePhoto = {
   executionId: string;
@@ -21,12 +21,12 @@ export type TChecklistStoragePhoto = {
   questionId?: string;
   counter: number;
   photoUri: string;
-}
+};
 
 export type SaveChecklistPhotoParams = {
   userId: number;
   data: TChecklistStoragePhoto;
-}
+};
 
 /*
 userId: {
@@ -44,9 +44,7 @@ export class ChecklistPhotosStorageRepository {
     return `${this.storageKey}${photoKey}`;
   }
 
-  public static generateStorageKey() {
-
-  }
+  public static generateStorageKey() {}
 
   public static saveChecklistPhoto({ data }: SaveChecklistPhotoParams): void {
     const key = this.generateKey(data);

@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  ExecutionRepository,
-} from '@/app/repositories/api/ExecutionRepository';
+import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 
-export const useExecutions = () => {
+export const useExecution = () => {
   const notifyOnChangeProps = useFocusNotifyOnChangeProps();
 
   const { data, isLoading, refetch, isRefetching } = useQuery({
@@ -20,7 +18,10 @@ export const useExecutions = () => {
   });
 
   return {
-    executions: data ?? [],
+    executions: {
+      todo: data?.['em andamento'] ?? [],
+      done: data?.finalizado ?? [],
+    },
     isLoading,
     isRefetching,
     isPending: isLoading || isRefetching,

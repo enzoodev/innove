@@ -6,7 +6,7 @@ export type TGetLocationsParams = {
 
 export class LocationRepositoryClass extends BaseRepository {
   async getLocations(params: TGetLocationsParams) {
-    return await super.getAll<TLocation>({
+    return super.getAll<TLocation>({
       url: 'local',
       params,
     });

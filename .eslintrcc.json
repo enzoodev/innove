@@ -6,7 +6,8 @@
         "plugin:react/recommended",
         "airbnb",
 				"plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:@tanstack/eslint-plugin-query/recommended"
     ],
 		"globals": {
         "__DEV__": "readonly"
@@ -23,7 +24,8 @@
         "react",
 				"react-hooks",
         "@typescript-eslint",
-        "prettier"
+        "prettier",
+        "@tanstack/query"
     ],
     "rules": {
       "react/require-default-props": "off",
@@ -60,9 +62,10 @@
       "consistent-return": "off",
       "react/jsx-props-no-spreading": "off",
       "import/no-duplicates": "off",
-      "radix": "off"
-
-
+      "radix": "off",
+      "@tanstack/query/exhaustive-deps": "error",
+      "@tanstack/query/no-rest-destructuring": "warn",
+      "@tanstack/query/stable-query-client": "error"
     },
     "settings": {
       "import/resolver": {

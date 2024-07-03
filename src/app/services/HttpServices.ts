@@ -1,5 +1,5 @@
 import { HttpMethod } from '@/enums/HttpMethod';
-import { buildUrl } from '@/app/utils/buildUrl';
+import { UrlBuilder } from '@/app/utils/UrlBuilder';
 import { parseJsonToFormData } from '@/app/utils/parseJsonToFormData';
 import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
 
@@ -17,7 +17,7 @@ export class HttpServices {
     params: TRequestConfig,
   ): Promise<T> => {
     const method = params.method ?? HttpMethod.GET;
-    const url = buildUrl(this.baseUrl, params.url, params.params);
+    const url = UrlBuilder.build(this.baseUrl, params.url, params.params);
     const requestBody = parseJsonToFormData(params.data);
     const token = AuthStorageRepository.getToken();
 
@@ -50,7 +50,7 @@ export class HttpServices {
   public static get = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
-    return await this.request<T>({
+    return this.request<T>({
       method: HttpMethod.GET,
       ...params,
     });
@@ -59,7 +59,7 @@ export class HttpServices {
   public static post = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
-    return await this.request<T>({
+    return this.request<T>({
       method: HttpMethod.POST,
       ...params,
     });
@@ -68,7 +68,7 @@ export class HttpServices {
   public static put = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
-    return await this.request<T>({
+    return this.request<T>({
       method: HttpMethod.PUT,
       ...params,
     });
@@ -77,7 +77,7 @@ export class HttpServices {
   public static delete = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
-    return await this.request<T>({
+    return this.request<T>({
       method: HttpMethod.DELETE,
       ...params,
     });
@@ -86,7 +86,7 @@ export class HttpServices {
   public static patch = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
-    return await this.request<T>({
+    return this.request<T>({
       method: HttpMethod.PATCH,
       ...params,
     });

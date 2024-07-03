@@ -21,7 +21,7 @@ export const Routes = ({ onReady }: Props) => {
     HttpServices.registerInterceptTokenManager = {
       logout: handleLogout,
     };
-  }, []);
+  }, [handleLogout]);
 
   return (
     <NavigationContainer onReady={onReady} theme={DefaultTheme}>

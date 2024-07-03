@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
 import { AuthRepository } from '@/app/repositories/api/AuthRepository';
@@ -35,14 +35,17 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     mutationFn: AuthRepository.logout,
   });
 
-  const handleLogin = useCallback(async (params: TLoginParams) => {
-    try {
-      const data = await loginFn(params);
-      setAuth(data);
-    } catch (error) {
-      // toast.error('Não foi possível buscar seus dados.');
-    }
-  }, []);
+  const handleLogin = useCallback(
+    async (params: TLoginParams) => {
+      try {
+        const data = await loginFn(params);
+        setAuth(data);
+      } catch (error) {
+        // toast.error('Não foi possível buscar seus dados.');
+      }
+    },
+    [loginFn],
+  );
 
   const handleLogout = useCallback(async () => {
     try {
@@ -51,21 +54,19 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     } catch (error) {
       // toast.error('Não foi possível buscar seus dados.');
     }
-  }, []);
-
-  const value = useMemo(() => ({
-    auth,
-    clientId: auth?.idclient ?? 0,
-    isAuthenticated,
-    isLoadingLogin,
-    isLoadingLogout,
-    handleLogin,
-    handleLogout,
-  }), [])
+  }, [logoutFn]);
 
   return (
     <AuthContext.Provider
-      value={value}
+      value={{
+        auth,
+        clientId: auth?.idclient ?? 0,
+        isAuthenticated,
+        isLoadingLogin,
+        isLoadingLogout,
+        handleLogin,
+        handleLogout,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,7 +1,7 @@
 type GetExecuntionsResponse = {
-  "em andamento": Array<TExecution> | null;
-  "finalizado":  Array<TExecution> | null;
-}
+  'em andamento': Array<TExecution> | null;
+  finalizado: Array<TExecution> | null;
+};
 
 type TExecution = {
   id: number;
@@ -9,14 +9,14 @@ type TExecution = {
   datestart: string;
   dateend: string;
   detalhes: {
-      id: string;
-      nome: string;
+    id: string;
+    nome: string;
   };
   idclient: number;
   status: string;
-}
+};
 
 type TExecutionType = {
   id: number;
   name: string;
-}
+};

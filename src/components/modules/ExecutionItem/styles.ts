@@ -51,7 +51,7 @@ export const Subtitle = styled.Text`
   `};
 `;
 
-export const Location = styled.View`
+export const Execution = styled.View`
   align-self: flex-start;
   ${({ theme }) => css`
     border-radius: ${theme.border.radius.full}px;
@@ -61,21 +61,21 @@ export const Location = styled.View`
   `};
 `;
 
-export const LocationText = styled.Text`
+export const ExecutionText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.fonts.main.bold};
     font-size: ${theme.fontSizes.xs}px;
     color: ${theme.colors.textTertiary};
   `};
 `;
-export const LocationInfoWrapper = styled.View`
+export const ExecutionInfoWrapper = styled.View`
   flex: 1;
   ${({ theme }) => css`
     gap: ${theme.layout[1]}px;
   `};
 `;
 
-export const LocationInfoTitle = styled.Text`
+export const ExecutionInfoTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.fonts.main.regular};
     font-size: ${theme.fontSizes.sm}px;
@@ -83,7 +83,7 @@ export const LocationInfoTitle = styled.Text`
   `};
 `;
 
-export const LocationInfoSubtitle = styled.Text`
+export const ExecutionInfoSubtitle = styled.Text`
   ${({ theme }) => css`
     flex: 1;
     font-family: ${theme.fonts.main.semiBold};

@@ -1,7 +1,7 @@
 import { StatusBar, StatusBarProps } from 'expo-status-bar';
 import { useIsFocused } from '@react-navigation/native';
-import * as S from './styles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as S from './styles';
 
 export const AppStatusBar = (props: StatusBarProps) => {
   const isFocused = useIsFocused();

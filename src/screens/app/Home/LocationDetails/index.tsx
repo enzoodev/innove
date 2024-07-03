@@ -26,7 +26,7 @@ type Line = {
   paymentType: string;
 };
 
-export const LocationDetails = () => {
+export const ExecutionDetails = () => {
   const [lineSelected, setLineSelected] = useState<Line>({
     id: '',
     paymentType: 'Cartão Caju',
@@ -39,11 +39,11 @@ export const LocationDetails = () => {
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
   const route = useRoute();
-  const { location } = route.params as TLocationDetails;
+  const { execution } = route.params as TExecutionDetails;
   const { toDoChecklists, doneChecklists, isPending, isRefetching, refetch } =
     useChecklists({
-      idclient: location.idclient,
-      idlocal: location.id,
+      idclient: execution.idclient,
+      idlocal: execution.id,
       idexecution: '',
     });
 

@@ -8,13 +8,13 @@ type TLocation = {
   datestart: string;
   idclient: number;
   status: string;
-  address: Array<TLocationAddress>
-}
+  address: Array<TLocationAddress>;
+};
 
 type TLocationType = {
   id: number;
   name: string;
-}
+};
 
 type TLocationAddress = {
   id: string;
@@ -25,4 +25,4 @@ type TLocationAddress = {
   bairro: string;
   cidade: string;
   estado: string;
-}
+};
