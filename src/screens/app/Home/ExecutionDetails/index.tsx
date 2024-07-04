@@ -10,31 +10,15 @@ import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 
 import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
+import { IconEditOff } from 'tabler-react-native/icons';
 import { LayoutBaseHeader } from '@/components/elements/LayoutBaseHeader';
 import { RefundDetailsItem } from '@/components/elements/Financial/RefundDetailsItem';
 import { RefundDetailsHeader } from '@/components/elements/Financial/RefundDetailsHeader';
 import { RefundDetailsSkeletonItem } from '@/components/elements/Financial/RefundDetailsSkeletonItem';
 
-import { RefundLineDetailsModal } from '../RefundLineDetailsModal';
-import { UpdateRefundCardLineModal } from './UpdateRefundCardLineModal';
-
 import * as S from './styles';
-import { IconEditOff } from 'tabler-react-native/icons';
-
-type Line = {
-  id: string;
-  paymentType: string;
-};
 
 export const ExecutionDetails = () => {
-  const [lineSelected, setLineSelected] = useState<Line>({
-    id: '',
-    paymentType: 'Cartão Caju',
-  });
-  const [isOpenUpdateRefundCardLineModal, toggleOpenUpdateRefundCardLineModal] =
-    useToggle();
-  const [isOpenRefundLineDetailsModal, toggleOpenRefundLineDetailsModal] =
-    useToggle();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
@@ -43,8 +27,8 @@ export const ExecutionDetails = () => {
   const { toDoChecklists, doneChecklists, isPending, isRefetching, refetch } =
     useChecklists({
       idclient: execution.idclient,
-      idlocal: execution.id,
-      idexecution: '',
+      idexecution: execution.id.toString(),
+      idlocal: parseInt(execution.detalhes.id),
     });
 
   const handleOpenRefundDetailsItem = useCallback(
@@ -192,19 +176,6 @@ export const ExecutionDetails = () => {
             />
           </S.ListEmptyWrapper>
         }
-      />
-      <UpdateRefundCardLineModal
-        isOpen={isOpenUpdateRefundCardLineModal}
-        onClose={toggleOpenUpdateRefundCardLineModal}
-        refundId={refundId}
-        lineId={lineSelected.id}
-        paymentType={lineSelected.paymentType}
-      />
-      <RefundLineDetailsModal
-        isOpen={isOpenRefundLineDetailsModal}
-        onClose={toggleOpenRefundLineDetailsModal}
-        id={lineSelected.id}
-        paymentType={lineSelected.paymentType}
       />
     </S.Container>
   );

@@ -28,10 +28,6 @@ export const ExecutionItem = memo(({ item, ...rest }: Props) => {
           <S.Execution>
             <S.ExecutionText>{item.tipo.name}</S.ExecutionText>
           </S.Execution>
-          {/* <S.ExecutionInfoWrapper>
-            <S.ExecutionInfoTitle>Local</S.ExecutionInfoTitle>
-            <S.ExecutionInfoSubtitle>{formattedAddress}</S.ExecutionInfoSubtitle>
-          </S.ExecutionInfoWrapper> */}
         </S.InfoWrapper>
       </S.Content>
       <IconChevronRight
