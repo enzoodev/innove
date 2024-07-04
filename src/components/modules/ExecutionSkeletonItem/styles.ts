@@ -7,9 +7,6 @@ export const Container = styled.View`
   ${({ theme }) => css`
     gap: ${theme.layout[3]}px;
     padding: ${theme.layout[3]}px;
-    background-color: ${theme.colors.cardBackground};
-    border-radius: ${theme.border.radius.md}px;
-    border: ${theme.border.width.md}px solid ${theme.colors.cardBorder};
   `};
 `;
 

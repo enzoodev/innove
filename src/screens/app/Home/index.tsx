@@ -112,21 +112,27 @@ export const Home = () => {
 
     if (filteredTodoExecutions.length === 0) {
       return (
-        <ListEmptyCard
-          title="Nenhuma execução pendente encontrada."
-          Icon={() => (
-            <IconCircleCheck
-              stroke={1.5}
-              size={theme.iconSizes.md}
-              color={theme.colors.textSecondary}
-            />
-          )}
-        />
+        <S.ListEmptyWrapper>
+          <ListEmptyCard
+            title="Nenhuma execução pendente encontrada."
+            Icon={() => (
+              <IconCircleCheck
+                stroke={1.5}
+                size={theme.iconSizes.md}
+                color={theme.colors.textSecondary}
+              />
+            )}
+          />
+        </S.ListEmptyWrapper>
       );
     }
 
     return filteredTodoExecutions.map(item => (
-      <ExecutionItem item={item} onPress={() => handleOpenExecution(item)} />
+      <ExecutionItem
+        key={item.id}
+        item={item}
+        onPress={() => handleOpenExecution(item)}
+      />
     ));
   }, [
     filteredTodoExecutions,
@@ -143,21 +149,27 @@ export const Home = () => {
 
     if (filteredDoneExecutions.length === 0) {
       return (
-        <ListEmptyCard
-          title="Nenhuma execução finalizada encontrada."
-          Icon={() => (
-            <IconMapOff
-              stroke={1.5}
-              size={theme.iconSizes.md}
-              color={theme.colors.textSecondary}
-            />
-          )}
-        />
+        <S.ListEmptyWrapper>
+          <ListEmptyCard
+            title="Nenhuma execução finalizada encontrada."
+            Icon={() => (
+              <IconMapOff
+                stroke={1.5}
+                size={theme.iconSizes.md}
+                color={theme.colors.textSecondary}
+              />
+            )}
+          />
+        </S.ListEmptyWrapper>
       );
     }
 
     return filteredDoneExecutions.map(item => (
-      <ExecutionItem item={item} onPress={() => handleOpenExecution(item)} />
+      <ExecutionItem
+        key={item.id}
+        item={item}
+        onPress={() => handleOpenExecution(item)}
+      />
     ));
   }, [
     filteredDoneExecutions,
@@ -191,21 +203,29 @@ export const Home = () => {
             />
           }
           contentContainerStyle={{
+            gap: theme.layout[4],
             paddingTop: theme.layout[4],
             paddingBottom: theme.layout[4] + insets.bottom,
           }}
         >
-          <S.ListHeader>
-            <HomeHeader />
-            <S.SearchInputWrapper>
-              <SearchInput
-                value={searchText}
-                onChangeText={setSearchText}
-                placeholder="Buscar execução"
-              />
-            </S.SearchInputWrapper>
-          </S.ListHeader>
-          {renderTodoExecutions()}
+          <HomeHeader />
+          <SearchInput
+            value={searchText}
+            onChangeText={setSearchText}
+            placeholder="Buscar execução"
+          />
+          <S.ListWrapper>
+            <S.ListHeader>
+              <S.ListHeaderTitle>Execuções pendentes</S.ListHeaderTitle>
+            </S.ListHeader>
+            <S.ListItemsWrapper>{renderTodoExecutions()}</S.ListItemsWrapper>
+          </S.ListWrapper>
+          <S.ListWrapper>
+            <S.ListHeader>
+              <S.ListHeaderTitle>Execuções finalizadas</S.ListHeaderTitle>
+            </S.ListHeader>
+            <S.ListItemsWrapper>{renderDoneExecutions()}</S.ListItemsWrapper>
+          </S.ListWrapper>
         </ScrollView>
         {!isPending && (
           <AnimatedButtonAddWrapper style={buttonAnimatedStyle}>
