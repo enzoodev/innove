@@ -2,8 +2,8 @@ import { BaseRepository } from './shared/BaseRepository';
 
 export type TGetChecklistsParams = {
   idclient: number;
-  idlocal: number;
-  idexecution: string;
+  idlocal: string;
+  idexecution: number;
 };
 
 type TGetChecklistQuestionsParams = {
@@ -13,6 +13,10 @@ type TGetChecklistQuestionsParams = {
 
 type TGetAnswersTypesParams = {
   idclient: number;
+};
+
+export type TFinishExecutionParams = {
+  idexecution: number;
 };
 
 export class ChecklistRepositoryClass extends BaseRepository {
@@ -53,6 +57,13 @@ export class ChecklistRepositoryClass extends BaseRepository {
     return super.getAll<TAnswerType>({
       url: 'answerstypes',
       params,
+    });
+  }
+
+  async finishExecution(params: TFinishExecutionParams) {
+    await super.create({
+      url: 'endexecution',
+      data: params,
     });
   }
 }

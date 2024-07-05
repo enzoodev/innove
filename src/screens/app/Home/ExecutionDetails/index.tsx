@@ -1,7 +1,8 @@
-import { useCallback, useState } from 'react';
-import { FlatList, ListRenderItem, RefreshControl } from 'react-native';
+import { useCallback } from 'react';
+import { RefreshControl, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { IconCircleCheck, IconThumbDown } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
 import { useChecklists } from '@/hooks/useChecklists';
@@ -10,12 +11,12 @@ import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 
 import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
-import { IconEditOff } from 'tabler-react-native/icons';
+import { ListSeparators } from '@/app/utils/ListSeparators';
 import { LayoutBaseHeader } from '@/components/elements/LayoutBaseHeader';
-import { RefundDetailsItem } from '@/components/elements/Financial/RefundDetailsItem';
-import { RefundDetailsHeader } from '@/components/elements/Financial/RefundDetailsHeader';
-import { RefundDetailsSkeletonItem } from '@/components/elements/Financial/RefundDetailsSkeletonItem';
+import { ChecklistItem } from '@/components/modules/ChecklistItem';
+import { ChecklistSkeletonItem } from '@/components/modules/ChecklistSkeletonItem';
 
+import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import * as S from './styles';
 
 export const ExecutionDetails = () => {
@@ -23,160 +24,176 @@ export const ExecutionDetails = () => {
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
   const route = useRoute();
-  const { execution } = route.params as TExecutionDetails;
-  const { toDoChecklists, doneChecklists, isPending, isRefetching, refetch } =
-    useChecklists({
-      idclient: execution.idclient,
-      idexecution: execution.id.toString(),
-      idlocal: parseInt(execution.detalhes.id),
-    });
+  const { execution } = route.params as TExecutionDetailsRouteParams;
+  const {
+    toDoChecklists,
+    doneChecklists,
+    isPending,
+    isRefetching,
+    refetch,
+    handleFinishExecution,
+    isLoadingFinishExecution,
+  } = useChecklists({
+    idclient: execution.idclient,
+    idexecution: execution.id,
+    idlocal: execution.detalhes.id,
+  });
 
-  const handleOpenRefundDetailsItem = useCallback(
-    (item: RefundDetailsType) => {
-      setLineSelected({
-        id: item.idlinhareembolso,
-        paymentType: item.origem,
+  const handleOpenChecklistItem = useCallback(
+    (item: TChecklist) => {
+      navigation.navigate('Checklist', {
+        checklistId: item.idchecklist,
+        locationId: execution.detalhes.id,
       });
-
-      if (isFinishedRefund) {
-        toggleOpenRefundLineDetailsModal();
-      } else {
-        const isCashType = item.origem === 'Dinheiro';
-
-        if (isCashType) {
-          const hasEditAction = item.action.includes('EDIT');
-
-          if (hasEditAction) {
-            navigation.navigate('UpdateRefundCashLine', {
-              refundId,
-              lineId: item.idlinhareembolso,
-            });
-          } else {
-            toggleOpenRefundLineDetailsModal();
-          }
-        } else {
-          toggleOpenUpdateRefundCardLineModal();
-        }
-      }
     },
-    [
-      isFinishedRefund,
-      navigation,
-      refundId,
-      toggleOpenRefundLineDetailsModal,
-      toggleOpenUpdateRefundCardLineModal,
-    ],
+    [execution.detalhes.id, navigation],
   );
 
-  const handleDeleteRefundLine = useCallback(
-    (refund: RefundDetailsType) => {
-      setLineSelected({
-        id: refund.idlinhareembolso,
-        paymentType: refund.origem,
-      });
-
-      toggleOpenDeleteRefundLineModal();
-    },
-    [toggleOpenDeleteRefundLineModal],
-  );
-
-  const loadingData = Array.from({ length: 6 }).map((_, index) => ({
-    idchecklist: index.toString(),
-  }));
-
-  const toDoChecklistsFlatListData = isPending ? loadingData : toDoChecklists;
-  const doneChecklistsFlatListData = isPending ? loadingData : doneChecklists;
-
-  const keyExtractor = useCallback((item: TChecklist) => item.idchecklist, []);
-
-  const renderItem: ListRenderItem<TChecklist> = useCallback(
-    ({ item, index }) => {
-      const isLastItem = flatListData.length === index + 1;
-
-      if (isPending) {
-        return <RefundDetailsSkeletonItem isLastItem={isLastItem} />;
-      }
-
+  const renderLoadingList = useCallback(() => {
+    return Array.from({ length: 6 }).map((_, index, array) => {
+      const hasSeparator = ListSeparators.getHasSeparator(index, array);
       return (
-        <RefundDetailsItem
-          item={item}
-          isLastItem={isLastItem}
-          onDeleteRefundLine={() => handleDeleteRefundLine(item)}
-          onPress={() => handleOpenRefundDetailsItem(item)}
-        />
+        <S.ItemWrapper key={String(index + 1)}>
+          <ChecklistSkeletonItem />
+          {hasSeparator && <S.ItemSeparator />}
+        </S.ItemWrapper>
       );
-    },
-    [
-      flatListData.length,
-      handleDeleteRefundLine,
-      handleOpenRefundDetailsItem,
-      isPending,
-    ],
-  );
+    });
+  }, []);
+
+  const renderTodoChecklists = useCallback(() => {
+    if (isPending) {
+      return renderLoadingList();
+    }
+
+    if (toDoChecklists.length === 0) {
+      return (
+        <S.ListEmptyWrapper>
+          <ListEmptyCard
+            title="Nenhum checklist pendente encontrado."
+            Icon={() => (
+              <IconCircleCheck
+                stroke={1.5}
+                size={theme.iconSizes.md}
+                color={theme.colors.textSecondary}
+              />
+            )}
+          />
+        </S.ListEmptyWrapper>
+      );
+    }
+
+    return toDoChecklists.map((item, index, array) => {
+      const hasSeparator = ListSeparators.getHasSeparator(index, array);
+      return (
+        <S.ItemWrapper key={item.idchecklist}>
+          <ChecklistItem
+            item={item}
+            onPress={() => handleOpenChecklistItem(item)}
+          />
+          {hasSeparator && <S.ItemSeparator />}
+        </S.ItemWrapper>
+      );
+    });
+  }, [
+    isPending,
+    toDoChecklists,
+    renderLoadingList,
+    theme.iconSizes.md,
+    theme.colors.textSecondary,
+    handleOpenChecklistItem,
+  ]);
+
+  const renderDoneChecklists = useCallback(() => {
+    if (isPending) {
+      return renderLoadingList();
+    }
+
+    if (doneChecklists.length === 0) {
+      return (
+        <S.ListEmptyWrapper>
+          <ListEmptyCard
+            title="Nenhum checklist finalizado encontrado."
+            Icon={() => (
+              <IconThumbDown
+                stroke={1.5}
+                size={theme.iconSizes.md}
+                color={theme.colors.textSecondary}
+              />
+            )}
+          />
+        </S.ListEmptyWrapper>
+      );
+    }
+
+    return doneChecklists.map((item, index, array) => {
+      const hasSeparator = ListSeparators.getHasSeparator(index, array);
+      return (
+        <S.ItemWrapper key={item.idchecklist}>
+          <ChecklistItem
+            item={item}
+            onPress={() => handleOpenChecklistItem(item)}
+          />
+          {hasSeparator && <S.ItemSeparator />}
+        </S.ItemWrapper>
+      );
+    });
+  }, [
+    doneChecklists,
+    handleOpenChecklistItem,
+    isPending,
+    renderLoadingList,
+    theme.colors.textSecondary,
+    theme.iconSizes.md,
+  ]);
 
   useRefreshOnFocus(refetch);
 
   return (
     <S.Container>
-      <FlatList
-        data={flatListData as []}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        ItemSeparatorComponent={S.ItemSeparator}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            tintColor={theme.colors.textSecondary}
-            refreshing={isRefetching}
-            onRefresh={refetch}
-          />
-        }
-        contentContainerStyle={{
-          paddingBottom: insets.bottom + theme.layout[4],
-        }}
-        ListHeaderComponent={
-          <S.ListHeader>
-            <LayoutBaseHeader hasBackButton title="Detalhes da obra" />
-            <RefundDetailsHeader refundId={refundId} isLoading={isPending} />
-            {flatListData.length > 0 && (
-              <S.RefundsHeader>
-                <S.RefundType>
-                  <S.RefundCash />
-                  <S.RefundTitle>Dinheiro</S.RefundTitle>
-                </S.RefundType>
-                <S.RefundType>
-                  <S.RefundCard />
-                  <S.RefundTitle>Cartão</S.RefundTitle>
-                </S.RefundType>
-              </S.RefundsHeader>
-            )}
-          </S.ListHeader>
-        }
-        ListFooterComponent={
-          <S.ButtonWrapper>
-            <Button
-              title="Finalizar reembolso"
-              onPress={handleFinishRefund}
-              isLoading={isLoadingRequest}
-              isDisabled={isPending}
-            />
-          </S.ButtonWrapper>
-        }
-        ListEmptyComponent={
-          <S.ListEmptyWrapper>
-            <ListEmptyCard
-              title="Nenhum item encontrado."
-              Icon={() => (
-                <IconEditOff
-                  stroke={1.5}
-                  size={theme.iconSizes.md}
-                  color={theme.colors.textTertiary}
-                />
-              )}
-            />
-          </S.ListEmptyWrapper>
-        }
+      <AppStatusBar
+        translucent
+        // eslint-disable-next-line react/style-prop-object
+        style="light"
+        backgroundColor={theme.colors.main}
       />
+      <S.Content>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              tintColor={theme.colors.textSecondary}
+              refreshing={isRefetching}
+              onRefresh={refetch}
+            />
+          }
+          contentContainerStyle={{
+            paddingBottom: insets.bottom + theme.layout[4],
+          }}
+        >
+          <S.ListHeader>
+            <LayoutBaseHeader hasBackButton title="Detalhes da execução" />
+          </S.ListHeader>
+          <S.ListWrapper>
+            <S.ListHeader>
+              <S.ListHeaderTitle>Checklists pendentes</S.ListHeaderTitle>
+            </S.ListHeader>
+            <S.ListItemsWrapper>{renderTodoChecklists()}</S.ListItemsWrapper>
+          </S.ListWrapper>
+          <S.ListWrapper>
+            <S.ListHeader>
+              <S.ListHeaderTitle>Checklists finalizadas</S.ListHeaderTitle>
+            </S.ListHeader>
+            <S.ListItemsWrapper>{renderDoneChecklists()}</S.ListItemsWrapper>
+          </S.ListWrapper>
+          <Button
+            title="Finalizar execução"
+            onPress={handleFinishExecution}
+            isLoading={isLoadingFinishExecution}
+            isDisabled={isPending}
+          />
+        </ScrollView>
+      </S.Content>
     </S.Container>
   );
 };

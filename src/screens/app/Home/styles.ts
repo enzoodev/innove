@@ -9,6 +9,8 @@ export const Content = styled.View`
   margin: 0 ${({ theme }) => theme.layout[4]}px;
 `;
 
+export const ItemWrapper = styled.View``;
+
 export const ItemSeparator = styled.View`
   margin: ${({ theme }) => theme.layout[2]}px 0;
 `;

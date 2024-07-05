@@ -48,7 +48,7 @@ export const Subtitle = styled.Text`
   `};
 `;
 
-export const Execution = styled.View`
+export const Checklist = styled.View`
   align-self: flex-start;
   ${({ theme }) => css`
     border-radius: ${theme.border.radius.full}px;
@@ -58,7 +58,7 @@ export const Execution = styled.View`
   `};
 `;
 
-export const ExecutionText = styled.Text`
+export const ChecklistText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.fonts.main.bold};
     font-size: ${theme.fontSizes.xs}px;

@@ -1,12 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   ChecklistRepository,
   TGetChecklistsParams,
 } from '@/app/repositories/api/ChecklistRepository';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
+import { useAppNavigation } from './useAppNavigation';
 
 export const useChecklists = (params: TGetChecklistsParams) => {
   const notifyOnChangeProps = useFocusNotifyOnChangeProps();
+  const navigation = useAppNavigation();
 
   const { data, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ['allChecklists', ...Object.values(params)],
@@ -20,6 +23,23 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     notifyOnChangeProps,
   });
 
+  const {
+    mutateAsync: finishExecutionFn,
+    isPending: isLoadingFinishExecution,
+  } = useMutation({
+    mutationFn: ChecklistRepository.finishExecution,
+  });
+
+  const handleFinishExecution = useCallback(async () => {
+    try {
+      await finishExecutionFn({ idexecution: params.idexecution });
+      navigation.goBack();
+      // toast.success('deu bom!');
+    } catch (error) {
+      // toast.error('Não foi possível buscar seus dados.');
+    }
+  }, [finishExecutionFn, navigation, params.idexecution]);
+
   return {
     toDoChecklists: data?.toDoChecklists ?? [],
     doneChecklists: data?.doneChecklists ?? [],
@@ -27,5 +47,7 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     isRefetching,
     isPending: isLoading || isRefetching,
     refetch,
+    handleFinishExecution,
+    isLoadingFinishExecution,
   };
 };

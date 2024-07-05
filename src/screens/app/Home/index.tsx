@@ -16,6 +16,8 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 
+import { ListSeparators } from '@/app/utils/ListSeparators';
+
 import { useExecution } from '@/hooks/useExecution';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
@@ -98,16 +100,20 @@ export const Home = () => {
   );
 
   const renderLoadingList = useCallback(() => {
-    return Array.from({ length: 6 }, (_, index) => (
-      <ExecutionSkeletonItem key={index} />
-    ));
+    return Array.from({ length: 6 }).map((_, index, array) => {
+      const hasSeparator = ListSeparators.getHasSeparator(index, array);
+      return (
+        <S.ItemWrapper key={String(index + 1)}>
+          <ExecutionSkeletonItem />
+          {hasSeparator && <S.ItemSeparator />}
+        </S.ItemWrapper>
+      );
+    });
   }, []);
 
   const renderTodoExecutions = useCallback(() => {
     if (isPending) {
-      return Array.from({ length: 6 }, (_, index) => (
-        <ExecutionSkeletonItem key={index} />
-      ));
+      return renderLoadingList();
     }
 
     if (filteredTodoExecutions.length === 0) {
@@ -127,17 +133,23 @@ export const Home = () => {
       );
     }
 
-    return filteredTodoExecutions.map(item => (
-      <ExecutionItem
-        key={item.id}
-        item={item}
-        onPress={() => handleOpenExecution(item)}
-      />
-    ));
+    return filteredTodoExecutions.map((item, index, array) => {
+      const hasSeparator = ListSeparators.getHasSeparator(index, array);
+      return (
+        <S.ItemWrapper key={item.id}>
+          <ExecutionItem
+            item={item}
+            onPress={() => handleOpenExecution(item)}
+          />
+          {hasSeparator && <S.ItemSeparator />}
+        </S.ItemWrapper>
+      );
+    });
   }, [
     filteredTodoExecutions,
     handleOpenExecution,
     isPending,
+    renderLoadingList,
     theme.colors.textSecondary,
     theme.iconSizes.md,
   ]);
@@ -164,13 +176,18 @@ export const Home = () => {
       );
     }
 
-    return filteredDoneExecutions.map(item => (
-      <ExecutionItem
-        key={item.id}
-        item={item}
-        onPress={() => handleOpenExecution(item)}
-      />
-    ));
+    return filteredDoneExecutions.map((item, index, array) => {
+      const hasSeparator = ListSeparators.getHasSeparator(index, array);
+      return (
+        <S.ItemWrapper key={item.id}>
+          <ExecutionItem
+            item={item}
+            onPress={() => handleOpenExecution(item)}
+          />
+          {hasSeparator && <S.ItemSeparator />}
+        </S.ItemWrapper>
+      );
+    });
   }, [
     filteredDoneExecutions,
     handleOpenExecution,

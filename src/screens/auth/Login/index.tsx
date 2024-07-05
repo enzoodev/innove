@@ -49,15 +49,18 @@ export const Login = () => {
     navigation.navigate('Login');
   }, [navigation]);
 
-  const onSubmit: SubmitHandler<TLoginSchema> = useCallback(async data => {
-    try {
-      await handleLogin({
-        login: data.login,
-        pass: data.password,
-        devicetype: '2',
-      });
-    } catch (error) {}
-  }, []);
+  const onSubmit: SubmitHandler<TLoginSchema> = useCallback(
+    async data => {
+      try {
+        await handleLogin({
+          login: data.login,
+          pass: data.password,
+          devicetype: '2',
+        });
+      } catch (error) {}
+    },
+    [handleLogin],
+  );
 
   return (
     <S.Container>
