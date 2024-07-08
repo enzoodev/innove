@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+import { useToast } from 'react-native-toast-notifications';
 import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 
 export const useExecution = () => {
+  const toast = useToast();
   const notifyOnChangeProps = useFocusNotifyOnChangeProps();
 
   const { data, isLoading, refetch, isRefetching } = useQuery({
@@ -11,7 +13,10 @@ export const useExecution = () => {
       try {
         return await ExecutionRepository.getExecutions();
       } catch (error) {
-        // toast.error('Não foi possível buscar seus dados.');
+        toast.show('Não foi possível buscar suas execuções.', {
+          type: 'danger',
+          placement: 'top',
+        });
       }
     },
     notifyOnChangeProps,

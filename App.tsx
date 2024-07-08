@@ -1,6 +1,8 @@
+/* eslint-disable global-require */
 import React, { useCallback } from 'react';
 import { ThemeProvider } from 'styled-components/native';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ToastProvider } from 'react-native-toast-notifications';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
@@ -32,9 +34,11 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <AuthContextProvider>
-          <Routes onReady={onLayoutRootView} />
-        </AuthContextProvider>
+        <ToastProvider>
+          <AuthContextProvider>
+            <Routes onReady={onLayoutRootView} />
+          </AuthContextProvider>
+        </ToastProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

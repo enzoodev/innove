@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { useToast } from 'react-native-toast-notifications';
 import { useTheme } from 'styled-components/native';
 
 import { HttpServices } from '@/app/services/HttpServices';
@@ -13,15 +14,24 @@ type Props = {
 
 export const Routes = ({ onReady }: Props) => {
   const theme = useTheme();
+  const toast = useToast();
   const { isAuthenticated, handleLogout } = useAuth();
 
   DefaultTheme.colors.background = theme.colors.background;
 
+  const loggoutOnUnauthorized = useCallback(async () => {
+    await handleLogout();
+    toast.show('Falha na autenticação, realize o login novamente.', {
+      type: 'danger',
+      placement: 'top',
+    });
+  }, [handleLogout, toast]);
+
   useEffect(() => {
     HttpServices.registerInterceptTokenManager = {
-      logout: handleLogout,
+      logout: loggoutOnUnauthorized,
     };
-  }, [handleLogout]);
+  }, [loggoutOnUnauthorized]);
 
   return (
     <NavigationContainer onReady={onReady} theme={DefaultTheme}>

@@ -12,8 +12,10 @@ export const Content = styled.View`
 export const ItemWrapper = styled.View``;
 
 export const ItemSeparator = styled.View`
-  height: ${({ theme }) => theme.border.width.md}px;
-  background-color: ${({ theme }) => theme.colors.cardBorderInner};
+  ${({ theme }) => css`
+    background-color: ${theme.colors.cardBorderInner};
+    height: ${theme.border.width.md}px;
+  `};
 `;
 
 export const ListHeader = styled.View`

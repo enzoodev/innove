@@ -1,5 +1,6 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { useToast } from 'react-native-toast-notifications';
 import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
 import { AuthRepository } from '@/app/repositories/api/AuthRepository';
 
@@ -22,6 +23,7 @@ export const AuthContext = React.createContext<AuthContextDataProps>(
 );
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
+  const toast = useToast();
   const [auth, setAuth] = useState<TAuth | null>(
     AuthStorageRepository.getAuth(),
   );
@@ -41,10 +43,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         const data = await loginFn(params);
         setAuth(data);
       } catch (error) {
-        // toast.error('Não foi possível buscar seus dados.');
+        toast.show('Não foi possível entrar na sua conta.', {
+          type: 'danger',
+          placement: 'top',
+        });
       }
     },
-    [loginFn],
+    [loginFn, toast],
   );
 
   const handleLogout = useCallback(async () => {
@@ -52,9 +57,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       await logoutFn();
       setAuth(null);
     } catch (error) {
-      // toast.error('Não foi possível buscar seus dados.');
+      toast.show('Não foi possível fazer sair da sua conta.', {
+        type: 'danger',
+        placement: 'top',
+      });
     }
-  }, [logoutFn]);
+  }, [logoutFn, toast]);
 
   const value = useMemo(
     () => ({

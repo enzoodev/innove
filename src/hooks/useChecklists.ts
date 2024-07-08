@@ -1,13 +1,15 @@
 import { useCallback } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useToast } from 'react-native-toast-notifications';
 import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
 import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 import { useAppNavigation } from './useAppNavigation';
 
 export const useChecklists = (params: TGetChecklistsParams) => {
-  const notifyOnChangeProps = useFocusNotifyOnChangeProps();
+  const toast = useToast();
   const navigation = useAppNavigation();
+  const notifyOnChangeProps = useFocusNotifyOnChangeProps();
 
   const { data, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ['allChecklists', ...Object.values(params)],
@@ -32,11 +34,18 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     try {
       await finishExecutionFn({ idexecution: params.idexecution });
       navigation.goBack();
-      // toast.success('deu bom!');
+
+      toast.show('Execução finalizada com sucesso!', {
+        type: 'success',
+        placement: 'top',
+      });
     } catch (error) {
-      // toast.error('Não foi possível buscar seus dados.');
+      toast.show('Não foi possível finalizar a execução.', {
+        type: 'danger',
+        placement: 'top',
+      });
     }
-  }, [finishExecutionFn, navigation, params.idexecution]);
+  }, [finishExecutionFn, navigation, params.idexecution, toast]);
 
   return {
     toDoChecklists: data?.toDoChecklists ?? [],

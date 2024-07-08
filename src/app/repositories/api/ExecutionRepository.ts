@@ -2,6 +2,7 @@ import { BaseRepository } from './shared/BaseRepository';
 
 export class ExecutionRepositoryClass extends BaseRepository {
   async getExecutions() {
+    await new Promise(resolve => setTimeout(resolve, 5000));
     return super.get<GetExecuntionsResponse>({
       url: 'execution',
     });
