@@ -18,7 +18,7 @@ export const ItemSeparator = styled.View`
 
 export const ListHeader = styled.View`
   ${({ theme }) => css`
-    padding: ${theme.layout[2]}px ${theme.layout[3]}px;
+    padding: ${theme.layout[3]}px;
   `};
 `;
 

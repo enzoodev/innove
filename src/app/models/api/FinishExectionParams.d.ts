@@ -1,0 +1,3 @@
+type TFinishExecutionParams = {
+  idexecution: number;
+};

@@ -1,8 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  LocationRepository,
-  TGetLocationsParams,
-} from '@/app/repositories/api/LocationRepository';
+import { LocationRepository } from '@/app/repositories/api/LocationRepository';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 
 export const useLocations = (params: TGetLocationsParams) => {

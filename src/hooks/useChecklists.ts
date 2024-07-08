@@ -1,9 +1,7 @@
 import { useCallback } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  ChecklistRepository,
-  TGetChecklistsParams,
-} from '@/app/repositories/api/ChecklistRepository';
+import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
+import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 import { useAppNavigation } from './useAppNavigation';
 
@@ -27,7 +25,7 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     mutateAsync: finishExecutionFn,
     isPending: isLoadingFinishExecution,
   } = useMutation({
-    mutationFn: ChecklistRepository.finishExecution,
+    mutationFn: ExecutionRepository.finishExecution,
   });
 
   const handleFinishExecution = useCallback(async () => {

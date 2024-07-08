@@ -11,7 +11,7 @@ type Props = ViewProps &
     title: string;
   };
 
-export const LayoutBaseHeader = memo(
+export const Header = memo(
   ({ title, hasBackButton = false, rightComponent, ...rest }: Props) => {
     const theme = useTheme();
     const navigation = useNavigation();

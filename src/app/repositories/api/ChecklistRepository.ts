@@ -1,37 +1,28 @@
 import { BaseRepository } from './shared/BaseRepository';
 
-export type TGetChecklistsParams = {
-  idclient: number;
-  idlocal: string;
-  idexecution: number;
-};
-
-type TGetChecklistQuestionsParams = {
-  idlocal: string;
-  idchecklist: string;
-};
-
-type TGetAnswersTypesParams = {
-  idclient: number;
-};
-
-export type TFinishExecutionParams = {
-  idexecution: number;
-};
-
 export class ChecklistRepositoryClass extends BaseRepository {
-  async getToDoChecklists(params: TGetChecklistsParams) {
-    return super.getAll<TChecklist>({
+  async getToDoChecklists(params: TGetChecklistsParams): Promise<TChecklist[]> {
+    const response = await super.getAll<TChecklistDTO>({
       url: 'checklisttodo',
       params,
     });
+
+    return response.map(item => ({
+      ...item,
+      status: 0,
+    }));
   }
 
-  async getDoneChecklists(params: TGetChecklistsParams) {
-    return super.getAll<TChecklist>({
+  async getDoneChecklists(params: TGetChecklistsParams): Promise<TChecklist[]> {
+    const response = await super.getAll<TChecklistDTO>({
       url: 'checklistdone',
       params,
     });
+
+    return response.map(item => ({
+      ...item,
+      status: 1,
+    }));
   }
 
   async getAllChecklists(params: TGetChecklistsParams) {
@@ -60,9 +51,9 @@ export class ChecklistRepositoryClass extends BaseRepository {
     });
   }
 
-  async finishExecution(params: TFinishExecutionParams) {
-    await super.create({
-      url: 'endexecution',
+  async saveChecklist(params: TSaveChecklistParams) {
+    return super.create({
+      url: 'savechecklist',
       data: params,
     });
   }

@@ -20,7 +20,7 @@ export const Container = styled.View<ContainerTypeStyleProps>`
   flex-direction: row;
   align-items: center;
   ${({ theme, hasBackButton, rightComponent }) => css`
-    padding: ${theme.layout[4]}px 0;
+    padding-top: ${theme.layout[4]}px;
     ${hasBackButton &&
     !!rightComponent &&
     css`

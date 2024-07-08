@@ -60,7 +60,7 @@ export const SyncPhotosButton = styled(BorderlessButton)`
 export const SettingsButton = styled(BorderlessButton)``;
 
 export const UserPhoto = styled.Image.attrs(({ theme }) => ({
-  width: theme.layout[10],
-  height: theme.layout[10],
-  borderRadius: theme.layout[5],
+  width: theme.layout[12],
+  height: theme.layout[12],
+  borderRadius: theme.layout[6],
 }))``;

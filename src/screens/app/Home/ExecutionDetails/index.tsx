@@ -12,11 +12,11 @@ import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
 import { ListSeparators } from '@/app/utils/ListSeparators';
-import { LayoutBaseHeader } from '@/components/elements/LayoutBaseHeader';
+import { Header } from '@/components/elements/Header';
+import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ChecklistItem } from '@/components/modules/ChecklistItem';
 import { ChecklistSkeletonItem } from '@/components/modules/ChecklistSkeletonItem';
 
-import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import * as S from './styles';
 
 export const ExecutionDetails = () => {
@@ -130,17 +130,13 @@ export const ExecutionDetails = () => {
       const hasSeparator = ListSeparators.getHasSeparator(index, array);
       return (
         <S.ItemWrapper key={item.idchecklist}>
-          <ChecklistItem
-            item={item}
-            onPress={() => handleOpenChecklistItem(item)}
-          />
+          <ChecklistItem item={item} />
           {hasSeparator && <S.ItemSeparator />}
         </S.ItemWrapper>
       );
     });
   }, [
     doneChecklists,
-    handleOpenChecklistItem,
     isPending,
     renderLoadingList,
     theme.colors.textSecondary,
@@ -168,12 +164,11 @@ export const ExecutionDetails = () => {
             />
           }
           contentContainerStyle={{
+            gap: theme.layout[4],
             paddingBottom: insets.bottom + theme.layout[4],
           }}
         >
-          <S.ListHeader>
-            <LayoutBaseHeader hasBackButton title="Detalhes da execução" />
-          </S.ListHeader>
+          <Header hasBackButton title="Detalhes da execução" />
           <S.ListWrapper>
             <S.ListHeader>
               <S.ListHeaderTitle>Checklists pendentes</S.ListHeaderTitle>

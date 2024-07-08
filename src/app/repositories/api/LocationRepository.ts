@@ -1,9 +1,5 @@
 import { BaseRepository } from './shared/BaseRepository';
 
-export type TGetLocationsParams = {
-  idclient: number;
-};
-
 export class LocationRepositoryClass extends BaseRepository {
   async getLocations(params: TGetLocationsParams) {
     return super.getAll<TLocation>({

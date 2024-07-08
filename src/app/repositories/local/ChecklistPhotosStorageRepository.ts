@@ -25,7 +25,7 @@ export type TChecklistStoragePhoto = {
 };
 
 export class ChecklistPhotosStorageRepository {
-  private static storageKey = 'CHECKLIST_PHOTOS_';
+  private static storageKey = 'CHECKLIST_PHOTOS';
 
   private static getUserKey(): string {
     const userId = AuthStorageRepository.getUserId();
@@ -54,7 +54,7 @@ export class ChecklistPhotosStorageRepository {
     const prefix = data.questionId ? 'nc' : 'comp';
     const userKey = this.getUserKey();
     const photoKey = [userKey, prefix, ...array].join('_');
-    return `${this.storageKey}${photoKey}`;
+    return `${this.storageKey}_${photoKey}`;
   }
 
   public static saveChecklistPhoto(data: TChecklistStoragePhoto): void {

@@ -6,6 +6,13 @@ export class ExecutionRepositoryClass extends BaseRepository {
       url: 'execution',
     });
   }
+
+  async finishExecution(params: TFinishExecutionParams) {
+    await super.create({
+      url: 'endexecution',
+      data: params,
+    });
+  }
 }
 
 export const ExecutionRepository = new ExecutionRepositoryClass();

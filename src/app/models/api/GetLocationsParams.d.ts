@@ -1,0 +1,3 @@
+type TGetLocationsParams = {
+  idclient: number;
+};

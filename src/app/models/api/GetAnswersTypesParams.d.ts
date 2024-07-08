@@ -1,0 +1,3 @@
+type TGetAnswersTypesParams = {
+  idclient: number;
+};
