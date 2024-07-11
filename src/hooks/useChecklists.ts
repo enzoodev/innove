@@ -3,21 +3,27 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
 import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
 import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
+import { generateQueryKey } from '@/app/utils/generateQueryKey';
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 import { useAppNavigation } from './useAppNavigation';
+import { useRefresh } from './useRefresh';
 
 export const useChecklists = (params: TGetChecklistsParams) => {
   const toast = useToast();
   const navigation = useAppNavigation();
   const notifyOnChangeProps = useFocusNotifyOnChangeProps();
+  const { key, refresh } = useRefresh();
 
   const { data, isLoading, refetch, isRefetching } = useQuery({
-    queryKey: ['allChecklists', ...Object.values(params)],
+    queryKey: generateQueryKey('allChecklists', key, params),
     queryFn: async () => {
       try {
         return await ChecklistRepository.getAllChecklists(params);
       } catch (error) {
-        // toast.error('Não foi possível buscar seus dados.');
+        toast.show('Não foi possível buscar seus checklists.', {
+          type: 'danger',
+          placement: 'top',
+        });
       }
     },
     notifyOnChangeProps,
@@ -53,6 +59,7 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     isLoading,
     isRefetching,
     isPending: isLoading || isRefetching,
+    refresh,
     refetch,
     handleFinishExecution,
     isLoadingFinishExecution,

@@ -18,29 +18,29 @@ export class BaseRepository {
     });
   }
 
-  async create(params: TRequestConfig): Promise<void> {
-    await HttpServices.post({
+  async create<T = unknown>(params: TRequestConfig): Promise<T> {
+    return HttpServices.post({
       ...params,
       url: UrlBuilder.group(this.appUrl, params.url),
     });
   }
 
-  async update(id: string, params: TRequestConfig): Promise<void> {
-    await HttpServices.put({
+  async update<T = unknown>(id: string, params: TRequestConfig): Promise<T> {
+    return HttpServices.put({
       ...params,
       url: UrlBuilder.group(this.appUrl, params.url, id),
     });
   }
 
-  async delete(id: string, params: TRequestConfig): Promise<void> {
-    await HttpServices.delete({
+  async delete<T = unknown>(id: string, params: TRequestConfig): Promise<T> {
+    return HttpServices.delete({
       ...params,
       url: UrlBuilder.group(this.appUrl, params.url, id),
     });
   }
 
-  async patch(id: string, params: TRequestConfig): Promise<void> {
-    await HttpServices.patch({
+  async patch<T = unknown>(id: string, params: TRequestConfig): Promise<T> {
+    return HttpServices.patch({
       ...params,
       url: UrlBuilder.group(this.appUrl, params.url, id),
     });

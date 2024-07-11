@@ -30,6 +30,7 @@ export const ExecutionDetails = () => {
     doneChecklists,
     isPending,
     isRefetching,
+    refresh,
     refetch,
     handleFinishExecution,
     isLoadingFinishExecution,
@@ -143,7 +144,7 @@ export const ExecutionDetails = () => {
     theme.iconSizes.md,
   ]);
 
-  useRefreshOnFocus(refetch);
+  useRefreshOnFocus(refresh);
 
   return (
     <S.Container>

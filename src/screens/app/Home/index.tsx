@@ -18,6 +18,7 @@ import {
 
 import { ListSeparators } from '@/app/utils/ListSeparators';
 
+import { useToggle } from '@/hooks/useToggle';
 import { useExecution } from '@/hooks/useExecution';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
@@ -30,15 +31,19 @@ import { ButtonAdd } from '@/components/elements/ButtonAdd';
 import { AnimatedButtonAddWrapper } from '@/components/elements/AnimatedButtonAddWrapper';
 import { ExecutionItem } from '@/components/modules/ExecutionItem';
 import { ExecutionSkeletonItem } from '@/components/modules/ExecutionSkeletonItem';
+import { StartExecutionModal } from '@/components/modules/StartExecutionModal';
 
 import * as S from './styles';
 
 export const Home = () => {
   const [searchText, setSearchText] = useState('');
+  const [isOpenStartExecutionModal, toggleOpenStartExecutionModal] =
+    useToggle();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
-  const { executions, isRefetching, isPending, refetch } = useExecution();
+  const { executions, isRefetching, isPending, refresh, refetch } =
+    useExecution();
 
   const filteredTodoExecutions = useMemo(
     () =>
@@ -63,7 +68,9 @@ export const Home = () => {
     [navigation],
   );
 
-  const handleCreateExecution = useCallback(() => {}, []);
+  const handleCreateExecution = useCallback(() => {
+    toggleOpenStartExecutionModal();
+  }, [toggleOpenStartExecutionModal]);
 
   const drag = useSharedValue(0);
 
@@ -197,7 +204,7 @@ export const Home = () => {
     theme.iconSizes.md,
   ]);
 
-  useRefreshOnFocus(refetch);
+  useRefreshOnFocus(refresh);
 
   return (
     <S.Container>
@@ -250,6 +257,10 @@ export const Home = () => {
           </AnimatedButtonAddWrapper>
         )}
       </S.Content>
+      <StartExecutionModal
+        isOpen={isOpenStartExecutionModal}
+        onClose={toggleOpenStartExecutionModal}
+      />
     </S.Container>
   );
 };

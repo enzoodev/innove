@@ -4,7 +4,7 @@ import { parseJsonToFormData } from '@/app/utils/parseJsonToFormData';
 import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
 
 type RegisterInterceptTokenManager = {
-  logout: () => Promise<void>;
+  logout: () => void;
 } | null;
 
 export class HttpServices {
@@ -36,8 +36,7 @@ export class HttpServices {
 
     if (!response.ok) {
       if (response.status === 401 && this.registerInterceptTokenManager) {
-        // show toast error
-        await this.registerInterceptTokenManager.logout();
+        this.registerInterceptTokenManager.logout();
       }
 
       throw new Error();

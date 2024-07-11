@@ -12,6 +12,7 @@ export type AuthContextDataProps = {
   isLoadingLogout: boolean;
   handleLogin: (params: TLoginParams) => Promise<void>;
   handleLogout: () => Promise<void>;
+  handleCleanAuth: () => void;
 };
 
 interface AuthContextProviderProps {
@@ -64,6 +65,16 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }, [logoutFn, toast]);
 
+  const handleCleanAuth = useCallback(() => {
+    setAuth(null);
+    AuthStorageRepository.logout();
+
+    toast.show('Falha na autenticação, realize o login novamente.', {
+      type: 'danger',
+      placement: 'top',
+    });
+  }, [toast]);
+
   const value = useMemo(
     () => ({
       auth,
@@ -73,9 +84,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       isLoadingLogout,
       handleLogin,
       handleLogout,
+      handleCleanAuth,
     }),
     [
       auth,
+      handleCleanAuth,
       handleLogin,
       handleLogout,
       isAuthenticated,

@@ -2,10 +2,25 @@ import { BaseRepository } from './shared/BaseRepository';
 
 export class ExecutionRepositoryClass extends BaseRepository {
   async getExecutions() {
-    await new Promise(resolve => setTimeout(resolve, 5000));
     return super.get<GetExecuntionsResponse>({
       url: 'execution',
     });
+  }
+
+  async startExecution(
+    params: TStartExecutionParams,
+  ): Promise<TExecution | undefined> {
+    const { idExecution } = await super.create<{ idExecution: number }>({
+      url: 'startexecution',
+      data: params,
+    });
+
+    const updatedExecutions = await this.getExecutions();
+    const execution = updatedExecutions['em andamento']?.find(
+      item => item.id === idExecution,
+    );
+
+    return execution;
   }
 
   async finishExecution(params: TFinishExecutionParams) {
