@@ -1,7 +1,9 @@
 import { BaseRepository } from './shared/BaseRepository';
 
-export class ChecklistRepositoryClass extends BaseRepository {
-  async getToDoChecklists(params: TGetChecklistsParams): Promise<TChecklist[]> {
+export class ChecklistRepository extends BaseRepository {
+  public static async getToDoChecklists(
+    params: TGetChecklistsParams,
+  ): Promise<TChecklist[]> {
     const response = await super.getAll<TChecklistDTO>({
       url: 'checklisttodo',
       params,
@@ -13,7 +15,9 @@ export class ChecklistRepositoryClass extends BaseRepository {
     }));
   }
 
-  async getDoneChecklists(params: TGetChecklistsParams): Promise<TChecklist[]> {
+  public static async getDoneChecklists(
+    params: TGetChecklistsParams,
+  ): Promise<TChecklist[]> {
     const response = await super.getAll<TChecklistDTO>({
       url: 'checklistdone',
       params,
@@ -25,7 +29,7 @@ export class ChecklistRepositoryClass extends BaseRepository {
     }));
   }
 
-  async getAllChecklists(params: TGetChecklistsParams) {
+  public static async getAllChecklists(params: TGetChecklistsParams) {
     const [toDoChecklists, doneChecklists] = await Promise.all([
       this.getToDoChecklists(params),
       this.getDoneChecklists(params),
@@ -37,26 +41,26 @@ export class ChecklistRepositoryClass extends BaseRepository {
     };
   }
 
-  async getChecklistQuestions(params: TGetChecklistQuestionsParams) {
+  public static async getChecklistQuestions(
+    params: TGetChecklistQuestionsParams,
+  ) {
     return super.getAll<TChecklistQuestion>({
       url: 'checklist',
       params,
     });
   }
 
-  async getAnswersTypes(params: TGetAnswersTypesParams) {
+  public static async getAnswersTypes(params: TGetAnswersTypesParams) {
     return super.getAll<TAnswerType>({
       url: 'answerstypes',
       params,
     });
   }
 
-  async saveChecklist(params: TSaveChecklistParams) {
+  public static async saveChecklist(params: TSaveChecklistParams) {
     return super.create({
       url: 'savechecklist',
       data: params,
     });
   }
 }
-
-export const ChecklistRepository = new ChecklistRepositoryClass();
