@@ -107,7 +107,7 @@ export const Home = () => {
   );
 
   const renderLoadingList = useCallback(() => {
-    return Array.from({ length: 6 }).map((_, index, array) => {
+    return Array.from({ length: 3 }).map((_, index, array) => {
       const hasSeparator = ListSeparators.getHasSeparator(index, array);
       return (
         <S.ItemWrapper key={String(index + 1)}>
