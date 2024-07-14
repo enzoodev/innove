@@ -1,4 +1,4 @@
-import { memo, useState, ReactNode, useCallback } from 'react';
+import { memo, useState, ReactNode, useCallback, useEffect } from 'react';
 import { LayoutChangeEvent } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -28,13 +28,20 @@ export const CollapsableContainer = memo(({ children, isExpanded }: Props) => {
     [height],
   );
 
-  const collapsableStyle = useAnimatedStyle(() => {
-    animatedHeight.value = isExpanded ? withTiming(height) : withTiming(0);
+  useEffect(() => {
+    if (height > 0) {
+      animatedHeight.value = isExpanded
+        ? withTiming(height, { duration: 150 })
+        : withTiming(0, { duration: 250 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isExpanded, height]);
 
+  const collapsableStyle = useAnimatedStyle(() => {
     return {
       height: animatedHeight.value,
     };
-  }, [isExpanded, height]);
+  });
 
   return (
     <Animated.View style={[collapsableStyle, { overflow: 'hidden', flex: 1 }]}>
