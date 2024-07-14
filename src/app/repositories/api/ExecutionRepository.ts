@@ -1,13 +1,13 @@
 import { BaseRepository } from './shared/BaseRepository';
 
-export class ExecutionRepositoryClass extends BaseRepository {
-  async getExecutions() {
+export class ExecutionRepository extends BaseRepository {
+  public static async getExecutions() {
     return super.get<GetExecuntionsResponse>({
       url: 'execution',
     });
   }
 
-  async startExecution(
+  public static async startExecution(
     params: TStartExecutionParams,
   ): Promise<TExecution | undefined> {
     const { idExecution } = await super.create<{ idExecution: number }>({
@@ -23,12 +23,10 @@ export class ExecutionRepositoryClass extends BaseRepository {
     return execution;
   }
 
-  async finishExecution(params: TFinishExecutionParams) {
+  public static async finishExecution(params: TFinishExecutionParams) {
     await super.create({
       url: 'endexecution',
       data: params,
     });
   }
 }
-
-export const ExecutionRepository = new ExecutionRepositoryClass();
