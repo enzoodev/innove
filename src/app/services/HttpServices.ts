@@ -13,9 +13,7 @@ export class HttpServices {
 
   private static baseUrl = 'https://safety360.espertibrasil.com.br/api/';
 
-  private static request = async <T = unknown>(
-    params: TRequestConfig,
-  ): Promise<T> => {
+  private static request = async <T>(params: TRequestConfig): Promise<T> => {
     const method = params.method ?? HttpMethod.GET;
     const url = UrlBuilder.build(this.baseUrl, params.url, params.params);
     const requestBody = parseJsonToFormData(params.data);
