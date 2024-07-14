@@ -50,11 +50,13 @@ export const SelectDropDown = memo(
     const hasFormError = !!formError;
     const [searchText, setSearchText] = useState('');
 
-    const filteredItems = useMemo(() => {
-      return items.filter(item =>
-        item.label.toLowerCase().includes(searchText.toLowerCase()),
-      );
-    }, [items, searchText]);
+    const filteredItems = useMemo(
+      () =>
+        items.filter(item =>
+          item.label.toLowerCase().includes(searchText.toLowerCase()),
+        ),
+      [items, searchText],
+    );
 
     const handleChangeValue = useCallback(
       (data: SelectDropDownItem) => {
