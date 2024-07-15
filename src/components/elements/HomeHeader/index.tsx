@@ -1,29 +1,30 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { IconSettings, IconWifi } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { PhotoFormatter } from '@/app/utils/PhotoFormatter';
 import { useAuth } from '@/hooks/useAuth';
+import { useAppNavigation } from '@/hooks/useAppNavigation';
+
+import { UserPhoto } from '@/components/elements/UserPhoto';
 
 import * as S from './styles';
 
 export const HomeHeader = memo(() => {
   const theme = useTheme();
+  const navigation = useAppNavigation();
   const { auth } = useAuth();
 
-  if (!auth) {
-    return null;
-  }
-
-  const photoUri = PhotoFormatter.formatUri(auth.client_logo_icon);
+  const handleGoToSettings = useCallback(() => {
+    navigation.navigate('Settings');
+  }, [navigation]);
 
   return (
     <S.Container>
       <S.Content>
-        <S.UserPhoto source={{ uri: photoUri }} />
+        <UserPhoto size={theme.layout[12]} />
         <S.UserTextWrapper>
           <S.UserNameLabel>Olá,</S.UserNameLabel>
-          <S.UserName>{auth.name}</S.UserName>
+          <S.UserName>{auth?.name}</S.UserName>
         </S.UserTextWrapper>
       </S.Content>
       <S.ButtonsWrapper>
@@ -34,7 +35,7 @@ export const HomeHeader = memo(() => {
             color={theme.colors.mainContrast}
           />
         </S.SyncPhotosButton>
-        <S.SettingsButton>
+        <S.SettingsButton onPress={handleGoToSettings}>
           <IconSettings
             stroke={1.5}
             size={theme.iconSizes.md}
