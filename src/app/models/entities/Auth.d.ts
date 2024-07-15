@@ -23,9 +23,3 @@ type TAuthPermission = {
   idpermission: string;
   name: string;
 };
-
-type TLoginParams = {
-  login: string;
-  pass: string;
-  devicetype: string;
-};
