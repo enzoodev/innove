@@ -20,4 +20,22 @@ export class AuthRepository {
 
     AuthStorageRepository.logout();
   }
+
+  public static async recoverAccount(
+    params: TRecoverAccountParams,
+  ): Promise<void> {
+    await HttpServices.post({
+      url: 'recover',
+      data: params,
+    });
+  }
+
+  public static async updatePassword(
+    params: TUpdatePasswordParams,
+  ): Promise<void> {
+    await HttpServices.post({
+      url: 'updatepass',
+      data: params,
+    });
+  }
 }
