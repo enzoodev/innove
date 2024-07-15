@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { ThemeProvider } from 'styled-components/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from 'react-native-toast-notifications';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
@@ -34,11 +35,13 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <ToastProvider>
-          <AuthContextProvider>
-            <Routes onReady={onLayoutRootView} />
-          </AuthContextProvider>
-        </ToastProvider>
+        <SafeAreaProvider>
+          <ToastProvider>
+            <AuthContextProvider>
+              <Routes onReady={onLayoutRootView} />
+            </AuthContextProvider>
+          </ToastProvider>
+        </SafeAreaProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
