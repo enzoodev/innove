@@ -1,9 +1,14 @@
+/* eslint-disable react/style-prop-object */
 import { useEffect } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 
-import { HttpServices } from '@/app/services/HttpServices';
 import { useAuth } from '@/hooks/useAuth';
+
+import { HttpServices } from '@/app/services/HttpServices';
+
+import { AppStatusBar } from '@/components/elements/AppStatusBar';
+
 import { AppRoutes } from './App.routes';
 import { AuthRoutes } from './Auth.routes';
 
@@ -25,6 +30,11 @@ export const Routes = ({ onReady }: Props) => {
 
   return (
     <NavigationContainer onReady={onReady} theme={DefaultTheme}>
+      <AppStatusBar
+        translucent
+        style="light"
+        backgroundColor={theme.colors.main}
+      />
       {isAuthenticated ? <AppRoutes /> : <AuthRoutes />}
     </NavigationContainer>
   );
