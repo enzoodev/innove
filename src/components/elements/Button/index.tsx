@@ -11,6 +11,7 @@ type Props = TouchableHighlightProps & {
   Icon?: () => JSX.Element;
   color?: string;
   bgColor?: string;
+  borderColor?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
   itsCancelButton?: boolean;
@@ -22,6 +23,7 @@ export const Button = memo(
     title,
     color,
     bgColor,
+    borderColor,
     onPress,
     Icon,
     isLoading = false,
@@ -43,6 +45,7 @@ export const Button = memo(
         underlayColor={shade(0.2, buttonBgColor)}
         onPress={onPress}
         bgColor={buttonBgColor}
+        borderColor={borderColor || buttonBgColor}
         disabled={isDisabled || isLoading}
         isDisabled={isDisabled}
         {...rest}

@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/elements/Skeleton';
 
 type ButtonProps = {
   bgColor: string;
+  borderColor: string;
   isDisabled: boolean;
 };
 
@@ -17,9 +18,12 @@ export const Container = styled.TouchableHighlight<ButtonProps>`
   min-height: ${RFValue(42)}px;
   align-items: center;
   justify-content: center;
-  border-radius: ${({ theme }) => theme.border.radius.md}px;
-  background-color: ${({ bgColor }) => bgColor};
-  opacity: ${({ isDisabled }) => (isDisabled ? 0.4 : 1)};
+  ${({ theme, bgColor, borderColor, isDisabled }) => css`
+    border-radius: ${theme.border.radius.md}px;
+    background-color: ${bgColor};
+    border: 1px solid ${borderColor};
+    opacity: ${isDisabled ? 0.4 : 1};
+  `};
 `;
 
 export const SkeletonButton = styled(Skeleton)`
