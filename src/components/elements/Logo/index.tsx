@@ -9,7 +9,8 @@ type Props = {
 };
 
 export const Logo = memo(({ size }: Props) => {
-  const width = RFValue(size);
+  const height = RFValue(size);
+  const width = height * 3;
 
-  return <Image style={{ width }} source={Innove} />;
+  return <Image style={{ height, width }} source={Innove} />;
 });
