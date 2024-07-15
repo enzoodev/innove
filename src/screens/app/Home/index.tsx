@@ -24,7 +24,6 @@ import { useAppNavigation } from '@/hooks/useAppNavigation';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 
 import { SearchInput } from '@/components/elements/SearchInput';
-import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
 import { HomeHeader } from '@/components/elements/HomeHeader';
 import { ButtonAdd } from '@/components/elements/ButtonAdd';
@@ -208,12 +207,6 @@ export const Home = () => {
 
   return (
     <S.Container>
-      <AppStatusBar
-        translucent
-        // eslint-disable-next-line react/style-prop-object
-        style="light"
-        backgroundColor={theme.colors.main}
-      />
       <S.Content>
         <ScrollView
           showsVerticalScrollIndicator={false}

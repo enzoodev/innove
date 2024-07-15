@@ -1,4 +1,3 @@
-/* eslint-disable react/style-prop-object */
 import { useCallback } from 'react';
 import {
   ScrollView,
@@ -19,7 +18,6 @@ import { Logo } from '@/components/elements/Logo';
 import { Label } from '@/components/elements/Label';
 import { Input } from '@/components/elements/Input';
 import { Button } from '@/components/elements/Button';
-import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { PasswordInput } from '@/components/elements/PasswordInput';
 import { AnimatedKeyboardWrapper } from '@/components/elements/AnimatedKeyboardWrapper';
 
@@ -51,24 +49,17 @@ export const Login = () => {
 
   const onSubmit: SubmitHandler<TLoginSchema> = useCallback(
     async data => {
-      try {
-        await handleLogin({
-          login: data.login,
-          pass: data.password,
-          devicetype: '2',
-        });
-      } catch (error) {}
+      await handleLogin({
+        login: data.login,
+        pass: data.password,
+        devicetype: '2',
+      });
     },
     [handleLogin],
   );
 
   return (
     <S.Container>
-      <AppStatusBar
-        translucent
-        style="light"
-        backgroundColor={theme.colors.main}
-      />
       <ScrollView
         contentContainerStyle={{
           paddingTop: dimensions.height * 0.15,
@@ -77,7 +68,7 @@ export const Login = () => {
       >
         <AnimatedKeyboardWrapper>
           <S.Content>
-            <Logo size={200} />
+            <Logo size={60} />
             <S.FormWrapper>
               <S.Label>Acesse sua conta</S.Label>
               <Controller

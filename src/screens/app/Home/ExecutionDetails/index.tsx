@@ -13,7 +13,6 @@ import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
 import { ListSeparators } from '@/app/utils/ListSeparators';
 import { Header } from '@/components/elements/Header';
-import { AppStatusBar } from '@/components/elements/AppStatusBar';
 import { ChecklistItem } from '@/components/modules/ChecklistItem';
 import { ChecklistSkeletonItem } from '@/components/modules/ChecklistSkeletonItem';
 
@@ -148,12 +147,6 @@ export const ExecutionDetails = () => {
 
   return (
     <S.Container>
-      <AppStatusBar
-        translucent
-        // eslint-disable-next-line react/style-prop-object
-        style="light"
-        backgroundColor={theme.colors.main}
-      />
       <S.Content>
         <ScrollView
           showsVerticalScrollIndicator={false}
