@@ -10,9 +10,13 @@ export type AuthContextDataProps = {
   isAuthenticated: boolean;
   isLoadingLogin: boolean;
   isLoadingLogout: boolean;
+  isLoadingRecoverAccount: boolean;
+  isLoadingUpdatePassword: boolean;
   handleLogin: (params: TLoginParams) => Promise<void>;
   handleLogout: () => Promise<void>;
   handleCleanAuth: () => void;
+  handleRecoverAccount: (params: TRecoverAccountParams) => Promise<void>;
+  handleUpdatePassword: (params: TUpdatePasswordParams) => Promise<void>;
 };
 
 interface AuthContextProviderProps {
@@ -37,6 +41,16 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const { mutateAsync: logoutFn, isPending: isLoadingLogout } = useMutation({
     mutationFn: AuthRepository.logout,
   });
+
+  const { mutateAsync: recoverAccountFn, isPending: isLoadingRecoverAccount } =
+    useMutation({
+      mutationFn: AuthRepository.recoverAccount,
+    });
+
+  const { mutateAsync: updatePasswordFn, isPending: isLoadingUpdatePassword } =
+    useMutation({
+      mutationFn: AuthRepository.updatePassword,
+    });
 
   const handleLogin = useCallback(
     async (params: TLoginParams) => {
@@ -75,6 +89,42 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     });
   }, [toast]);
 
+  const handleRecoverAccount = useCallback(
+    async (params: TRecoverAccountParams) => {
+      try {
+        await recoverAccountFn(params);
+        toast.show('Enviamos um e-mail para você.', {
+          type: 'success',
+          placement: 'top',
+        });
+      } catch (error) {
+        toast.show('Não foi possível recuperar sua conta.', {
+          type: 'danger',
+          placement: 'top',
+        });
+      }
+    },
+    [recoverAccountFn, toast],
+  );
+
+  const handleUpdatePassword = useCallback(
+    async (params: TUpdatePasswordParams) => {
+      try {
+        await updatePasswordFn(params);
+        toast.show('Senha alterada com sucesso.', {
+          type: 'success',
+          placement: 'top',
+        });
+      } catch (error) {
+        toast.show('Não foi possível alterar sua senha.', {
+          type: 'danger',
+          placement: 'top',
+        });
+      }
+    },
+    [updatePasswordFn, toast],
+  );
+
   const value = useMemo(
     () => ({
       auth,
@@ -82,18 +132,26 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       isAuthenticated,
       isLoadingLogin,
       isLoadingLogout,
+      isLoadingRecoverAccount,
+      isLoadingUpdatePassword,
       handleLogin,
       handleLogout,
       handleCleanAuth,
+      handleRecoverAccount,
+      handleUpdatePassword,
     }),
     [
       auth,
       handleCleanAuth,
       handleLogin,
       handleLogout,
+      handleRecoverAccount,
+      handleUpdatePassword,
       isAuthenticated,
       isLoadingLogin,
       isLoadingLogout,
+      isLoadingRecoverAccount,
+      isLoadingUpdatePassword,
     ],
   );
 
