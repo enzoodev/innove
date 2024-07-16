@@ -17,6 +17,7 @@ import { Label } from '@/components/elements/Label';
 import { Button } from '@/components/elements/Button';
 import { PasswordInput } from '@/components/elements/PasswordInput';
 import { AnimatedKeyboardWrapper } from '@/components/elements/AnimatedKeyboardWrapper';
+import { PasswordRule } from '@/components/modules/PasswordRule';
 
 import * as S from './styles';
 
@@ -75,6 +76,15 @@ export const UpdatePassword = () => {
                   Digite sua nova senha conforme as regras abaixo
                 </S.Subtitle>
               </S.Header>
+              <S.RulesWrapper>
+                {rules.map(rule => (
+                  <PasswordRule
+                    key={rule.message}
+                    message={rule.message}
+                    isSatisfied={rule.isSatisfied}
+                  />
+                ))}
+              </S.RulesWrapper>
               <Controller
                 control={control}
                 name="password"

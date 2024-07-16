@@ -8,7 +8,7 @@ export const Container = styled.View`
 export const Content = styled.View`
   align-items: center;
   ${({ theme }) => css`
-    gap: ${theme.layout[8]}px;
+    gap: ${theme.layout[6]}px;
     margin: 0 ${theme.layout[4]}px;
   `};
 `;
@@ -16,6 +16,12 @@ export const Content = styled.View`
 export const FormWrapper = styled.View`
   width: 100%;
   align-items: center;
+  ${({ theme }) => css`
+    gap: ${theme.layout[6]}px;
+  `};
+`;
+
+export const RulesWrapper = styled.View`
   ${({ theme }) => css`
     gap: ${theme.layout[4]}px;
   `};
