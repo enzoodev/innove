@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import styled, { css } from 'styled-components/native';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { BorderlessButton } from '@/components/elements/BorderlessButton';
 
 export type ContainerTypeStyleProps = {
@@ -55,11 +54,11 @@ export const Title = styled.Text<TitleTypeStyleProps>`
 export const GoBackButton = styled(
   BorderlessButton,
 )<GoBackButtonTypeStyleProps>`
-  ${({ rightComponent }) =>
+  ${({ theme, rightComponent }) =>
     !rightComponent &&
     css`
       position: absolute;
       left: 0;
-      top: ${RFValue(14)}px;
+      top: ${theme.layout[4]}px;
     `};
 `;
