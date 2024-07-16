@@ -8,7 +8,7 @@ import * as S from './styles';
 
 type Props = ViewProps &
   S.ContainerTypeStyleProps & {
-    title: string;
+    title?: string;
   };
 
 export const Header = memo(
@@ -38,7 +38,7 @@ export const Header = memo(
             />
           </S.GoBackButton>
         )}
-        <S.Title hasBackButton={hasBackButton}>{title}</S.Title>
+        {title && <S.Title hasBackButton={hasBackButton}>{title}</S.Title>}
         {rightComponent}
       </S.Container>
     );
