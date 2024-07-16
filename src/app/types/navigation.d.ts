@@ -18,4 +18,5 @@ type AppStackParamsList = {
 type AuthStackParamsList = {
   Login: undefined;
   RecoverAccount: undefined;
+  RecoverAccountEmailSent: undefined;
 };
