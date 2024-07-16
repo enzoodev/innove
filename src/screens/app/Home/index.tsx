@@ -97,9 +97,9 @@ export const Home = () => {
       const { contentOffset } = event.nativeEvent;
 
       if (contentOffset.y === 0) {
-        drag.value = 1;
-      } else {
         drag.value = 0;
+      } else {
+        drag.value = 1;
       }
     },
     [drag],
