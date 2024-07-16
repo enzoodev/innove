@@ -32,7 +32,7 @@ export class ChecklistPhotosStorageRepository {
     return `userId:${userId}`;
   }
 
-  private static getPhotosByUser(): TChecklistStoragePhoto[] {
+  public static getPhotosByUser(): TChecklistStoragePhoto[] {
     const keys = StorageRepository.getAllKeys();
     const userKey = this.getUserKey();
     const keysByUser = keys.filter(key => key.includes(userKey));
@@ -57,12 +57,12 @@ export class ChecklistPhotosStorageRepository {
     return `${this.storageKey}_${photoKey}`;
   }
 
-  public static saveChecklistPhoto(data: TChecklistStoragePhoto): void {
+  public static savePhoto(data: TChecklistStoragePhoto): void {
     const key = this.generateKey(data);
     StorageRepository.set(key, data);
   }
 
-  public static deleteChecklistPhoto(data: TChecklistStoragePhoto): void {
+  public static deletePhoto(data: TChecklistStoragePhoto): void {
     const key = this.generateKey(data);
     StorageRepository.delete(key);
   }

@@ -4,10 +4,10 @@ const encodedKeyBase64 = 'aW5ub3ZlIHN0b3JhZ2Uga2V5';
 const mmkv = new MMKV({ id: encodedKeyBase64 });
 
 export class StorageRepository {
-  private static baseKey = '@INNOVE_STORAGE_KEY_';
+  private static baseKey = '@INNOVE_STORAGE_KEY';
 
   private static makeKey(key: string): string {
-    return `${this.baseKey}${key}`;
+    return `${this.baseKey}_${key}`;
   }
 
   public static get<T>(key: string): T | null {
