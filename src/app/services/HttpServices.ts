@@ -13,13 +13,17 @@ export class HttpServices {
 
   private static baseUrl = 'https://safety360.espertibrasil.com.br/api/';
 
-  private static request = async <T>(params: TRequestConfig): Promise<T> => {
-    const method = params.method ?? HttpMethod.GET;
-    const url = UrlBuilder.build(this.baseUrl, params.url, params.params);
-    const requestBody = parseJsonToFormData(params.data);
+  private static request = async <T>({
+    url,
+    method = HttpMethod.GET,
+    data,
+    params,
+  }: TRequestConfig): Promise<T> => {
+    const constructedUrl = UrlBuilder.build(this.baseUrl, url, params);
+    const requestBody = parseJsonToFormData(data);
     const token = AuthStorageRepository.getToken();
 
-    const response = await fetch(url, {
+    const response = await fetch(constructedUrl, {
       method,
       body: requestBody,
       credentials: 'include',
