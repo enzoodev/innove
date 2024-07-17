@@ -15,8 +15,8 @@ export type AuthContextDataProps = {
   handleLogin: (params: TLoginParams) => Promise<void>;
   handleLogout: () => Promise<void>;
   handleCleanAuth: () => void;
-  handleRecoverAccount: (params: TRecoverAccountParams) => Promise<void>;
-  handleUpdatePassword: (params: TUpdatePasswordParams) => Promise<void>;
+  handleRecoverAccount: (params: TRecoverAccountParams) => Promise<boolean>;
+  handleUpdatePassword: (params: TUpdatePasswordParams) => Promise<boolean>;
 };
 
 interface AuthContextProviderProps {
@@ -81,6 +81,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }, [logoutFn, toast]);
 
   const handleCleanAuth = useCallback(() => {
+    if (!auth) {
+      return;
+    }
+
     setAuth(null);
     AuthStorageRepository.logout();
 
@@ -88,17 +92,20 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       type: 'danger',
       placement: 'top',
     });
-  }, [toast]);
+  }, [auth, toast]);
 
   const handleRecoverAccount = useCallback(
     async (params: TRecoverAccountParams) => {
       try {
         await recoverAccountFn(params);
+        return true;
       } catch (error) {
         toast.show('Não foi possível recuperar sua conta.', {
           type: 'danger',
           placement: 'top',
         });
+
+        return false;
       }
     },
     [recoverAccountFn, toast],
@@ -112,11 +119,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           type: 'success',
           placement: 'top',
         });
+        return true;
       } catch (error) {
         toast.show('Não foi possível alterar sua senha.', {
           type: 'danger',
           placement: 'top',
         });
+        return false;
       }
     },
     [updatePasswordFn, toast],
