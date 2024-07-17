@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { ScrollView, useWindowDimensions } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTheme } from 'styled-components/native';
@@ -12,19 +12,21 @@ import {
 } from '@/app/schemas/auth/updatePasswordSchema';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 import { Label } from '@/components/elements/Label';
 import { Button } from '@/components/elements/Button';
 import { PasswordInput } from '@/components/elements/PasswordInput';
 import { AnimatedKeyboardWrapper } from '@/components/elements/AnimatedKeyboardWrapper';
+import { GoBackButton } from '@/components/elements/GoBackButton';
 import { PasswordRule } from '@/components/modules/PasswordRule';
 
 import * as S from './styles';
 
 export const UpdatePassword = () => {
   const theme = useTheme();
+  const navigation = useAuthNavigation();
   const insets = useSafeAreaInsets();
-  const dimensions = useWindowDimensions();
   const { handleUpdatePassword, isLoadingUpdatePassword } = useAuth();
 
   const {
@@ -55,20 +57,21 @@ export const UpdatePassword = () => {
   const onSubmit: SubmitHandler<TUpdatePasswordSchema> = useCallback(
     async data => {
       await handleUpdatePassword({ newpass: data.password });
+      navigation.goBack();
     },
-    [handleUpdatePassword],
+    [handleUpdatePassword, navigation],
   );
 
   return (
     <S.Container>
       <ScrollView
         contentContainerStyle={{
-          paddingTop: dimensions.height * 0.15,
           paddingBottom: insets.bottom,
         }}
       >
         <AnimatedKeyboardWrapper>
           <S.Content>
+            <GoBackButton />
             <S.FormWrapper>
               <S.Header>
                 <S.Title>Alterar senha</S.Title>
@@ -125,7 +128,7 @@ export const UpdatePassword = () => {
               />
             </S.FormWrapper>
             <Button
-              title="Entrar"
+              title="Salvar"
               onPress={handleSubmit(onSubmit)}
               isLoading={isLoadingUpdatePassword}
               color={theme.colors.buttonBodyTextColor}
