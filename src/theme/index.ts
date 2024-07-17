@@ -43,7 +43,7 @@ export const theme = {
     success: '#32CD32',
     warning: '#FFD700',
     error: '#DF0202',
-    mail: '#CC3F29',
+    mail: '#F35737',
     mailContrast: '#FFFFFF',
     passwordRuleBg: '#FFC800',
     passwordRuleBgContrast: '#FFFFFF',
