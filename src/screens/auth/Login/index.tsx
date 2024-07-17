@@ -44,7 +44,7 @@ export const Login = () => {
   });
 
   const handleRecoverPassword = useCallback(() => {
-    navigation.navigate('Login');
+    navigation.navigate('RecoverAccount');
   }, [navigation]);
 
   const onSubmit: SubmitHandler<TLoginSchema> = useCallback(
