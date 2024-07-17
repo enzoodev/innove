@@ -1,31 +1,37 @@
 import styled, { css } from 'styled-components/native';
 
-export const Container = styled.View`
+export type TTypeStyleProps = {
+  isSatisfied: boolean;
+};
+
+export const Container = styled.View<TTypeStyleProps>`
+  width: 100%;
   flex-direction: row;
   align-items: center;
-  ${({ theme }) => css`
+  ${({ theme, isSatisfied }) => css`
     gap: ${theme.layout[2]}px;
+    opacity: ${isSatisfied ? 1 : 0.7};
   `};
 `;
 
-export const IconWrapper = styled.View<{ isSatisfied: boolean }>`
+export const IconWrapper = styled.View<TTypeStyleProps>`
   ${({ theme, isSatisfied }) => css`
     align-items: center;
     justify-content: center;
-    width: ${theme.layout[8]}px;
-    height: ${theme.layout[8]}px;
+    width: ${theme.layout[6]}px;
+    height: ${theme.layout[6]}px;
     border-radius: ${theme.border.radius.full}px;
     background-color: ${isSatisfied
-      ? theme.colors.successLight
-      : theme.colors.errorLight};
+      ? theme.colors.passwordRuleBg
+      : theme.colors.cardBodyButtonBackgroundColor};
   `};
 `;
 
 export const Title = styled.Text`
+  flex: 1;
   ${({ theme }) => css`
     font-family: ${theme.fonts.main.regular};
-    font-size: ${theme.fontSizes.sm}px;
-    color: ${theme.colors.textTertiary};
-    margin-top: ${theme.layout[6]}px;
+    font-size: ${theme.fontSizes.xs}px;
+    color: ${theme.colors.textSecondary};
   `};
 `;
