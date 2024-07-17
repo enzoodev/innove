@@ -43,8 +43,10 @@ export const RecoverAccount = () => {
 
   const onSubmit: SubmitHandler<TRecoverAccountSchema> = useCallback(
     async ({ email }) => {
-      await handleRecoverAccount({ email });
-      navigation.navigate('RecoverAccountEmailSent');
+      const isDone = await handleRecoverAccount({ email });
+      if (!isDone) {
+        navigation.navigate('RecoverAccountEmailSent');
+      }
     },
     [handleRecoverAccount, navigation],
   );

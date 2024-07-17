@@ -30,6 +30,7 @@ export const Title = styled.Text`
 `;
 
 export const Subtitle = styled.Text`
+  width: 90%;
   text-align: center;
   ${({ theme }) => css`
     font-family: ${theme.fonts.main.regular};
