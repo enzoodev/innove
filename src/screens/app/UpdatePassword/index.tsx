@@ -56,8 +56,10 @@ export const UpdatePassword = () => {
 
   const onSubmit: SubmitHandler<TUpdatePasswordSchema> = useCallback(
     async data => {
-      await handleUpdatePassword({ newpass: data.password });
-      navigation.goBack();
+      const isDone = await handleUpdatePassword({ newpass: data.password });
+      if (isDone) {
+        navigation.goBack();
+      }
     },
     [handleUpdatePassword, navigation],
   );
