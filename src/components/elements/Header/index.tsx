@@ -1,8 +1,7 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { ViewProps } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { IconChevronLeft } from 'tabler-react-native/icons';
-import { useTheme } from 'styled-components/native';
+
+import { GoBackButton } from '@/components/elements/GoBackButton';
 
 import * as S from './styles';
 
@@ -13,13 +12,6 @@ type Props = ViewProps &
 
 export const Header = memo(
   ({ title, hasBackButton = false, rightComponent, ...rest }: Props) => {
-    const theme = useTheme();
-    const navigation = useNavigation();
-
-    const handleGoBack = useCallback(() => {
-      navigation.goBack();
-    }, [navigation]);
-
     return (
       <S.Container
         hasBackButton={hasBackButton}
@@ -27,16 +19,9 @@ export const Header = memo(
         {...rest}
       >
         {hasBackButton && (
-          <S.GoBackButton
-            onPress={handleGoBack}
-            rightComponent={rightComponent}
-          >
-            <IconChevronLeft
-              stroke={1.25}
-              color={theme.colors.textPrimary}
-              size={theme.iconSizes.md}
-            />
-          </S.GoBackButton>
+          <S.GoBackButtonWrapper rightComponent={rightComponent}>
+            <GoBackButton />
+          </S.GoBackButtonWrapper>
         )}
         {title && <S.Title hasBackButton={hasBackButton}>{title}</S.Title>}
         {rightComponent}

@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import styled, { css } from 'styled-components/native';
-import { BorderlessButton } from '@/components/elements/BorderlessButton';
 
 export type ContainerTypeStyleProps = {
   hasBackButton?: boolean;
@@ -51,9 +50,7 @@ export const Title = styled.Text<TitleTypeStyleProps>`
   `}
 `;
 
-export const GoBackButton = styled(
-  BorderlessButton,
-)<GoBackButtonTypeStyleProps>`
+export const GoBackButtonWrapper = styled.View<GoBackButtonTypeStyleProps>`
   ${({ theme, rightComponent }) =>
     !rightComponent &&
     css`
