@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
 import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
 import { AuthRepository } from '@/app/repositories/api/AuthRepository';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
 
 export type AuthContextDataProps = {
   auth: TAuth | null;
@@ -30,7 +29,6 @@ export const AuthContext = React.createContext<AuthContextDataProps>(
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const toast = useToast();
-  const authNavigation = useAuthNavigation();
 
   const [auth, setAuth] = useState<TAuth | null>(
     AuthStorageRepository.getAuth(),
@@ -96,7 +94,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     async (params: TRecoverAccountParams) => {
       try {
         await recoverAccountFn(params);
-        authNavigation.navigate('RecoverAccountEmailSent');
       } catch (error) {
         toast.show('Não foi possível recuperar sua conta.', {
           type: 'danger',
@@ -104,14 +101,14 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         });
       }
     },
-    [authNavigation, recoverAccountFn, toast],
+    [recoverAccountFn, toast],
   );
 
   const handleUpdatePassword = useCallback(
     async (params: TUpdatePasswordParams) => {
       try {
         await updatePasswordFn(params);
-        toast.show('Senha alterada com sucesso.', {
+        toast.show('Senha alterada com sucesso!', {
           type: 'success',
           placement: 'top',
         });
