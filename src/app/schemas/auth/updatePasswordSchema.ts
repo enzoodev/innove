@@ -17,15 +17,16 @@ export const passwordRules = [
   { regex: /.{8,}/, message: 'A senha deve ter no mínimo 8 caracteres.' },
 ];
 
-const passwordSchema = z.string().min(1, 'A senha é obrigatória.');
-
-passwordRules.forEach(rule => {
-  passwordSchema.regex(rule.regex, rule.message);
-});
-
 export const updatePasswordSchema = z
   .object({
-    password: passwordSchema,
+    password: z
+      .string()
+      .min(1, 'A senha é obrigatória.')
+      .regex(passwordRules[0].regex, passwordRules[0].message)
+      .regex(passwordRules[1].regex, passwordRules[1].message)
+      .regex(passwordRules[2].regex, passwordRules[2].message)
+      .regex(passwordRules[3].regex, passwordRules[3].message)
+      .regex(passwordRules[4].regex, passwordRules[4].message),
     passwordConfirmation: z
       .string()
       .min(1, 'A confirmação de senha é obrigatória.'),
