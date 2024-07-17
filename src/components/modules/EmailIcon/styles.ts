@@ -11,5 +11,10 @@ export const Container = styled.View`
     height: ${theme.layout[10]}px;
     border-radius: ${theme.border.radius.full}px;
     background-color: ${theme.colors.mail};
+    shadow-color: ${theme.colors.mail};
+    shadow-offset: 0px 2px;
+    shadow-opacity: 0.8;
+    shadow-radius: 3.84px;
+    elevation: 5;
   `};
 `;
