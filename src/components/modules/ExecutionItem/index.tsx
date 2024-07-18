@@ -11,9 +11,10 @@ type Props = TouchableOpacityProps & {
 
 export const ExecutionItem = memo(({ item, ...rest }: Props) => {
   const theme = useTheme();
+  const isDone = item.status === 'Finalizado';
 
   return (
-    <S.Container {...rest}>
+    <S.Container disabled={isDone} {...rest}>
       <S.IconWrapper>
         <IconHammer
           stroke={1.5}
@@ -30,11 +31,13 @@ export const ExecutionItem = memo(({ item, ...rest }: Props) => {
           </S.Execution>
         </S.InfoWrapper>
       </S.Content>
-      <IconChevronRight
-        stroke={1.25}
-        size={theme.iconSizes.md}
-        color={theme.colors.textSecondary}
-      />
+      {!isDone && (
+        <IconChevronRight
+          stroke={1.25}
+          size={theme.iconSizes.md}
+          color={theme.colors.textSecondary}
+        />
+      )}
     </S.Container>
   );
 });
