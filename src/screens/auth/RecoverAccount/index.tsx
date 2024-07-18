@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   recoverAccountSchema,
   TRecoverAccountSchema,
-} from '@/app/schemas/auth/recoverAccount';
+} from '@/app/schemas/auth/recoverAccountSchema';
 
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthNavigation } from '@/hooks/useAuthNavigation';
