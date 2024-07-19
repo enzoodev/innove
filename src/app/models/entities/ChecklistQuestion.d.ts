@@ -3,6 +3,5 @@ type TChecklistQuestion = {
   questions: Array<{
     idquestion: string;
     name: string;
-    ativo: string;
   }>;
 };
