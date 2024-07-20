@@ -11,7 +11,9 @@ export class HttpServices {
   public static registerInterceptTokenManager: RegisterInterceptTokenManager =
     null;
 
-  private static baseUrl = 'https://safety360.espertibrasil.com.br/api/';
+  private static baseUrl =
+    process.env.EXPO_PUBLIC_API_URL ??
+    'https://safety360.espertibrasil.com.br/api/';
 
   private static request = async <T>({
     url,
