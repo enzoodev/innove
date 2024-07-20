@@ -1,7 +1,7 @@
 type TChecklistDTO = {
   idchecklist: string;
-  dateRegister: string;
   name: string;
+  dateRegister?: string;
 };
 
 type TChecklist = TChecklistDTO & {
