@@ -5,9 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconCircleCheck, IconThumbDown } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { useChecklists } from '@/hooks/useChecklists';
-import { useAppNavigation } from '@/hooks/useAppNavigation';
-import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
+import { useChecklists } from '@/hooks/api/useChecklists';
+import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
 
 import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
@@ -27,6 +27,7 @@ export const ExecutionDetails = () => {
   const {
     toDoChecklists,
     doneChecklists,
+    hasDoneChecklist,
     isPending,
     isRefetching,
     refresh,
@@ -175,12 +176,14 @@ export const ExecutionDetails = () => {
             </S.ListHeader>
             <S.ListItemsWrapper>{renderDoneChecklists()}</S.ListItemsWrapper>
           </S.ListWrapper>
-          <Button
-            title="Finalizar execução"
-            onPress={handleFinishExecution}
-            isLoading={isLoadingFinishExecution}
-            isDisabled={isPending}
-          />
+          {hasDoneChecklist && (
+            <Button
+              title="Finalizar execução"
+              onPress={handleFinishExecution}
+              isLoading={isLoadingFinishExecution}
+              isDisabled={isPending}
+            />
+          )}
         </ScrollView>
       </S.Content>
     </S.Container>
