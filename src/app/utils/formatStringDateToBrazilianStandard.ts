@@ -1,8 +1,8 @@
 export const formatStringDateToBrazilianStandard = (
   dateString: string,
 ): string => {
-  if (dateString.trim().length === 0) {
-    throw new Error('Data não informada.');
+  if (!dateString || dateString.trim().length === 0) {
+    return 'Sem data';
   }
 
   const dateParts = dateString.split('-');
