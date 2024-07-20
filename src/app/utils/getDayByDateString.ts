@@ -8,7 +8,11 @@ const days = [
   'Sábado',
 ];
 
-export const getDayByDateString = (dateString: string) => {
+export const getDayByDateString = (dateString?: string) => {
+  if (!dateString) {
+    return 'Sem data';
+  }
+
   const date = new Date(dateString);
   const day = date.getDay();
   return days[day];
