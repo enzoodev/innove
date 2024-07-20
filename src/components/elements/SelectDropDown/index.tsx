@@ -8,7 +8,7 @@ import {
 } from 'tabler-react-native/icons';
 import uuid from 'react-native-uuid';
 
-import { useToggle } from '@/hooks/useToggle';
+import { useToggle } from '@/hooks/shared/useToggle';
 
 import { CollapsableContainer } from '@/components/elements/CollapsableContainer';
 

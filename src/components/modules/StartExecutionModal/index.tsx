@@ -8,9 +8,9 @@ import {
   TStartExecutionSchema,
 } from '@/app/schemas/execution/startExecution';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useLocations } from '@/hooks/useLocations';
-import { useExecution } from '@/hooks/useExecution';
+import { useAuth } from '@/hooks/api/useAuth';
+import { useLocations } from '@/hooks/api/useLocations';
+import { useExecution } from '@/hooks/api/useExecution';
 
 import { Label } from '@/components/elements/Label';
 import { Button } from '@/components/elements/Button';

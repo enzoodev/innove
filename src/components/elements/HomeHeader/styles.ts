@@ -20,12 +20,12 @@ export const Content = styled.View`
 `;
 
 export const UserTextWrapper = styled.View`
-  flex: 1;
+  width: 70%;
 `;
 
 export const UserName = styled.Text`
+  width: 100%;
   ${({ theme }) => css`
-    flex: 1;
     font-family: ${theme.fonts.main.semiBold};
     font-size: ${theme.fontSizes.sm}px;
     color: ${theme.colors.textSecondary};
@@ -34,7 +34,6 @@ export const UserName = styled.Text`
 
 export const UserNameLabel = styled.Text`
   ${({ theme }) => css`
-    flex: 1;
     font-family: ${theme.fonts.main.regular};
     font-size: ${theme.fontSizes.sm}px;
     color: ${theme.colors.textSecondary};
@@ -51,7 +50,7 @@ export const ButtonsWrapper = styled.View`
 
 export const SyncPhotosButton = styled(BorderlessButton)`
   ${({ theme }) => css`
-    padding: ${theme.layout[1]}px;
+    padding: ${theme.layout[1] * 1.25}px;
     border-radius: ${theme.border.radius.full}px;
     background-color: ${theme.colors.main};
   `};

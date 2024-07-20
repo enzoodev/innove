@@ -2,8 +2,8 @@ import { memo, useCallback } from 'react';
 import { IconSettings, IconWifi } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useAppNavigation } from '@/hooks/useAppNavigation';
+import { useAuth } from '@/hooks/api/useAuth';
+import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
 import { UserPhoto } from '@/components/elements/UserPhoto';
 

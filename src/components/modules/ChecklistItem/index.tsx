@@ -14,7 +14,7 @@ type Props = TouchableOpacityProps & {
 
 export const ChecklistItem = memo(({ item, ...rest }: Props) => {
   const theme = useTheme();
-  const [date, hour] = item.dateRegister.split(' ');
+  const [date, hour] = item.dateRegister?.split(' ') ?? [];
   const formattedDate = formatStringDateToBrazilianStandard(date);
   const day = getDayByDateString(item.dateRegister);
   const isFinished = item.status === 1;

@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Image } from 'react-native';
 
 import { PhotoFormatter } from '@/app/utils/PhotoFormatter';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/api/useAuth';
 
 type Props = {
   size: number;

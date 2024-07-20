@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import Animated from 'react-native-reanimated';
 
-import { useAnimatedKeyboardStyle } from '@/hooks/useAnimatedKeyboardStyle';
+import { useAnimatedKeyboardStyle } from '@/hooks/shared/useAnimatedKeyboardStyle';
 
 type Props = {
   children: ReactNode;
