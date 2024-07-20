@@ -5,7 +5,7 @@ import { StackActions } from '@react-navigation/native';
 import { IconCheck } from 'tabler-react-native/icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuthNavigation } from '@/hooks/shared/useAuthNavigation';
 
 import { Button } from '@/components/elements/Button';
 import { GoBackButton } from '@/components/elements/GoBackButton';

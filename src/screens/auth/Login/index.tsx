@@ -11,8 +11,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { loginSchema, TLoginSchema } from '@/app/schemas/auth/loginSchema';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuth } from '@/hooks/api/useAuth';
+import { useAuthNavigation } from '@/hooks/shared/useAuthNavigation';
 
 import { Logo } from '@/components/elements/Logo';
 import { Label } from '@/components/elements/Label';

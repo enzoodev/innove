@@ -11,8 +11,8 @@ import {
   updatePasswordSchema,
 } from '@/app/schemas/auth/updatePasswordSchema';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useAuthNavigation } from '@/hooks/useAuthNavigation';
+import { useAuth } from '@/hooks/api/useAuth';
+import { useAuthNavigation } from '@/hooks/shared/useAuthNavigation';
 
 import { Label } from '@/components/elements/Label';
 import { Button } from '@/components/elements/Button';

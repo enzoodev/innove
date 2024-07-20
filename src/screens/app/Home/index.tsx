@@ -18,10 +18,10 @@ import {
 
 import { ListSeparators } from '@/app/utils/ListSeparators';
 
-import { useToggle } from '@/hooks/useToggle';
-import { useExecution } from '@/hooks/useExecution';
-import { useAppNavigation } from '@/hooks/useAppNavigation';
-import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
+import { useToggle } from '@/hooks/shared/useToggle';
+import { useExecution } from '@/hooks/api/useExecution';
+import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
 
 import { SearchInput } from '@/components/elements/SearchInput';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';

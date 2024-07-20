@@ -4,8 +4,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IconMail, IconPhone, IconUserCircle } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useAppNavigation } from '@/hooks/useAppNavigation';
+import { useAuth } from '@/hooks/api/useAuth';
+import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
 import { Header } from '@/components/elements/Header';
 import { Button } from '@/components/elements/Button';

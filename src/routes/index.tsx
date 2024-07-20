@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/api/useAuth';
 
 import { HttpServices } from '@/app/services/HttpServices';
 
