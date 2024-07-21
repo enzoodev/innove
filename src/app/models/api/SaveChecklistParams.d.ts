@@ -1,5 +1,5 @@
 type TSaveChecklistParams = {
-  idchecklist?: string;
+  idchecklist: string;
   idexecution: string;
   answers: Array<TSaveChecklistAnswer>;
 };
