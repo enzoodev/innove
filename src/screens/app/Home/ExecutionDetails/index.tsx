@@ -7,7 +7,6 @@ import { useTheme } from 'styled-components/native';
 
 import { useChecklists } from '@/hooks/api/useChecklists';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
-import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
 
 import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
@@ -30,7 +29,6 @@ export const ExecutionDetails = () => {
     hasDoneChecklist,
     isPending,
     isRefetching,
-    refresh,
     refetch,
     handleFinishExecution,
     isLoadingFinishExecution,
@@ -45,13 +43,15 @@ export const ExecutionDetails = () => {
       navigation.navigate('Checklist', {
         checklistId: item.idchecklist,
         locationId: execution.detalhes.id,
+        clientId: execution.idclient,
+        executionId: execution.id.toString(),
       });
     },
-    [execution.detalhes.id, navigation],
+    [execution.detalhes.id, execution.id, execution.idclient, navigation],
   );
 
   const renderLoadingList = useCallback(() => {
-    return Array.from({ length: 6 }).map((_, index, array) => {
+    return Array.from({ length: 3 }).map((_, index, array) => {
       const hasSeparator = ListSeparators.getHasSeparator(index, array);
       return (
         <S.ItemWrapper key={String(index + 1)}>
@@ -143,8 +143,6 @@ export const ExecutionDetails = () => {
     theme.colors.textSecondary,
     theme.iconSizes.md,
   ]);
-
-  useRefreshOnFocus(refresh);
 
   return (
     <S.Container>
