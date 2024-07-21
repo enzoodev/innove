@@ -5,6 +5,7 @@ import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository'
 import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
 import { useAppNavigation } from '../shared/useAppNavigation';
 import { useAppQuery } from '../shared/useAppQuery';
+import { useRefreshOnFocus } from '../shared/useRefreshOnFocus';
 
 export const useChecklists = (params: TGetChecklistsParams) => {
   const toast = useToast();
@@ -50,6 +51,8 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     }
   }, [finishExecutionFn, navigation, params.idexecution, toast]);
 
+  useRefreshOnFocus(refresh);
+
   return {
     toDoChecklists: data?.toDoChecklists ?? [],
     doneChecklists: data?.doneChecklists ?? [],
@@ -57,7 +60,6 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     isLoading,
     isRefetching,
     isPending,
-    refresh,
     refetch,
     handleFinishExecution,
     isLoadingFinishExecution,
