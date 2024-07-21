@@ -21,7 +21,6 @@ import { ListSeparators } from '@/app/utils/ListSeparators';
 import { useToggle } from '@/hooks/shared/useToggle';
 import { useExecution } from '@/hooks/api/useExecution';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
-import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
 
 import { SearchInput } from '@/components/elements/SearchInput';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
@@ -41,8 +40,7 @@ export const Home = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
-  const { executions, isRefetching, isPending, refresh, refetch } =
-    useExecution();
+  const { executions, isRefetching, isPending, refetch } = useExecution();
 
   const filteredTodoExecutions = useMemo(
     () =>
@@ -202,8 +200,6 @@ export const Home = () => {
     theme.colors.textSecondary,
     theme.iconSizes.md,
   ]);
-
-  useRefreshOnFocus(refresh);
 
   return (
     <S.Container>
