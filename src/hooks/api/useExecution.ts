@@ -4,6 +4,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
 import { useAppNavigation } from '../shared/useAppNavigation';
 import { useAppQuery } from '../shared/useAppQuery';
+import { useRefreshOnFocus } from '../shared/useRefreshOnFocus';
 
 export const useExecution = () => {
   const toast = useToast();
@@ -47,6 +48,8 @@ export const useExecution = () => {
     [navigation, refresh, startExecutionFn, toast],
   );
 
+  useRefreshOnFocus(refresh);
+
   return {
     executions: {
       todo: data?.['em andamento'] ?? [],
@@ -55,7 +58,6 @@ export const useExecution = () => {
     isLoading,
     isRefetching,
     isPending,
-    refresh,
     refetch,
     handleStartExecution,
     isLoadingStartExecution,
