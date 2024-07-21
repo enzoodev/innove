@@ -5,6 +5,8 @@ type TExecutionDetailsRouteParams = {
 type TChecklistRouteParams = {
   checklistId: string;
   locationId: string;
+  clientId: number;
+  executionId: string;
 };
 
 type AppStackParamsList = {
