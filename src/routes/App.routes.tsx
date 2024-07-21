@@ -3,6 +3,7 @@ import { Home } from '@/screens/app/Home';
 import { Settings } from '@/screens/app/Settings';
 import { ExecutionDetails } from '@/screens/app/Home/ExecutionDetails';
 import { UpdatePassword } from '@/screens/app/UpdatePassword';
+import { Checklist } from '@/screens/app/Home/ExecutionDetails/Checklist';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -13,6 +14,7 @@ export const AppRoutes = () => {
       <Screen name="UpdatePassword" component={UpdatePassword} />
       <Screen name="Settings" component={Settings} />
       <Screen name="ExecutionDetails" component={ExecutionDetails} />
+      <Screen name="Checklist" component={Checklist} />
     </Navigator>
   );
 };
