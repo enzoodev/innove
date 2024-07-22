@@ -87,6 +87,15 @@ export const useFormChecklist = ({
 
   const sections = watch('sections');
 
+  const handleOpenSection = useCallback(
+    (index: number) => {
+      setValue(`sections.${index}.isOpen`, !sections[index].isOpen, {
+        shouldDirty: true,
+      });
+    },
+    [sections, setValue],
+  );
+
   const handleAddPhoto = useCallback(
     ({ sectionIndex, questionIndex, photoUri }: AddPhotoParams) => {
       const question = sections[sectionIndex].questions[questionIndex];
@@ -145,7 +154,8 @@ export const useFormChecklist = ({
   const handleFetchQuestions = useCallback(async () => {
     try {
       const sections = await getChecklistQuestionsFn({ idchecklist, idlocal });
-      const formattedSections = sections.map(item => ({
+      const formattedSections = sections.map((item, index) => ({
+        isOpen: index === 0,
         subtitle: item.subtitle,
         questions: item.questions.map(question => ({
           name: question.name,
@@ -231,6 +241,7 @@ export const useFormChecklist = ({
     control,
     errors,
     handleSaveChecklist,
+    handleOpenSection,
     handleAddPhoto,
     handleDeletePhoto,
     handleAddComplementPhoto,
