@@ -9,12 +9,17 @@ type TChecklistRouteParams = {
   executionId: string;
 };
 
+type TTakeChecklistPhotoRouteParams = {
+  setPhoto: (uri: string) => Promise<void>;
+};
+
 type AppStackParamsList = {
   Home: undefined;
   Settings: undefined;
   UpdatePassword: undefined;
   ExecutionDetails: TExecutionDetailsRouteParams;
   Checklist: TChecklistRouteParams;
+  TakeChecklistPhoto: TTakeChecklistPhotoRouteParams;
 };
 
 type AuthStackParamsList = {
