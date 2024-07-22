@@ -52,8 +52,10 @@ export const theme = {
     errorContrast: '#FFFFFF',
     toastBgSuccess: '#32B636',
     toastBgError: '#B83131',
-    toastTextSuccess: '#fff',
-    toastTextError: '#fff',
+    toastTextSuccess: '#FFFFFF',
+    toastTextError: '#FFFFFF',
+    imageWrapperBackgroundColor: '#F7F7F8',
+    imageWrapperBorderColor: '#D9D8DA',
   },
 
   fonts: {
