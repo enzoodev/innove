@@ -6,5 +6,4 @@ export const Container = styled.View`
 
 export const Content = styled.View`
   flex: 1;
-  margin: 0 ${({ theme }) => theme.layout[4]}px;
 `;
