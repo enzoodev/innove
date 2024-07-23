@@ -28,6 +28,10 @@ type SetPhotosParams = {
   questionIndex: number;
 };
 
+type TRespondParams = SetPhotosParams & {
+  answerId: string;
+};
+
 type AddPhotoParams = SetPhotosParams & {
   photoUri: string;
 };
@@ -86,6 +90,16 @@ export const useFormChecklist = ({
   });
 
   const sections = watch('sections');
+
+  const handleRespond = useCallback(
+    ({ sectionIndex, questionIndex, answerId }: TRespondParams) => {
+      setValue(
+        `sections.${sectionIndex}.questions.${questionIndex}.idanswerstype`,
+        answerId,
+      );
+    },
+    [setValue],
+  );
 
   const handleOpenSection = useCallback(
     (index: number) => {
@@ -241,6 +255,7 @@ export const useFormChecklist = ({
     control,
     errors,
     handleSaveChecklist,
+    handleRespond,
     handleOpenSection,
     handleAddPhoto,
     handleDeletePhoto,
