@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export class UrlBuilder {
-  public static build = (baseURL: string, url: string, params?: unknown) => {
+  public static readonly build = (
+    baseURL: string,
+    url: string,
+    params?: unknown,
+  ) => {
     const fullUrl = new URL(url, baseURL);
 
     if (params) {

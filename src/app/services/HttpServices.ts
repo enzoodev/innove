@@ -50,7 +50,7 @@ export class HttpServices {
     return responseData.data;
   };
 
-  public static get = async <T = unknown>(
+  public static readonly get = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
     return this.request<T>({
@@ -59,7 +59,7 @@ export class HttpServices {
     });
   };
 
-  public static post = async <T = unknown>(
+  public static readonly post = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
     return this.request<T>({
@@ -68,7 +68,7 @@ export class HttpServices {
     });
   };
 
-  public static put = async <T = unknown>(
+  public static readonly put = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
     return this.request<T>({
@@ -77,7 +77,7 @@ export class HttpServices {
     });
   };
 
-  public static delete = async <T = unknown>(
+  public static readonly delete = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
     return this.request<T>({
@@ -86,7 +86,7 @@ export class HttpServices {
     });
   };
 
-  public static patch = async <T = unknown>(
+  public static readonly patch = async <T = unknown>(
     params: TRequestConfig,
   ): Promise<T> => {
     return this.request<T>({
