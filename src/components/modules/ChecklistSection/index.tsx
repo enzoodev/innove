@@ -1,9 +1,13 @@
 import { memo } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
+import { Control, FieldErrors } from 'react-hook-form';
 import { IconChevronDown } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { TSaveChecklistSectionSchema } from '@/app/schemas/checklist/saveChecklistSchema';
+import {
+  TSaveChecklistSchema,
+  TSaveChecklistSectionSchema,
+} from '@/app/schemas/checklist/saveChecklistSchema';
 
 import { CollapsableContainer } from '@/components/elements/CollapsableContainer';
 import { IconButton } from '@/components/elements/IconButton';
@@ -12,14 +16,29 @@ import { Question } from '@/components/modules/Question';
 import * as S from './styles';
 
 type Props = {
+  control: Control<TSaveChecklistSchema>;
+  errors: FieldErrors<TSaveChecklistSchema>;
+  index: number;
   section: TSaveChecklistSectionSchema;
   answers: TAnswerType[];
   onOpenSection: () => void;
   onRespond: (questionIndex: number, answer: string) => void;
+  onSetPhoto: (questionIndex: number, photoUri: string) => void;
+  onDeletePhoto: (questionIndex: number, photoIndex: number) => void;
 };
 
 export const ChecklistSection = memo(
-  ({ section, answers, onOpenSection, onRespond }: Props) => {
+  ({
+    control,
+    errors,
+    index,
+    section,
+    answers,
+    onOpenSection,
+    onRespond,
+    onSetPhoto,
+    onDeletePhoto,
+  }: Props) => {
     const theme = useTheme();
 
     return (
@@ -43,13 +62,20 @@ export const ChecklistSection = memo(
         </TouchableWithoutFeedback>
         <CollapsableContainer isExpanded={section.isOpen}>
           <S.QuestionsContainer>
-            {section.questions.map((question, index) => (
+            {section.questions.map((question, questionIndex) => (
               <Question
                 key={question.idquestion}
-                name={question.name}
-                response={question.idanswerstype}
+                control={control}
+                errors={errors}
+                sectionIndex={index}
+                questionIndex={questionIndex}
+                question={question}
                 answers={answers}
-                onRespond={answer => onRespond(index, answer)}
+                onRespond={answer => onRespond(questionIndex, answer)}
+                onSetPhoto={photoUri => onSetPhoto(questionIndex, photoUri)}
+                onDeletePhoto={photoIndex =>
+                  onDeletePhoto(questionIndex, photoIndex)
+                }
               />
             ))}
           </S.QuestionsContainer>
