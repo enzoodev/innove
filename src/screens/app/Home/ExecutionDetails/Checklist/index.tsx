@@ -31,9 +31,9 @@ export const Checklist = () => {
     handleSaveChecklist,
     handleRespond,
     handleOpenSection,
-    handleAddPhoto,
+    handleSetPhoto,
     handleDeletePhoto,
-    handleAddComplementPhoto,
+    handleSetComplementPhoto,
     handleDeleteComplementPhoto,
   } = useFormChecklist({
     idclient: clientId,
@@ -50,7 +50,10 @@ export const Checklist = () => {
     return sections.map((section, sectionIndex) => (
       <ChecklistSection
         key={(sectionIndex + 1).toString()}
+        control={control}
+        errors={errors}
         section={section}
+        index={sectionIndex}
         answers={answersTypes}
         onOpenSection={() => handleOpenSection(sectionIndex)}
         onRespond={(questionIndex, answerId) =>
@@ -60,9 +63,33 @@ export const Checklist = () => {
             answerId,
           })
         }
+        onSetPhoto={(questionIndex, photoUri) =>
+          handleSetPhoto({
+            sectionIndex,
+            questionIndex,
+            photoUri,
+          })
+        }
+        onDeletePhoto={(questionIndex, photoIndex) =>
+          handleDeletePhoto({
+            sectionIndex,
+            questionIndex,
+            photoIndex,
+          })
+        }
       />
     ));
-  }, [answersTypes, handleOpenSection, handleRespond, isLoading, sections]);
+  }, [
+    answersTypes,
+    control,
+    errors,
+    handleDeletePhoto,
+    handleOpenSection,
+    handleRespond,
+    handleSetPhoto,
+    isLoading,
+    sections,
+  ]);
 
   return (
     <S.Container>
