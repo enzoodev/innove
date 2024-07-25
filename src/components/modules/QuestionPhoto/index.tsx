@@ -13,15 +13,15 @@ import { IconButton } from '@/components/elements/IconButton';
 import * as S from './styles';
 
 type Props = S.TImageWrapperProps & {
-  uri: string;
+  uri: string | null;
   index: number;
-  setPhoto: (uri: string) => Promise<void>;
+  setPhoto: (uri: string) => void;
   deletePhoto: () => void;
 };
 
 export const QuestionPhoto = memo(
   ({ uri, index, isLastItem, setPhoto, deletePhoto }: Props) => {
-    const hasPhoto = uri.trim().length > 0;
+    const hasPhoto = !!uri;
     const theme = useTheme();
     const navigation = useAppNavigation();
 
