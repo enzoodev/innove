@@ -32,11 +32,11 @@ type TRespondParams = SetPhotosParams & {
   answerId: string;
 };
 
-type AddPhotoParams = SetPhotosParams & {
+export type SetPhotoParams = SetPhotosParams & {
   photoUri: string;
 };
 
-type DeletePhotoParams = SetPhotosParams & {
+export type DeletePhotoParams = SetPhotosParams & {
   photoIndex: number;
 };
 
@@ -66,6 +66,18 @@ export const useFormChecklist = ({
       mutationFn: ChecklistRepository.saveChecklist,
     });
 
+  const generateInitialPhotosState = useCallback(
+    (questionId: string | undefined, length = 5) => {
+      return Array.from({ length }, () => ({
+        executionId,
+        checklistId: idchecklist,
+        questionId,
+        photoUri: null,
+      }));
+    },
+    [executionId, idchecklist],
+  );
+
   const {
     control,
     handleSubmit,
@@ -76,7 +88,7 @@ export const useFormChecklist = ({
     resolver: zodResolver(saveChecklistSchema),
     defaultValues: {
       sections: [],
-      complementPhotos: [],
+      complementPhotos: generateInitialPhotosState(undefined, 10),
     },
   });
 
@@ -110,8 +122,8 @@ export const useFormChecklist = ({
     [sections, setValue],
   );
 
-  const handleAddPhoto = useCallback(
-    ({ sectionIndex, questionIndex, photoUri }: AddPhotoParams) => {
+  const handleSetPhoto = useCallback(
+    ({ sectionIndex, questionIndex, photoUri }: SetPhotoParams) => {
       const question = sections[sectionIndex].questions[questionIndex];
 
       setValue(`sections.${sectionIndex}.questions.${questionIndex}.photos`, [
@@ -138,7 +150,7 @@ export const useFormChecklist = ({
     [sections, setValue],
   );
 
-  const handleAddComplementPhoto = useCallback(
+  const handleSetComplementPhoto = useCallback(
     (photoUri: string) => {
       addComplementPhoto({
         executionId,
@@ -158,10 +170,13 @@ export const useFormChecklist = ({
 
   const formatPhotosToSend = useCallback(
     (photos: Array<TSaveChecklistPhotoSchema>): Array<TChecklistStoragePhoto> =>
-      photos.map((item, index) => ({
-        ...item,
-        counter: index,
-      })),
+      photos
+        .filter(item => !!item.photoUri)
+        .map((item, index) => ({
+          ...item,
+          counter: index + 1,
+          photoUri: item.photoUri as string,
+        })),
     [],
   );
 
@@ -175,7 +190,7 @@ export const useFormChecklist = ({
           name: question.name,
           idquestion: question.idquestion,
           idanswerstype: '',
-          photos: [],
+          photos: generateInitialPhotosState(question.idquestion),
         })),
       }));
 
@@ -186,7 +201,14 @@ export const useFormChecklist = ({
         placement: 'top',
       });
     }
-  }, [getChecklistQuestionsFn, idchecklist, idlocal, setValue, toast]);
+  }, [
+    generateInitialPhotosState,
+    getChecklistQuestionsFn,
+    idchecklist,
+    idlocal,
+    setValue,
+    toast,
+  ]);
 
   const onSubmit: SubmitHandler<TSaveChecklistSchema> = useCallback(
     async data => {
@@ -257,9 +279,9 @@ export const useFormChecklist = ({
     handleSaveChecklist,
     handleRespond,
     handleOpenSection,
-    handleAddPhoto,
+    handleSetPhoto,
     handleDeletePhoto,
-    handleAddComplementPhoto,
+    handleSetComplementPhoto,
     handleDeleteComplementPhoto,
   };
 };
