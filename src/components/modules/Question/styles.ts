@@ -1,8 +1,11 @@
+import { Dimensions } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 type ResponseTypeStyleProps = {
   isSelected: boolean;
 };
+
+const { width } = Dimensions.get('window');
 
 export const Container = styled.View`
   ${({ theme }) => css`
@@ -53,4 +56,12 @@ export const ResponseButton = styled.TouchableOpacity<ResponseTypeStyleProps>`
       ? theme.colors.textSecondary
       : theme.colors.textTertiary};
   `};
+`;
+
+export const JustificationsContainer = styled.View``;
+
+export const PhotosWrapper = styled.ScrollView`
+  width: ${width}px;
+  height: ${({ theme }) => theme.layout[72]}px;
+  align-self: center;
 `;
