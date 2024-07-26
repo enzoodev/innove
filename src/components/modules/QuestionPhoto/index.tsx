@@ -9,7 +9,10 @@ import { useTheme } from 'styled-components/native';
 
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
+import { photosQuantityPerQuestion } from '@/app/utils/constants/photosQuantityPerQuestion';
+
 import { IconButton } from '@/components/elements/IconButton';
+
 import * as S from './styles';
 
 type Props = S.TImageWrapperProps & {
@@ -34,7 +37,9 @@ export const QuestionPhoto = memo(
     return (
       <S.ImageWrapper isLastItem={isLastItem}>
         <S.ImageHeader>
-          <S.ImageHeaderTitle>Foto {index + 1}/10</S.ImageHeaderTitle>
+          <S.ImageHeaderTitle>
+            Foto {index + 1}/{photosQuantityPerQuestion}
+          </S.ImageHeaderTitle>
           <S.ImageHeaderButtonsWrapper>
             <IconButton
               onPress={handleTakePhoto}
@@ -48,6 +53,7 @@ export const QuestionPhoto = memo(
             />
             <IconButton
               disabled={!hasPhoto}
+              isDisabled={!hasPhoto}
               onPress={deletePhoto}
               Icon={() => (
                 <IconTrash
@@ -71,7 +77,7 @@ export const QuestionPhoto = memo(
           <TouchableWithoutFeedback onPress={handleTakePhoto}>
             <S.ImageEmptyWrapper>
               <IconCameraOff
-                stroke={1.5}
+                stroke={1.25}
                 size={theme.layout[32]}
                 color={theme.colors.textTertiary}
               />
