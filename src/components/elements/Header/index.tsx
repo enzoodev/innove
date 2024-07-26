@@ -8,10 +8,17 @@ import * as S from './styles';
 type Props = ViewProps &
   S.ContainerTypeStyleProps & {
     title?: string;
+    backButtonLeftSpace?: number;
   };
 
 export const Header = memo(
-  ({ title, hasBackButton = false, rightComponent, ...rest }: Props) => {
+  ({
+    title,
+    hasBackButton = false,
+    rightComponent,
+    backButtonLeftSpace = 0,
+    ...rest
+  }: Props) => {
     return (
       <S.Container
         hasBackButton={hasBackButton}
@@ -19,7 +26,10 @@ export const Header = memo(
         {...rest}
       >
         {hasBackButton && (
-          <S.GoBackButtonWrapper rightComponent={rightComponent}>
+          <S.GoBackButtonWrapper
+            rightComponent={rightComponent}
+            backButtonLeftSpace={backButtonLeftSpace}
+          >
             <GoBackButton />
           </S.GoBackButtonWrapper>
         )}
