@@ -17,6 +17,7 @@ import {
 
 import { useAppQuery } from '@/hooks/shared/useAppQuery';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+import { photosQuantityPerQuestion } from '@/app/utils/constants/photosQuantityPerQuestion';
 
 type UseFormChecklistParams = TGetChecklistQuestionsParams &
   TGetAnswersTypesParams & {
@@ -30,6 +31,10 @@ type SetPhotosParams = {
 
 type TRespondParams = SetPhotosParams & {
   answerId: string;
+};
+
+type TClassificateParams = SetPhotosParams & {
+  classificationId: string;
 };
 
 export type SetPhotoParams = SetPhotosParams & {
@@ -67,7 +72,7 @@ export const useFormChecklist = ({
     });
 
   const generateInitialPhotosState = useCallback(
-    (questionId: string | undefined, length = 5) => {
+    (questionId: string | undefined, length = photosQuantityPerQuestion) => {
       return Array.from({ length }, () => ({
         executionId,
         checklistId: idchecklist,
@@ -113,10 +118,26 @@ export const useFormChecklist = ({
     [setValue],
   );
 
+  const handleClassificate = useCallback(
+    ({
+      sectionIndex,
+      questionIndex,
+      classificationId,
+    }: TClassificateParams) => {
+      setValue(
+        `sections.${sectionIndex}.questions.${questionIndex}.idclassification`,
+        classificationId,
+      );
+    },
+    [setValue],
+  );
+
   const handleOpenSection = useCallback(
     (index: number) => {
-      setValue(`sections.${index}.isOpen`, !sections[index].isOpen, {
-        shouldDirty: true,
+      sections.forEach((_, sectionIndex) => {
+        setValue(`sections.${sectionIndex}.isOpen`, index === sectionIndex, {
+          shouldDirty: true,
+        });
       });
     },
     [sections, setValue],
@@ -278,6 +299,7 @@ export const useFormChecklist = ({
     errors,
     handleSaveChecklist,
     handleRespond,
+    handleClassificate,
     handleOpenSection,
     handleSetPhoto,
     handleDeletePhoto,
