@@ -10,7 +10,7 @@ const photoSchema = z.object({
 const questionSchema = z
   .object({
     idquestion: z.string(),
-    idanswerstype: z.string(),
+    idanswerstype: z.string().min(1, 'Selecione uma resposta.'),
     idclassification: z.string().optional(),
     comments: z.string().optional(),
     name: z.string(),
@@ -18,7 +18,20 @@ const questionSchema = z
   })
   .refine(
     data => {
-      if (data.idanswerstype === '1') {
+      if (data.idanswerstype === '2') {
+        return data.photos.some(item => !!item.photoUri);
+      }
+      return true;
+    },
+    {
+      message:
+        'Adicione pelo menos uma foto quando a resposta for não conforme.',
+      path: ['photos'],
+    },
+  )
+  .refine(
+    data => {
+      if (data.idanswerstype === '2') {
         return data.idclassification !== undefined;
       }
       return true;
@@ -31,14 +44,14 @@ const questionSchema = z
   )
   .refine(
     data => {
-      if (data.idanswerstype === '1') {
+      if (data.idanswerstype === '2') {
         return data.comments !== undefined;
       }
       return true;
     },
     {
       message:
-        'Escreva um comentário para a questão quando a resposta for não conforme.',
+        'Escreva uma justificativa para a questão quando a resposta for não conforme.',
       path: ['comments'],
     },
   );
@@ -51,7 +64,10 @@ export const sectionSchema = z.object({
 
 export const saveChecklistSchema = z.object({
   sections: z.array(sectionSchema),
-  complementPhotos: z.array(photoSchema),
+  complement: z.object({
+    isOpen: z.boolean(),
+    photos: z.array(photoSchema),
+  }),
 });
 
 export type TSaveChecklistPhotoSchema = TypeOf<typeof photoSchema>;
