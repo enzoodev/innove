@@ -24,6 +24,7 @@ export const ImageHeader = styled.View`
   align-items: center;
   justify-content: space-between;
   ${({ theme }) => css`
+    gap: ${theme.layout[4]}px;
     padding: ${theme.layout[1]}px ${theme.layout[4]}px;
     border-bottom-width: ${theme.border.width.md}px;
     border-color: ${theme.colors.imageWrapperBorderColor};
