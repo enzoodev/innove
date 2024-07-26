@@ -37,7 +37,7 @@ type TClassificateParams = SetPhotosParams & {
   classificationId: string;
 };
 
-export type SetComplementPhoto = {
+export type SetComplementPhotoParams = {
   photoUri: string;
   photoIndex: number;
 };
@@ -46,7 +46,7 @@ export type DeleteComplementPhotoParams = {
   photoIndex: number;
 };
 
-export type SetPhotoParams = SetComplementPhoto & SetPhotosParams;
+export type SetPhotoParams = SetComplementPhotoParams & SetPhotosParams;
 
 export type DeletePhotoParams = DeleteComplementPhotoParams & SetPhotosParams;
 
@@ -180,7 +180,7 @@ export const useFormChecklist = ({
   );
 
   const handleSetComplementPhoto = useCallback(
-    ({ photoUri, photoIndex }: SetComplementPhoto) => {
+    ({ photoUri, photoIndex }: SetComplementPhotoParams) => {
       setValue(`complement.photos.${photoIndex}.photoUri`, photoUri);
     },
     [setValue],
