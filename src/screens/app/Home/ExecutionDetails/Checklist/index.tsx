@@ -30,6 +30,7 @@ export const Checklist = () => {
     errors,
     handleSaveChecklist,
     handleRespond,
+    handleClassificate,
     handleOpenSection,
     handleSetPhoto,
     handleDeletePhoto,
@@ -63,6 +64,13 @@ export const Checklist = () => {
             answerId,
           })
         }
+        onClassificate={(questionIndex, classificationId) =>
+          handleClassificate({
+            sectionIndex,
+            questionIndex,
+            classificationId,
+          })
+        }
         onSetPhoto={(questionIndex, photoUri) =>
           handleSetPhoto({
             sectionIndex,
@@ -83,6 +91,7 @@ export const Checklist = () => {
     answersTypes,
     control,
     errors,
+    handleClassificate,
     handleDeletePhoto,
     handleOpenSection,
     handleRespond,
@@ -94,20 +103,27 @@ export const Checklist = () => {
   return (
     <S.Container>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: theme.layout[4] + insets.bottom,
         }}
       >
         <AnimatedKeyboardWrapper>
           <S.Content>
-            <Header hasBackButton title="Checklist" />
+            <Header
+              title="Checklist"
+              hasBackButton
+              backButtonLeftSpace={theme.layout[4]}
+            />
             {renderSections()}
             {!isLoading && (
-              <Button
-                title="Finalizar Checklist"
-                onPress={handleSaveChecklist}
-                isLoading={isLoadingSaveChecklist}
-              />
+              <S.ButtonWrapper>
+                <Button
+                  title="Finalizar Checklist"
+                  onPress={handleSaveChecklist}
+                  isLoading={isLoadingSaveChecklist}
+                />
+              </S.ButtonWrapper>
             )}
           </S.Content>
         </AnimatedKeyboardWrapper>
