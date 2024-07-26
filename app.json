@@ -36,6 +36,12 @@
             "./src/assets/fonts/Inter-Regular.ttf"
           ]
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permita que o Innove App acesse a câmera"
+        }
       ]
     ]
   }
