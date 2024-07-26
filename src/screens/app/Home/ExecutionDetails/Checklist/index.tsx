@@ -23,7 +23,7 @@ export const Checklist = () => {
   const {
     sections,
     answersTypes,
-    complementPhotos,
+    complement,
     isLoading,
     isLoadingSaveChecklist,
     control,
@@ -71,11 +71,12 @@ export const Checklist = () => {
             classificationId,
           })
         }
-        onSetPhoto={(questionIndex, photoUri) =>
+        onSetPhoto={(questionIndex, photoUri, photoIndex) =>
           handleSetPhoto({
             sectionIndex,
             questionIndex,
             photoUri,
+            photoIndex,
           })
         }
         onDeletePhoto={(questionIndex, photoIndex) =>
