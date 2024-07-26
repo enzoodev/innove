@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
@@ -17,7 +17,7 @@ import {
 
 import { useAppQuery } from '@/hooks/shared/useAppQuery';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
-import { photosQuantityPerQuestion } from '@/app/utils/constants/photosQuantityPerQuestion';
+import { photosQuantityPerSection } from '@/app/utils/constants/photosQuantityPerSection';
 
 type UseFormChecklistParams = TGetChecklistQuestionsParams &
   TGetAnswersTypesParams & {
@@ -37,13 +37,18 @@ type TClassificateParams = SetPhotosParams & {
   classificationId: string;
 };
 
-export type SetPhotoParams = SetPhotosParams & {
+export type SetComplementPhoto = {
   photoUri: string;
-};
-
-export type DeletePhotoParams = SetPhotosParams & {
   photoIndex: number;
 };
+
+export type DeleteComplementPhotoParams = {
+  photoIndex: number;
+};
+
+export type SetPhotoParams = SetComplementPhoto & SetPhotosParams;
+
+export type DeletePhotoParams = DeleteComplementPhotoParams & SetPhotosParams;
 
 export const useFormChecklist = ({
   idclient,
@@ -72,7 +77,10 @@ export const useFormChecklist = ({
     });
 
   const generateInitialPhotosState = useCallback(
-    (questionId: string | undefined, length = photosQuantityPerQuestion) => {
+    (
+      questionId: string | undefined,
+      length = photosQuantityPerSection.question,
+    ) => {
       return Array.from({ length }, () => ({
         executionId,
         checklistId: idchecklist,
@@ -93,20 +101,18 @@ export const useFormChecklist = ({
     resolver: zodResolver(saveChecklistSchema),
     defaultValues: {
       sections: [],
-      complementPhotos: generateInitialPhotosState(undefined, 10),
+      complement: {
+        isOpen: false,
+        photos: generateInitialPhotosState(
+          undefined,
+          photosQuantityPerSection.complement,
+        ),
+      },
     },
   });
 
-  const {
-    fields: complementPhotos,
-    append: addComplementPhoto,
-    remove: deleteComplementPhoto,
-  } = useFieldArray({
-    control,
-    name: 'complementPhotos',
-  });
-
   const sections = watch('sections');
+  const complement = watch('complement');
 
   const handleRespond = useCallback(
     ({ sectionIndex, questionIndex, answerId }: TRespondParams) => {
@@ -139,54 +145,52 @@ export const useFormChecklist = ({
           shouldDirty: true,
         });
       });
+      setValue('complement.isOpen', false);
     },
     [sections, setValue],
   );
 
-  const handleSetPhoto = useCallback(
-    ({ sectionIndex, questionIndex, photoUri }: SetPhotoParams) => {
-      const question = sections[sectionIndex].questions[questionIndex];
+  const handleOpenComplementSection = useCallback(() => {
+    setValue('complement.isOpen', true);
+    sections.forEach((_, sectionIndex) => {
+      setValue(`sections.${sectionIndex}.isOpen`, false, {
+        shouldDirty: true,
+      });
+    });
+  }, [sections, setValue]);
 
-      setValue(`sections.${sectionIndex}.questions.${questionIndex}.photos`, [
-        ...question.photos,
-        {
-          executionId,
-          checklistId: idchecklist,
-          questionId: question.idquestion,
-          photoUri,
-        },
-      ]);
+  const handleSetPhoto = useCallback(
+    ({ sectionIndex, questionIndex, photoUri, photoIndex }: SetPhotoParams) => {
+      setValue(
+        `sections.${sectionIndex}.questions.${questionIndex}.photos.${photoIndex}.photoUri`,
+        photoUri,
+      );
     },
-    [executionId, idchecklist, sections, setValue],
+    [setValue],
   );
 
   const handleDeletePhoto = useCallback(
     ({ sectionIndex, questionIndex, photoIndex }: DeletePhotoParams) => {
-      const question = sections[sectionIndex].questions[questionIndex];
       setValue(
-        `sections.${sectionIndex}.questions.${questionIndex}.photos`,
-        question.photos.filter((_, index) => index !== photoIndex),
+        `sections.${sectionIndex}.questions.${questionIndex}.photos.${photoIndex}.photoUri`,
+        null,
       );
     },
-    [sections, setValue],
+    [setValue],
   );
 
   const handleSetComplementPhoto = useCallback(
-    (photoUri: string) => {
-      addComplementPhoto({
-        executionId,
-        checklistId: idchecklist,
-        photoUri,
-      });
+    ({ photoUri, photoIndex }: SetComplementPhoto) => {
+      setValue(`complement.photos.${photoIndex}.photoUri`, photoUri);
     },
-    [addComplementPhoto, executionId, idchecklist],
+    [setValue],
   );
 
   const handleDeleteComplementPhoto = useCallback(
-    (photoIndex: number) => {
-      deleteComplementPhoto(photoIndex);
+    ({ photoIndex }: DeleteComplementPhotoParams) => {
+      setValue(`complement.photos.${photoIndex}.photoUri`, null);
     },
-    [deleteComplementPhoto],
+    [setValue],
   );
 
   const formatPhotosToSend = useCallback(
@@ -233,53 +237,47 @@ export const useFormChecklist = ({
 
   const onSubmit: SubmitHandler<TSaveChecklistSchema> = useCallback(
     async data => {
-      try {
-        await saveChecklistFn({
-          idchecklist,
-          idexecution: executionId,
-          answers: data.sections.flatMap(section =>
-            section.questions.map(question => ({
-              idquestion: question.idquestion,
-              idanswerstype: question.idanswerstype,
-              idclassification: question.idclassification,
-              comments: question.comments,
-            })),
-          ),
-        });
+      console.log(data);
+      // try {
+      //   await saveChecklistFn({
+      //     idchecklist,
+      //     idexecution: executionId,
+      //     answers: data.sections.flatMap(section =>
+      //       section.questions.map(question => ({
+      //         idquestion: question.idquestion,
+      //         idanswerstype: question.idanswerstype,
+      //         idclassification: question.idclassification,
+      //         comments: question.comments,
+      //       })),
+      //     ),
+      //   });
 
-        data.sections.forEach(section => {
-          section.questions.forEach(question => {
-            formatPhotosToSend(question.photos).forEach(photo => {
-              ChecklistPhotosStorageRepository.savePhoto(photo);
-            });
-          });
-        });
+      //   data.sections.forEach(section => {
+      //     section.questions.forEach(question => {
+      //       formatPhotosToSend(question.photos).forEach(photo => {
+      //         ChecklistPhotosStorageRepository.savePhoto(photo);
+      //       });
+      //     });
+      //   });
 
-        formatPhotosToSend(data.complementPhotos).forEach(photo => {
-          ChecklistPhotosStorageRepository.savePhoto(photo);
-        });
+      //   formatPhotosToSend(data.complement).forEach(photo => {
+      //     ChecklistPhotosStorageRepository.savePhoto(photo);
+      //   });
 
-        navigation.goBack();
+      //   navigation.goBack();
 
-        toast.show('Checklist finalizado com sucesso!', {
-          type: 'success',
-          placement: 'top',
-        });
-      } catch (error) {
-        toast.show('Não foi possível finalizar o checklist.', {
-          type: 'danger',
-          placement: 'top',
-        });
-      }
+      //   toast.show('Checklist finalizado com sucesso!', {
+      //     type: 'success',
+      //     placement: 'top',
+      //   });
+      // } catch (error) {
+      //   toast.show('Não foi possível finalizar o checklist.', {
+      //     type: 'danger',
+      //     placement: 'top',
+      //   });
+      // }
     },
-    [
-      executionId,
-      formatPhotosToSend,
-      idchecklist,
-      navigation,
-      saveChecklistFn,
-      toast,
-    ],
+    [],
   );
 
   const handleSaveChecklist = handleSubmit(onSubmit);
@@ -292,7 +290,7 @@ export const useFormChecklist = ({
   return {
     sections,
     answersTypes: answersTypes ?? [],
-    complementPhotos,
+    complement,
     isLoading: isLoadingSections || isLoadingAnswersTypes,
     isLoadingSaveChecklist,
     control,
@@ -301,6 +299,7 @@ export const useFormChecklist = ({
     handleRespond,
     handleClassificate,
     handleOpenSection,
+    handleOpenComplementSection,
     handleSetPhoto,
     handleDeletePhoto,
     handleSetComplementPhoto,
