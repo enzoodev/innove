@@ -23,6 +23,7 @@ type Props = {
   answers: TAnswerType[];
   onOpenSection: () => void;
   onRespond: (questionIndex: number, answer: string) => void;
+  onClassificate: (questionIndex: number, classification: string) => void;
   onSetPhoto: (questionIndex: number, photoUri: string) => void;
   onDeletePhoto: (questionIndex: number, photoIndex: number) => void;
 };
@@ -36,6 +37,7 @@ export const ChecklistSection = memo(
     answers,
     onOpenSection,
     onRespond,
+    onClassificate,
     onSetPhoto,
     onDeletePhoto,
   }: Props) => {
@@ -43,9 +45,12 @@ export const ChecklistSection = memo(
 
     return (
       <S.Container isOpen={section.isOpen}>
-        <TouchableWithoutFeedback onPress={onOpenSection}>
-          <S.Header>
-            <S.Title>{section.subtitle}</S.Title>
+        <TouchableWithoutFeedback
+          onPress={onOpenSection}
+          disabled={section.isOpen}
+        >
+          <S.Header isOpen={section.isOpen}>
+            <S.Title isOpen={section.isOpen}>{section.subtitle}</S.Title>
             {!section.isOpen && (
               <IconButton
                 onPress={onOpenSection}
@@ -72,6 +77,9 @@ export const ChecklistSection = memo(
                 question={question}
                 answers={answers}
                 onRespond={answer => onRespond(questionIndex, answer)}
+                onClassificate={classification =>
+                  onClassificate(questionIndex, classification)
+                }
                 onSetPhoto={photoUri => onSetPhoto(questionIndex, photoUri)}
                 onDeletePhoto={photoIndex =>
                   onDeletePhoto(questionIndex, photoIndex)
