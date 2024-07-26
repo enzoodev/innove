@@ -77,6 +77,12 @@ export const JustificationsContainer = styled.View`
 `;
 
 export const ClassificationsContainer = styled.View`
+  ${({ theme }) => css`
+    gap: ${theme.layout[2]}px;
+  `};
+`;
+
+export const ClassificationsWrapper = styled.View`
   flex-direction: row;
   align-items: center;
   ${({ theme }) => css`
@@ -93,8 +99,28 @@ export const Classification = styled(BorderlessButton)`
   `};
 `;
 
-export const PhotosWrapper = styled.ScrollView`
+export const PhotosWrapper = styled.View`
+  ${({ theme }) => css`
+    gap: ${theme.layout[2]}px;
+  `};
+`;
+
+export const PhotosScrollView = styled.ScrollView`
   width: ${width}px;
   height: ${({ theme }) => theme.layout[72]}px;
   align-self: center;
+`;
+
+export const PhotosFormErrorWrapper = styled.View`
+  ${({ theme }) => css`
+    margin: 0 ${theme.layout[4]}px;
+  `};
+`;
+
+export const FormError = styled.Text`
+  ${({ theme }) => css`
+    font-family: ${theme.fonts.main.regular};
+    font-size: ${theme.fontSizes.sm}px;
+    color: ${theme.colors.error};
+  `};
 `;
