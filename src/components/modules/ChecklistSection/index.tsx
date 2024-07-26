@@ -24,7 +24,11 @@ type Props = {
   onOpenSection: () => void;
   onRespond: (questionIndex: number, answer: string) => void;
   onClassificate: (questionIndex: number, classification: string) => void;
-  onSetPhoto: (questionIndex: number, photoUri: string) => void;
+  onSetPhoto: (
+    questionIndex: number,
+    photoUri: string,
+    photoIndex: number,
+  ) => void;
   onDeletePhoto: (questionIndex: number, photoIndex: number) => void;
 };
 
@@ -80,7 +84,9 @@ export const ChecklistSection = memo(
                 onClassificate={classification =>
                   onClassificate(questionIndex, classification)
                 }
-                onSetPhoto={photoUri => onSetPhoto(questionIndex, photoUri)}
+                onSetPhoto={(photoUri, photoIndex) =>
+                  onSetPhoto(questionIndex, photoUri, photoIndex)
+                }
                 onDeletePhoto={photoIndex =>
                   onDeletePhoto(questionIndex, photoIndex)
                 }
