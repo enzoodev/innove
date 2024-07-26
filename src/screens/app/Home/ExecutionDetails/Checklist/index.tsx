@@ -10,6 +10,7 @@ import { Button } from '@/components/elements/Button';
 import { Header } from '@/components/elements/Header';
 import { AnimatedKeyboardWrapper } from '@/components/elements/AnimatedKeyboardWrapper';
 import { ChecklistSection } from '@/components/modules/ChecklistSection';
+import { ComplementSection } from '@/components/modules/ComplementSection';
 
 import * as S from './styles';
 
@@ -32,6 +33,7 @@ export const Checklist = () => {
     handleRespond,
     handleClassificate,
     handleOpenSection,
+    handleOpenComplementSection,
     handleSetPhoto,
     handleDeletePhoto,
     handleSetComplementPhoto,
@@ -48,54 +50,70 @@ export const Checklist = () => {
       return;
     }
 
-    return sections.map((section, sectionIndex) => (
-      <ChecklistSection
-        key={(sectionIndex + 1).toString()}
-        control={control}
-        errors={errors}
-        section={section}
-        index={sectionIndex}
-        answers={answersTypes}
-        onOpenSection={() => handleOpenSection(sectionIndex)}
-        onRespond={(questionIndex, answerId) =>
-          handleRespond({
-            sectionIndex,
-            questionIndex,
-            answerId,
-          })
-        }
-        onClassificate={(questionIndex, classificationId) =>
-          handleClassificate({
-            sectionIndex,
-            questionIndex,
-            classificationId,
-          })
-        }
-        onSetPhoto={(questionIndex, photoUri, photoIndex) =>
-          handleSetPhoto({
-            sectionIndex,
-            questionIndex,
-            photoUri,
-            photoIndex,
-          })
-        }
-        onDeletePhoto={(questionIndex, photoIndex) =>
-          handleDeletePhoto({
-            sectionIndex,
-            questionIndex,
-            photoIndex,
-          })
-        }
-      />
-    ));
+    return (
+      <>
+        {sections.map((section, sectionIndex) => (
+          <ChecklistSection
+            key={(sectionIndex + 1).toString()}
+            control={control}
+            errors={errors}
+            section={section}
+            index={sectionIndex}
+            answers={answersTypes}
+            onOpenSection={() => handleOpenSection(sectionIndex)}
+            onRespond={(questionIndex, answerId) =>
+              handleRespond({
+                sectionIndex,
+                questionIndex,
+                answerId,
+              })
+            }
+            onClassificate={(questionIndex, classificationId) =>
+              handleClassificate({
+                sectionIndex,
+                questionIndex,
+                classificationId,
+              })
+            }
+            onSetPhoto={(questionIndex, photoUri, photoIndex) =>
+              handleSetPhoto({
+                sectionIndex,
+                questionIndex,
+                photoUri,
+                photoIndex,
+              })
+            }
+            onDeletePhoto={(questionIndex, photoIndex) =>
+              handleDeletePhoto({
+                sectionIndex,
+                questionIndex,
+                photoIndex,
+              })
+            }
+          />
+        ))}
+        <ComplementSection
+          photos={complement.photos}
+          isOpen={complement.isOpen}
+          onOpenSection={handleOpenComplementSection}
+          onSetPhoto={handleSetComplementPhoto}
+          onDeletePhoto={handleDeleteComplementPhoto}
+        />
+      </>
+    );
   }, [
     answersTypes,
+    complement.isOpen,
+    complement.photos,
     control,
     errors,
     handleClassificate,
+    handleDeleteComplementPhoto,
     handleDeletePhoto,
+    handleOpenComplementSection,
     handleOpenSection,
     handleRespond,
+    handleSetComplementPhoto,
     handleSetPhoto,
     isLoading,
     sections,
