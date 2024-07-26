@@ -8,12 +8,12 @@ import {
   TSaveChecklistSchema,
 } from '@/app/schemas/checklist/saveChecklistSchema';
 import { ListSeparators } from '@/app/utils/ListSeparators';
+import { classifications } from '@/app/utils/constants/classifications';
 
 import { Label } from '@/components/elements/Label';
 import { Input } from '@/components/elements/Input';
 import { QuestionPhoto } from '@/components/modules/QuestionPhoto';
 
-import { classifications } from '@/app/utils/constants/classifications';
 import * as S from './styles';
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
   answers: TAnswerType[];
   onRespond: (answer: string) => void;
   onClassificate: (classification: string) => void;
-  onSetPhoto: (photoUri: string) => void;
+  onSetPhoto: (photoUri: string, photoIndex: number) => void;
   onDeletePhoto: (photoIndex: number) => void;
 };
 
@@ -75,6 +75,15 @@ export const Question = memo(
                 </S.ResponseText>
               </S.Response>
             ))}
+            {errors.sections?.[sectionIndex]?.questions?.[questionIndex]
+              ?.idanswerstype && (
+              <S.FormError>
+                {
+                  errors.sections?.[sectionIndex]?.questions?.[questionIndex]
+                    ?.idanswerstype?.message
+                }
+              </S.FormError>
+            )}
           </S.ResponsesContainer>
         </S.ResponsesContainerWrapper>
         {question.idanswerstype === '2' && (
@@ -102,46 +111,75 @@ export const Question = memo(
               />
               <Label title="Classificação">
                 <S.ClassificationsContainer>
-                  {classifications.map(item => (
-                    <S.Classification
-                      key={item.value}
-                      disabled={question.idclassification === item.value}
-                      onPress={() => onClassificate(item.value)}
-                    >
-                      <S.ResponseButton
-                        isSelected={question.idclassification === item.value}
+                  <S.ClassificationsWrapper>
+                    {classifications.map(item => (
+                      <S.Classification
+                        key={item.value}
                         disabled={question.idclassification === item.value}
                         onPress={() => onClassificate(item.value)}
                       >
-                        {question.idclassification === item.value && (
-                          <IconX
-                            stroke={2.5}
-                            size={theme.iconSizes.xs}
-                            color={theme.colors.textSecondary}
-                          />
-                        )}
-                      </S.ResponseButton>
-                      <S.ResponseText
-                        isSelected={question.idclassification === item.value}
-                      >
-                        {item.label}
-                      </S.ResponseText>
-                    </S.Classification>
-                  ))}
+                        <S.ResponseButton
+                          isSelected={question.idclassification === item.value}
+                          disabled={question.idclassification === item.value}
+                          onPress={() => onClassificate(item.value)}
+                        >
+                          {question.idclassification === item.value && (
+                            <IconX
+                              stroke={2.5}
+                              size={theme.iconSizes.xs}
+                              color={theme.colors.textSecondary}
+                            />
+                          )}
+                        </S.ResponseButton>
+                        <S.ResponseText
+                          isSelected={question.idclassification === item.value}
+                        >
+                          {item.label}
+                        </S.ResponseText>
+                      </S.Classification>
+                    ))}
+                  </S.ClassificationsWrapper>
+                  {errors.sections?.[sectionIndex]?.questions?.[questionIndex]
+                    ?.idclassification && (
+                    <S.FormError>
+                      {
+                        errors.sections?.[sectionIndex]?.questions?.[
+                          questionIndex
+                        ]?.idclassification?.message
+                      }
+                    </S.FormError>
+                  )}
                 </S.ClassificationsContainer>
               </Label>
             </S.JustificationsContainer>
-            <S.PhotosWrapper horizontal showsHorizontalScrollIndicator={false}>
-              {question.photos.map((photo, index, array) => (
-                <QuestionPhoto
-                  key={(index + 1).toString()}
-                  uri={photo.photoUri}
-                  index={index}
-                  isLastItem={ListSeparators.getIsLastItem(index, array)}
-                  setPhoto={onSetPhoto}
-                  deletePhoto={() => onDeletePhoto(index)}
-                />
-              ))}
+            <S.PhotosWrapper>
+              <S.PhotosScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {question.photos.map((photo, index, array) => (
+                  <QuestionPhoto
+                    key={(index + 1).toString()}
+                    uri={photo.photoUri}
+                    index={index}
+                    isLastItem={ListSeparators.getIsLastItem(index, array)}
+                    setPhoto={uri => onSetPhoto(uri, index)}
+                    deletePhoto={() => onDeletePhoto(index)}
+                  />
+                ))}
+              </S.PhotosScrollView>
+              {errors.sections?.[sectionIndex]?.questions?.[questionIndex]
+                ?.photos && (
+                <S.PhotosFormErrorWrapper>
+                  <S.FormError>
+                    {
+                      errors.sections?.[sectionIndex]?.questions?.[
+                        questionIndex
+                      ]?.photos?.message
+                    }
+                  </S.FormError>
+                </S.PhotosFormErrorWrapper>
+              )}
             </S.PhotosWrapper>
           </S.NonConformingContainer>
         )}
