@@ -8,6 +8,7 @@ export type ContainerTypeStyleProps = {
 
 export type GoBackButtonTypeStyleProps = {
   rightComponent?: ReactNode;
+  backButtonLeftSpace: number;
 };
 
 type TitleTypeStyleProps = {
@@ -51,11 +52,11 @@ export const Title = styled.Text<TitleTypeStyleProps>`
 `;
 
 export const GoBackButtonWrapper = styled.View<GoBackButtonTypeStyleProps>`
-  ${({ theme, rightComponent }) =>
+  ${({ theme, rightComponent, backButtonLeftSpace }) =>
     !rightComponent &&
     css`
       position: absolute;
-      left: 0;
+      left: ${backButtonLeftSpace}px;
       top: ${theme.layout[4]}px;
     `};
 `;
