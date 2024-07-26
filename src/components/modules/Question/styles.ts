@@ -1,3 +1,4 @@
+import { BorderlessButton } from '@/components/elements/BorderlessButton';
 import { Dimensions } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
@@ -13,6 +14,13 @@ export const Container = styled.View`
   `};
 `;
 
+export const ResponsesContainerWrapper = styled.View`
+  ${({ theme }) => css`
+    gap: ${theme.layout[2]}px;
+    padding: 0 ${theme.layout[4]}px;
+  `};
+`;
+
 export const Title = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.fonts.main.medium};
@@ -22,12 +30,12 @@ export const Title = styled.Text`
 `;
 
 export const ResponsesContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  ${({ theme }) => css`
+    gap: ${theme.layout[2]}px;
+  `};
 `;
 
-export const Response = styled.View`
+export const Response = styled(BorderlessButton)`
   flex-direction: row;
   align-items: center;
   ${({ theme }) => css`
@@ -45,11 +53,12 @@ export const ResponseText = styled.Text<ResponseTypeStyleProps>`
   `};
 `;
 
-export const ResponseButton = styled.TouchableOpacity<ResponseTypeStyleProps>`
+export const ResponseButton = styled(BorderlessButton)<ResponseTypeStyleProps>`
   align-items: center;
   justify-content: center;
   ${({ theme, isSelected }) => css`
-    padding: ${theme.layout[4]}px;
+    width: ${theme.layout[6]}px;
+    height: ${theme.layout[6]}px;
     border-radius: ${theme.border.radius.full}px;
     border-width: ${theme.border.width.lg}px;
     border-color: ${isSelected
@@ -58,7 +67,31 @@ export const ResponseButton = styled.TouchableOpacity<ResponseTypeStyleProps>`
   `};
 `;
 
-export const JustificationsContainer = styled.View``;
+export const NonConformingContainer = styled.View``;
+
+export const JustificationsContainer = styled.View`
+  ${({ theme }) => css`
+    gap: ${theme.layout[4]}px;
+    padding: ${theme.layout[2]}px ${theme.layout[4]}px ${theme.layout[4]}px;
+  `};
+`;
+
+export const ClassificationsContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  ${({ theme }) => css`
+    gap: ${theme.layout[12]}px;
+    margin-top: ${theme.layout[2]}px;
+    margin-left: ${theme.layout[4]}px;
+  `};
+`;
+
+export const Classification = styled(BorderlessButton)`
+  align-items: center;
+  ${({ theme }) => css`
+    gap: ${theme.layout[2]}px;
+  `};
+`;
 
 export const PhotosWrapper = styled.ScrollView`
   width: ${width}px;
