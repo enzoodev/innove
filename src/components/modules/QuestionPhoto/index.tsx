@@ -9,7 +9,7 @@ import { useTheme } from 'styled-components/native';
 
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
-import { photosQuantityPerQuestion } from '@/app/utils/constants/photosQuantityPerQuestion';
+import { photosQuantityPerSection } from '@/app/utils/constants/photosQuantityPerSection';
 
 import { IconButton } from '@/components/elements/IconButton';
 
@@ -38,7 +38,7 @@ export const QuestionPhoto = memo(
       <S.ImageWrapper isLastItem={isLastItem}>
         <S.ImageHeader>
           <S.ImageHeaderTitle>
-            Foto {index + 1}/{photosQuantityPerQuestion}
+            Foto {index + 1}/{photosQuantityPerSection.question}
           </S.ImageHeaderTitle>
           <S.ImageHeaderButtonsWrapper>
             <IconButton
@@ -77,8 +77,8 @@ export const QuestionPhoto = memo(
           <TouchableWithoutFeedback onPress={handleTakePhoto}>
             <S.ImageEmptyWrapper>
               <IconCameraOff
-                stroke={1.25}
-                size={theme.layout[32]}
+                stroke={1}
+                size={theme.layout[28]}
                 color={theme.colors.textTertiary}
               />
             </S.ImageEmptyWrapper>
