@@ -13,6 +13,7 @@ import { Label } from '@/components/elements/Label';
 import { Input } from '@/components/elements/Input';
 import { QuestionPhoto } from '@/components/modules/QuestionPhoto';
 
+import { classifications } from '@/app/utils/constants/classifications';
 import * as S from './styles';
 
 type Props = {
@@ -23,6 +24,7 @@ type Props = {
   question: TSaveChecklistQuestionSchema;
   answers: TAnswerType[];
   onRespond: (answer: string) => void;
+  onClassificate: (classification: string) => void;
   onSetPhoto: (photoUri: string) => void;
   onDeletePhoto: (photoIndex: number) => void;
 };
@@ -36,6 +38,7 @@ export const Question = memo(
     question,
     answers,
     onRespond,
+    onClassificate,
     onSetPhoto,
     onDeletePhoto,
   }: Props) => {
@@ -43,54 +46,95 @@ export const Question = memo(
 
     return (
       <S.Container>
-        <S.Title>{question.name}</S.Title>
-        <S.ResponsesContainer>
-          {answers.map(answer => (
-            <S.Response key={answer.id}>
-              <S.ResponseText isSelected={question.idanswerstype === answer.id}>
-                {answer.nome}
-              </S.ResponseText>
-              <S.ResponseButton
-                isSelected={question.idanswerstype === answer.id}
+        <S.ResponsesContainerWrapper>
+          <S.Title>{question.name}</S.Title>
+          <S.ResponsesContainer>
+            {answers.map(answer => (
+              <S.Response
+                key={answer.id}
+                disabled={question.idanswerstype === answer.id}
                 onPress={() => onRespond(answer.id)}
               >
-                {question.idanswerstype === answer.id && (
-                  <IconX
-                    stroke={1.5}
-                    size={theme.iconSizes.xs}
-                    color={theme.colors.textSecondary}
-                  />
-                )}
-              </S.ResponseButton>
-            </S.Response>
-          ))}
-        </S.ResponsesContainer>
+                <S.ResponseButton
+                  isSelected={question.idanswerstype === answer.id}
+                  disabled={question.idanswerstype === answer.id}
+                  onPress={() => onRespond(answer.id)}
+                >
+                  {question.idanswerstype === answer.id && (
+                    <IconX
+                      stroke={2.5}
+                      size={theme.iconSizes.xs}
+                      color={theme.colors.textSecondary}
+                    />
+                  )}
+                </S.ResponseButton>
+                <S.ResponseText
+                  isSelected={question.idanswerstype === answer.id}
+                >
+                  {answer.nome}
+                </S.ResponseText>
+              </S.Response>
+            ))}
+          </S.ResponsesContainer>
+        </S.ResponsesContainerWrapper>
         {question.idanswerstype === '2' && (
-          <S.JustificationsContainer>
-            <Controller
-              control={control}
-              name={`sections.${sectionIndex}.questions.${questionIndex}.comments`}
-              render={({ field: { onChange, value, onBlur, ref } }) => (
-                <Label title="Justificativa">
-                  <Input
-                    ref={ref}
-                    value={value}
-                    onChangeText={onChange}
-                    formError={
-                      errors.sections?.[sectionIndex]?.questions?.[
-                        questionIndex
-                      ]?.comments?.message
-                    }
-                    placeholder="Justificativa"
-                    onBlur={onBlur}
-                  />
-                </Label>
-              )}
-            />
+          <S.NonConformingContainer>
+            <S.JustificationsContainer>
+              <Controller
+                control={control}
+                name={`sections.${sectionIndex}.questions.${questionIndex}.comments`}
+                render={({ field: { onChange, value, onBlur, ref } }) => (
+                  <Label title="Justificativa">
+                    <Input
+                      ref={ref}
+                      value={value}
+                      onChangeText={onChange}
+                      formError={
+                        errors.sections?.[sectionIndex]?.questions?.[
+                          questionIndex
+                        ]?.comments?.message
+                      }
+                      placeholder="Justificativa"
+                      onBlur={onBlur}
+                    />
+                  </Label>
+                )}
+              />
+              <Label title="Classificação">
+                <S.ClassificationsContainer>
+                  {classifications.map(item => (
+                    <S.Classification
+                      key={item.value}
+                      disabled={question.idclassification === item.value}
+                      onPress={() => onClassificate(item.value)}
+                    >
+                      <S.ResponseButton
+                        isSelected={question.idclassification === item.value}
+                        disabled={question.idclassification === item.value}
+                        onPress={() => onClassificate(item.value)}
+                      >
+                        {question.idclassification === item.value && (
+                          <IconX
+                            stroke={2.5}
+                            size={theme.iconSizes.xs}
+                            color={theme.colors.textSecondary}
+                          />
+                        )}
+                      </S.ResponseButton>
+                      <S.ResponseText
+                        isSelected={question.idclassification === item.value}
+                      >
+                        {item.label}
+                      </S.ResponseText>
+                    </S.Classification>
+                  ))}
+                </S.ClassificationsContainer>
+              </Label>
+            </S.JustificationsContainer>
             <S.PhotosWrapper horizontal showsHorizontalScrollIndicator={false}>
               {question.photos.map((photo, index, array) => (
                 <QuestionPhoto
-                  key={photo.photoUri}
+                  key={(index + 1).toString()}
                   uri={photo.photoUri}
                   index={index}
                   isLastItem={ListSeparators.getIsLastItem(index, array)}
@@ -99,7 +143,7 @@ export const Question = memo(
                 />
               ))}
             </S.PhotosWrapper>
-          </S.JustificationsContainer>
+          </S.NonConformingContainer>
         )}
       </S.Container>
     );
