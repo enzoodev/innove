@@ -37,9 +37,10 @@ export const ComplementSection = memo(
     const navigation = useAppNavigation();
 
     const handleTakePhoto = useCallback(
-      (setPhoto: (uri: string) => void) => {
+      (setPhoto: (uri: string, index: number) => void, index: number) => {
         navigation.navigate('TakeChecklistPhoto', {
           setPhoto,
+          index,
         });
       },
       [navigation],
@@ -67,8 +68,10 @@ export const ComplementSection = memo(
                       <S.ButtonsWrapper>
                         <IconButton
                           onPress={() =>
-                            handleTakePhoto(uri =>
-                              onSetPhoto({ photoUri: uri, photoIndex: index }),
+                            handleTakePhoto(
+                              (photoUri, photoIndex) =>
+                                onSetPhoto({ photoUri, photoIndex }),
+                              index,
                             )
                           }
                           Icon={() => (
@@ -116,8 +119,10 @@ export const ComplementSection = memo(
                   ) : (
                     <TouchableWithoutFeedback
                       onPress={() =>
-                        handleTakePhoto(uri =>
-                          onSetPhoto({ photoUri: uri, photoIndex: index }),
+                        handleTakePhoto(
+                          (photoUri, photoIndex) =>
+                            onSetPhoto({ photoUri, photoIndex }),
+                          index,
                         )
                       }
                     >
