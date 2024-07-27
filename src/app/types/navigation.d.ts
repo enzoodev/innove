@@ -10,7 +10,8 @@ type TChecklistRouteParams = {
 };
 
 type TTakeChecklistPhotoRouteParams = {
-  setPhoto: (uri: string) => void;
+  index: number;
+  setPhoto: (uri: string, index: number) => void;
 };
 
 type AppStackParamsList = {
