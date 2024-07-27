@@ -18,7 +18,7 @@ import * as S from './styles';
 type Props = S.TImageWrapperProps & {
   uri: string | null;
   index: number;
-  setPhoto: (uri: string) => void;
+  setPhoto: (uri: string, index: number) => void;
   deletePhoto: () => void;
 };
 
@@ -31,8 +31,9 @@ export const QuestionPhoto = memo(
     const handleTakePhoto = useCallback(() => {
       navigation.navigate('TakeChecklistPhoto', {
         setPhoto,
+        index,
       });
-    }, [navigation, setPhoto]);
+    }, [index, navigation, setPhoto]);
 
     return (
       <S.ImageWrapper isLastItem={isLastItem}>
