@@ -108,7 +108,7 @@ export const TakeChecklistPhoto: React.FC = () => {
           await handleTakePhoto();
 
           doubleTapState.current = 0;
-          clearTimeout(doubleTapTimeout.current! as number);
+          clearTimeout(doubleTapTimeout.current as number);
         }
       }
     },
