@@ -40,7 +40,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Permita que o Innove App acesse a câmera"
+          "cameraPermission": "Permita que o Innove App acesse a câmera",
+          "microphonePermission": "Permita que o Innove App acesse o microfone"
         }
       ]
     ]
