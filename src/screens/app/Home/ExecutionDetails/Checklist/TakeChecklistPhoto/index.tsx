@@ -35,7 +35,8 @@ import * as S from './styles';
 
 export const TakeChecklistPhoto: React.FC = () => {
   const route = useRoute();
-  const { index, setPhoto } = route.params as TTakeChecklistPhotoRouteParams;
+  const { index, limitOfPhotos, setPhoto } =
+    route.params as TTakeChecklistPhotoRouteParams;
   const [currentIndex, setCurrentIndex] = useState(index);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [isLoadingTakePhoto, setIsLoadingTakePhoto] = useState(false);
@@ -125,7 +126,7 @@ export const TakeChecklistPhoto: React.FC = () => {
   }, [photoUri, handleGoBack, setPhoto, currentIndex]);
 
   const handleSavePhotoAndGoToNext = useCallback(() => {
-    if (!photoUri || currentIndex === 9) {
+    if (!photoUri || currentIndex === limitOfPhotos - 1) {
       return;
     }
 
@@ -133,7 +134,7 @@ export const TakeChecklistPhoto: React.FC = () => {
     setCurrentIndex(prevState => prevState + 1);
 
     handleResetPhoto();
-  }, [photoUri, currentIndex, setPhoto, handleResetPhoto]);
+  }, [photoUri, currentIndex, limitOfPhotos, setPhoto, handleResetPhoto]);
 
   if (!permission) {
     return (
@@ -158,7 +159,7 @@ export const TakeChecklistPhoto: React.FC = () => {
               </BorderlessButton>
               <S.ImagesButtonsFullWrapper>
                 <S.ImageButtonsWrapper>
-                  {currentIndex < 9 && (
+                  {currentIndex < limitOfPhotos - 1 && (
                     <S.IconButton onPress={handleSavePhotoAndGoToNext}>
                       <IconChevronRight
                         stroke={1.5}
