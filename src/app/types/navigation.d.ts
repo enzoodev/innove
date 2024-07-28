@@ -11,6 +11,7 @@ type TChecklistRouteParams = {
 
 type TTakeChecklistPhotoRouteParams = {
   index: number;
+  limitOfPhotos: number;
   setPhoto: (uri: string, index: number) => void;
 };
 
