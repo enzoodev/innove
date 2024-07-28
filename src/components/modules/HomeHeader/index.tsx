@@ -9,7 +9,12 @@ import { UserPhoto } from '@/components/elements/UserPhoto';
 
 import * as S from './styles';
 
-export const HomeHeader = memo(() => {
+type Props = {
+  hasPhotos: boolean;
+  onSyncPhotos: () => void;
+};
+
+export const HomeHeader = memo(({ hasPhotos, onSyncPhotos }: Props) => {
   const theme = useTheme();
   const navigation = useAppNavigation();
   const { auth } = useAuth();
@@ -28,13 +33,15 @@ export const HomeHeader = memo(() => {
         </S.UserTextWrapper>
       </S.Content>
       <S.ButtonsWrapper>
-        <S.SyncPhotosButton>
-          <IconWifi
-            stroke={1.5}
-            size={theme.iconSizes.sm}
-            color={theme.colors.mainContrast}
-          />
-        </S.SyncPhotosButton>
+        {hasPhotos && (
+          <S.SyncPhotosButton onPress={onSyncPhotos}>
+            <IconWifi
+              stroke={1.5}
+              size={theme.iconSizes.sm}
+              color={theme.colors.mainContrast}
+            />
+          </S.SyncPhotosButton>
+        )}
         <S.SettingsButton onPress={handleGoToSettings}>
           <IconSettings
             stroke={1.5}

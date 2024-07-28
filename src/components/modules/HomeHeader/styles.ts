@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/native';
-import { BorderlessButton } from '../BorderlessButton';
+import { BorderlessButton } from '../../elements/BorderlessButton';
 
 export const Container = styled.View`
   flex-direction: row;
@@ -50,7 +50,10 @@ export const ButtonsWrapper = styled.View`
 
 export const SyncPhotosButton = styled(BorderlessButton)`
   ${({ theme }) => css`
-    padding: ${theme.layout[1] * 1.25}px;
+    align-items: center;
+    justify-content: center;
+    height: ${theme.layout[8]}px;
+    width: ${theme.layout[8]}px;
     border-radius: ${theme.border.radius.full}px;
     background-color: ${theme.colors.main};
   `};
