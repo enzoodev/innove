@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
 import {
   ChecklistPhotosStorageRepository,
-  TChecklistStoragePhoto,
+  TSaveChecklistStoragePhotoParams,
 } from '@/app/repositories/local/ChecklistPhotosStorageRepository';
 import {
   saveChecklistSchema,
@@ -194,7 +194,9 @@ export const useFormChecklist = ({
   );
 
   const formatPhotosToSend = useCallback(
-    (photos: Array<TSaveChecklistPhotoSchema>): Array<TChecklistStoragePhoto> =>
+    (
+      photos: Array<TSaveChecklistPhotoSchema>,
+    ): Array<TSaveChecklistStoragePhotoParams> =>
       photos
         .filter(item => !!item.photoUri)
         .map((item, index) => ({
