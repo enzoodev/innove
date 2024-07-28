@@ -22,7 +22,8 @@ export class HttpServices {
     params,
   }: TRequestConfig): Promise<T> => {
     const constructedUrl = UrlBuilder.build(this.baseUrl, url, params);
-    const requestBody = parseJsonToFormData(data);
+    const requestBody =
+      data instanceof FormData ? data : parseJsonToFormData(data);
     const token = AuthStorageRepository.getToken();
 
     const response = await fetch(constructedUrl, {
