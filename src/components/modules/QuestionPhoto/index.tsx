@@ -32,6 +32,7 @@ export const QuestionPhoto = memo(
       navigation.navigate('TakeChecklistPhoto', {
         setPhoto,
         index,
+        limitOfPhotos: photosQuantityPerSection.question,
       });
     }, [index, navigation, setPhoto]);
 
