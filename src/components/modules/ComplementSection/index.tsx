@@ -41,6 +41,7 @@ export const ComplementSection = memo(
         navigation.navigate('TakeChecklistPhoto', {
           setPhoto,
           index,
+          limitOfPhotos: photosQuantityPerSection.complement,
         });
       },
       [navigation],
