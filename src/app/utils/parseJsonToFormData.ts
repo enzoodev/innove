@@ -1,4 +1,6 @@
-export const parseJsonToFormData = (json?: unknown): FormData | null => {
+export const parseJsonToFormData = (
+  json?: Record<string, unknown>,
+): FormData | null => {
   if (!json) {
     return null;
   }
