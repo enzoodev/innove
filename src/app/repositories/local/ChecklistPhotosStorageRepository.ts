@@ -16,12 +16,18 @@ Onde o COMP é o identificador de complementar do checklis, usar tamanho reduzid
 import { AuthStorageRepository } from './AuthStorageRepository';
 import { StorageRepository } from './shared/StorageRepository';
 
-export type TChecklistStoragePhoto = {
+export type TSaveChecklistStoragePhotoParams = {
   executionId: string;
   checklistId: string;
   questionId?: string;
   counter: number;
   photoUri: string;
+};
+
+export type TChecklistStoragePhoto = {
+  uri: string;
+  name: string;
+  type: string;
 };
 
 export class ChecklistPhotosStorageRepository {
@@ -39,9 +45,8 @@ export class ChecklistPhotosStorageRepository {
     const photosByUser = keysByUser.map(key =>
       StorageRepository.get<TChecklistStoragePhoto>(key),
     );
-    const photosByUserFiltered = photosByUser.filter(photo => !!photo);
 
-    return photosByUserFiltered as TChecklistStoragePhoto[];
+    return photosByUser as TChecklistStoragePhoto[];
   }
 
   public static getHasPhotos(): boolean {
@@ -49,21 +54,44 @@ export class ChecklistPhotosStorageRepository {
     return photos.length > 0;
   }
 
-  private static generateKey(data: TChecklistStoragePhoto): string {
-    const array = Object.values(data);
+  public static generateNameAndType(data: TSaveChecklistStoragePhotoParams): {
+    name: string;
+    type: string;
+  } {
     const prefix = data.questionId ? 'nc' : 'comp';
+    const fileExtension = data.photoUri.split('.').pop();
+    const questionPrefix = data.questionId ? `_${data.questionId}` : '';
+
+    if (!fileExtension) {
+      throw new Error('Extensão do arquivo não encontrada.');
+    }
+
+    return {
+      name: `${prefix}_${data.executionId}_${data.checklistId}${questionPrefix}_${data.counter}.${fileExtension}`,
+      type: `image/${fileExtension}`,
+    };
+  }
+
+  private static generateKey(data: TSaveChecklistStoragePhotoParams): string {
     const userKey = this.getUserKey();
-    const photoKey = [userKey, prefix, ...array].join('_');
-    return `${this.storageKey}_${photoKey}`;
+    const { name } = this.generateNameAndType(data);
+    return `${this.storageKey}_${userKey}_${name}`;
   }
 
-  public static savePhoto(data: TChecklistStoragePhoto): void {
+  public static savePhoto(data: TSaveChecklistStoragePhotoParams): void {
     const key = this.generateKey(data);
-    StorageRepository.set(key, data);
+    const { name, type } = this.generateNameAndType(data);
+
+    StorageRepository.set(key, {
+      uri: data.photoUri,
+      name,
+      type,
+    });
   }
 
-  public static deletePhoto(data: TChecklistStoragePhoto): void {
-    const key = this.generateKey(data);
+  public static deletePhoto(name: string): void {
+    const userKey = this.getUserKey();
+    const key = `${this.storageKey}_${userKey}_${name}`;
     StorageRepository.delete(key);
   }
 }
