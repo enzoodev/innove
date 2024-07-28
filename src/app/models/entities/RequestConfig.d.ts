@@ -1,6 +1,6 @@
-type TRequestConfig<T = unknown> = {
+type TRequestConfig = {
   url: string;
   method?: HttpMethod;
-  data?: T;
+  data?: Record<string, unknown> | FormData;
   params?: unknown;
 };
