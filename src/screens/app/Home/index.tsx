@@ -6,6 +6,7 @@ import {
   NativeSyntheticEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { IconCircleCheck, IconMapOff } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 import {
@@ -16,31 +17,38 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 
+import { ChecklistPhotosStorageRepository } from '@/app/repositories/local/ChecklistPhotosStorageRepository';
 import { ListSeparators } from '@/app/utils/ListSeparators';
 
 import { useToggle } from '@/hooks/shared/useToggle';
 import { useExecution } from '@/hooks/api/useExecution';
+import { useSyncPhotos } from '@/hooks/api/useSyncPhotos';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
 import { SearchInput } from '@/components/elements/SearchInput';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
-import { HomeHeader } from '@/components/elements/HomeHeader';
 import { ButtonAdd } from '@/components/elements/ButtonAdd';
 import { AnimatedButtonAddWrapper } from '@/components/elements/AnimatedButtonAddWrapper';
+import { HomeHeader } from '@/components/modules/HomeHeader';
 import { ExecutionItem } from '@/components/modules/ExecutionItem';
 import { ExecutionSkeletonItem } from '@/components/modules/ExecutionSkeletonItem';
 import { StartExecutionModal } from '@/components/modules/StartExecutionModal';
+import { SyncPhotosModal } from '@/components/modules/SyncPhotosModal';
 
 import * as S from './styles';
 
 export const Home = () => {
-  const [searchText, setSearchText] = useState('');
-  const [isOpenStartExecutionModal, toggleOpenStartExecutionModal] =
-    useToggle();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
   const { executions, isRefetching, isPending, refetch } = useExecution();
+  const [searchText, setSearchText] = useState('');
+  const [isOpenStartExecutionModal, toggleOpenStartExecutionModal] =
+    useToggle();
+  const [isOpenSyncPhotosModal, toggleOpenSyncPhotosModal] = useToggle(
+    ChecklistPhotosStorageRepository.getHasPhotos(),
+  );
+  const { syncPhotos, isLoadingSync, hasPhotos } = useSyncPhotos();
 
   const filteredTodoExecutions = useMemo(
     () =>
@@ -201,6 +209,16 @@ export const Home = () => {
     theme.iconSizes.md,
   ]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const hasPhotos = ChecklistPhotosStorageRepository.getHasPhotos();
+      if (hasPhotos && !isOpenSyncPhotosModal) {
+        toggleOpenSyncPhotosModal();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
+
   return (
     <S.Container>
       <S.Content>
@@ -221,7 +239,10 @@ export const Home = () => {
             paddingBottom: theme.layout[4] + insets.bottom,
           }}
         >
-          <HomeHeader />
+          <HomeHeader
+            hasPhotos={hasPhotos}
+            onSyncPhotos={toggleOpenSyncPhotosModal}
+          />
           <SearchInput
             value={searchText}
             onChangeText={setSearchText}
@@ -249,6 +270,12 @@ export const Home = () => {
       <StartExecutionModal
         isOpen={isOpenStartExecutionModal}
         onClose={toggleOpenStartExecutionModal}
+      />
+      <SyncPhotosModal
+        isOpen={isOpenSyncPhotosModal}
+        isLoading={isLoadingSync}
+        onClose={toggleOpenSyncPhotosModal}
+        sync={syncPhotos}
       />
     </S.Container>
   );
