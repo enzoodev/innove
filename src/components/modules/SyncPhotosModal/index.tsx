@@ -59,7 +59,7 @@ export const SyncPhotosModal = ({
     >
       <S.Container>
         <S.Quantity>
-          {quantity} foto{quantity === 1 ? '' : 's'} para sincronizar
+          {quantity} foto{quantity === 1 ? '' : 's'} para sincronizar.
         </S.Quantity>
       </S.Container>
       <S.Footer>
