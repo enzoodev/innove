@@ -7,7 +7,7 @@ import { useTheme } from 'styled-components/native';
 import {
   TSaveChecklistSchema,
   TSaveChecklistSectionSchema,
-} from '@/app/schemas/checklist/saveChecklistSchema';
+} from '@/schemas/checklist/saveChecklistSchema';
 
 import { CollapsableContainer } from '@/components/elements/CollapsableContainer';
 import { IconButton } from '@/components/elements/IconButton';

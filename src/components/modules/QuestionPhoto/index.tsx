@@ -9,7 +9,7 @@ import { useTheme } from 'styled-components/native';
 
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
-import { photosQuantityPerSection } from '@/app/utils/constants/photosQuantityPerSection';
+import { photosQuantityPerSection } from '@/utils/constants/photosQuantityPerSection';
 
 import { IconButton } from '@/components/elements/IconButton';
 

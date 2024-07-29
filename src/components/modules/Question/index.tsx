@@ -6,9 +6,9 @@ import { Control, Controller, FieldErrors } from 'react-hook-form';
 import {
   TSaveChecklistQuestionSchema,
   TSaveChecklistSchema,
-} from '@/app/schemas/checklist/saveChecklistSchema';
-import { ListSeparators } from '@/app/utils/ListSeparators';
-import { classifications } from '@/app/utils/constants/classifications';
+} from '@/schemas/checklist/saveChecklistSchema';
+import { ListSeparators } from '@/utils/ListSeparators';
+import { classifications } from '@/utils/constants/classifications';
 
 import { Label } from '@/components/elements/Label';
 import { Input } from '@/components/elements/Input';

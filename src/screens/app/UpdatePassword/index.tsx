@@ -9,7 +9,7 @@ import {
   passwordRules,
   TUpdatePasswordSchema,
   updatePasswordSchema,
-} from '@/app/schemas/auth/updatePasswordSchema';
+} from '@/schemas/auth/updatePasswordSchema';
 
 import { useAuth } from '@/hooks/api/useAuth';
 import { useAuthNavigation } from '@/hooks/shared/useAuthNavigation';

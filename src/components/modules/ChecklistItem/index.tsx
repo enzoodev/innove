@@ -3,8 +3,8 @@ import { TouchableOpacityProps } from 'react-native';
 import { IconChevronRight, IconHammer } from 'tabler-react-native/icons';
 import { useTheme } from 'styled-components/native';
 
-import { formatStringDateToBrazilianStandard } from '@/app/utils/formatStringDateToBrazilianStandard';
-import { getDayByDateString } from '@/app/utils/getDayByDateString';
+import { formatStringDateToBrazilianStandard } from '@/utils/formatStringDateToBrazilianStandard';
+import { getDayByDateString } from '@/utils/getDayByDateString';
 
 import * as S from './styles';
 

@@ -1,4 +1,4 @@
-import { LocationRepository } from '@/app/repositories/api/LocationRepository';
+import { LocationRepository } from '@/repositories/api/LocationRepository';
 import { useAppQuery } from '../shared/useAppQuery';
 
 export const useLocations = (params: TGetLocationsParams) => {

@@ -1,4 +1,4 @@
-import { HttpServices } from '@/app/services/HttpServices';
+import { HttpServices } from '@/services/HttpServices';
 import { AuthStorageRepository } from '../local/AuthStorageRepository';
 
 export class AuthRepository {

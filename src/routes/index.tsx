@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '@/hooks/api/useAuth';
 
-import { HttpServices } from '@/app/services/HttpServices';
+import { HttpServices } from '@/services/HttpServices';
 
 import { AppStatusBar } from '@/components/elements/AppStatusBar';
 

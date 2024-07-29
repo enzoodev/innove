@@ -14,9 +14,9 @@ import {
   SetComplementPhotoParams,
 } from '@/hooks/api/useFormChecklist';
 
-import { TSaveChecklistPhotoSchema } from '@/app/schemas/checklist/saveChecklistSchema';
-import { photosQuantityPerSection } from '@/app/utils/constants/photosQuantityPerSection';
-import { ListSeparators } from '@/app/utils/ListSeparators';
+import { TSaveChecklistPhotoSchema } from '@/schemas/checklist/saveChecklistSchema';
+import { photosQuantityPerSection } from '@/utils/constants/photosQuantityPerSection';
+import { ListSeparators } from '@/utils/ListSeparators';
 
 import { IconButton } from '@/components/elements/IconButton';
 import { CollapsableContainer } from '@/components/elements/CollapsableContainer';

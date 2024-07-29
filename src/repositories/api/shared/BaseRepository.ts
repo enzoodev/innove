@@ -1,5 +1,5 @@
-import { HttpServices } from '@/app/services/HttpServices';
-import { UrlBuilder } from '@/app/utils/UrlBuilder';
+import { HttpServices } from '@/services/HttpServices';
+import { UrlBuilder } from '@/utils/UrlBuilder';
 
 const appUrl = 'app';
 

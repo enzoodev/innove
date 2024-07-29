@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
-import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
+import { ChecklistRepository } from '@/repositories/api/ChecklistRepository';
+import { ExecutionRepository } from '@/repositories/api/ExecutionRepository';
 import { useAppNavigation } from '../shared/useAppNavigation';
 import { useAppQuery } from '../shared/useAppQuery';
 import { useRefreshOnFocus } from '../shared/useRefreshOnFocus';

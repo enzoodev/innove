@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'styled-components/native';
 
-import { ChecklistPhotosStorageRepository } from '@/app/repositories/local/ChecklistPhotosStorageRepository';
+import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
 
 import { Button } from '@/components/elements/Button';
 import { AppModal } from '@/components/elements/AppModal';

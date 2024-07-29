@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   startExecutionSchema,
   TStartExecutionSchema,
-} from '@/app/schemas/execution/startExecution';
+} from '@/schemas/execution/startExecution';
 
 import { useAuth } from '@/hooks/api/useAuth';
 import { useLocations } from '@/hooks/api/useLocations';

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
 
-import { generateQueryKey } from '@/app/utils/generateQueryKey';
-import { defaultErrorMessage } from '@/app/utils/error/defaultErrorMessage';
+import { generateQueryKey } from '@/utils/generateQueryKey';
+import { defaultErrorMessage } from '@/utils/error/defaultErrorMessage';
 
 import { useFocusNotifyOnChangeProps } from './useFocusNotifyOnChangeProps';
 import { useRefresh } from './useRefresh';

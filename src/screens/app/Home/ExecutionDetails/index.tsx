@@ -10,7 +10,7 @@ import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
 import { Button } from '@/components/elements/Button';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
-import { ListSeparators } from '@/app/utils/ListSeparators';
+import { ListSeparators } from '@/utils/ListSeparators';
 import { Header } from '@/components/elements/Header';
 import { ChecklistItem } from '@/components/modules/ChecklistItem';
 import { ChecklistSkeletonItem } from '@/components/modules/ChecklistSkeletonItem';

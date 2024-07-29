@@ -9,7 +9,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useTheme } from 'styled-components/native';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { loginSchema, TLoginSchema } from '@/app/schemas/auth/loginSchema';
+import { loginSchema, TLoginSchema } from '@/schemas/auth/loginSchema';
 
 import { useAuth } from '@/hooks/api/useAuth';
 import { useAuthNavigation } from '@/hooks/shared/useAuthNavigation';

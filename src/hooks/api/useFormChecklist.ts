@@ -4,20 +4,20 @@ import { useToast } from 'react-native-toast-notifications';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { ChecklistRepository } from '@/app/repositories/api/ChecklistRepository';
+import { ChecklistRepository } from '@/repositories/api/ChecklistRepository';
 import {
   ChecklistPhotosStorageRepository,
   TSaveChecklistStoragePhotoParams,
-} from '@/app/repositories/local/ChecklistPhotosStorageRepository';
+} from '@/repositories/local/ChecklistPhotosStorageRepository';
 import {
   saveChecklistSchema,
   TSaveChecklistPhotoSchema,
   TSaveChecklistSchema,
-} from '@/app/schemas/checklist/saveChecklistSchema';
+} from '@/schemas/checklist/saveChecklistSchema';
 
 import { useAppQuery } from '@/hooks/shared/useAppQuery';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
-import { photosQuantityPerSection } from '@/app/utils/constants/photosQuantityPerSection';
+import { photosQuantityPerSection } from '@/utils/constants/photosQuantityPerSection';
 
 type UseFormChecklistParams = TGetChecklistQuestionsParams &
   TGetAnswersTypesParams & {

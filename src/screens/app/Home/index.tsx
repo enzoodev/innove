@@ -17,8 +17,8 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 
-import { ChecklistPhotosStorageRepository } from '@/app/repositories/local/ChecklistPhotosStorageRepository';
-import { ListSeparators } from '@/app/utils/ListSeparators';
+import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
+import { ListSeparators } from '@/utils/ListSeparators';
 
 import { useToggle } from '@/hooks/shared/useToggle';
 import { useExecution } from '@/hooks/api/useExecution';

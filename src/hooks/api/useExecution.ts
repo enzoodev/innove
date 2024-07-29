@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { ExecutionRepository } from '@/app/repositories/api/ExecutionRepository';
+import { ExecutionRepository } from '@/repositories/api/ExecutionRepository';
 import { useAppNavigation } from '../shared/useAppNavigation';
 import { useAppQuery } from '../shared/useAppQuery';
 import { useRefreshOnFocus } from '../shared/useRefreshOnFocus';

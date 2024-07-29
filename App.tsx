@@ -11,8 +11,8 @@ import * as Font from 'expo-font';
 
 import { theme } from '@/theme';
 import { Routes } from '@/routes';
-import { queryClient } from '@/app/services/queryClient';
-import { AuthContextProvider } from '@/app/contexts/AuthContext';
+import { queryClient } from '@/services/queryClient';
+import { AuthContextProvider } from '@/contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 

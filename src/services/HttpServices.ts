@@ -1,7 +1,7 @@
 import { HttpMethod } from '@/enums/HttpMethod';
-import { UrlBuilder } from '@/app/utils/UrlBuilder';
-import { parseJsonToFormData } from '@/app/utils/parseJsonToFormData';
-import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
+import { UrlBuilder } from '@/utils/UrlBuilder';
+import { parseJsonToFormData } from '@/utils/parseJsonToFormData';
+import { AuthStorageRepository } from '@/repositories/local/AuthStorageRepository';
 
 type RegisterInterceptTokenManager = {
   logout: () => void;

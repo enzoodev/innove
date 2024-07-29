@@ -1,8 +1,8 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { AuthStorageRepository } from '@/app/repositories/local/AuthStorageRepository';
-import { AuthRepository } from '@/app/repositories/api/AuthRepository';
+import { AuthStorageRepository } from '@/repositories/local/AuthStorageRepository';
+import { AuthRepository } from '@/repositories/api/AuthRepository';
 
 export type AuthContextDataProps = {
   auth: TAuth | null;

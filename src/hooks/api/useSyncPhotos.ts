@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useFocusEffect } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
 
-import { SyncPhotosRepository } from '@/app/repositories/api/SyncPhotosRepository';
-import { ChecklistPhotosStorageRepository } from '@/app/repositories/local/ChecklistPhotosStorageRepository';
+import { SyncPhotosRepository } from '@/repositories/api/SyncPhotosRepository';
+import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
 
 export const useSyncPhotos = () => {
   const toast = useToast();
