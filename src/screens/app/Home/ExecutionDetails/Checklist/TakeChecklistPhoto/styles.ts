@@ -9,6 +9,13 @@ export const Container = styled.View`
   background-color: #060606;
 `;
 
+export const LoadingContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: #060606;
+`;
+
 export const Wrapper = styled.View`
   flex: 1;
 `;

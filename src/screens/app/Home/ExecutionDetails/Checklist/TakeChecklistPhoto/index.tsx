@@ -7,11 +7,7 @@ import {
 import { useRoute } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Camera,
-  useCameraDevice,
-  useCameraPermission,
-} from 'react-native-vision-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import {
   HandlerStateChangeEvent,
   State,
@@ -47,20 +43,17 @@ export const TakeChecklistPhoto: React.FC = () => {
   const [isLoadingRequestPermission, setIsLoadingRequestPermission] =
     useState(false);
   const [isFlashActive, toggleFlashActive] = useToggle();
-  const device = useCameraDevice('back');
-  const { hasPermission, requestPermission } = useCameraPermission();
+  const [permission, requestPermission] = useCameraPermissions();
   const theme = useTheme();
   const toast = useToast();
   const navigation = useAppNavigation();
-  const cameraRef = useRef<Camera>(null);
+  const cameraRef = useRef<CameraView>(null);
   const doubleTapState = useRef(0);
   const doubleTapTimeout = useRef<unknown>(null);
 
   useEffect(() => {
-    if (!hasPermission) {
-      requestPermission();
-    }
-  }, [hasPermission, requestPermission]);
+    requestPermission();
+  }, [requestPermission]);
 
   const handleResetPhoto = useCallback(() => {
     setPhotoUri(null);
@@ -83,18 +76,16 @@ export const TakeChecklistPhoto: React.FC = () => {
     try {
       setIsLoadingTakePhoto(true);
 
-      const photo = await cameraRef.current?.takePhoto({
-        enableShutterSound: false,
-        flash: isFlashActive ? 'on' : 'off',
+      const photo = await cameraRef.current?.takePictureAsync({
+        quality: 0.5,
+        imageType: 'jpg',
       });
 
       if (!photo) {
         throw new Error();
       }
-      // const response = await fetch(`file://${photo.path}`);
-      // const { size } = await response.blob();
-      // console.log(size);
-      setPhotoUri(`file://${photo.path}`);
+
+      setPhotoUri(photo.uri);
     } catch (error) {
       toast.show('Erro ao tirar a foto', {
         type: 'error',
@@ -103,7 +94,7 @@ export const TakeChecklistPhoto: React.FC = () => {
     } finally {
       setIsLoadingTakePhoto(false);
     }
-  }, [isFlashActive, toast]);
+  }, [toast]);
 
   const handleDoubleTap = useCallback(
     async ({
@@ -148,6 +139,14 @@ export const TakeChecklistPhoto: React.FC = () => {
 
     handleResetPhoto();
   }, [photoUri, currentIndex, limitOfPhotos, setPhoto, handleResetPhoto]);
+
+  if (!permission) {
+    return (
+      <S.LoadingContainer style={StyleSheet.absoluteFill}>
+        <ActivityIndicator size="large" color={theme.colors.mailContrast} />
+      </S.LoadingContainer>
+    );
+  }
 
   if (photoUri) {
     return (
@@ -201,21 +200,15 @@ export const TakeChecklistPhoto: React.FC = () => {
 
   return (
     <S.Container>
-      {hasPermission ? (
+      {permission.granted ? (
         <TapGestureHandler onHandlerStateChange={handleDoubleTap}>
           <S.Wrapper>
-            {!!device && (
-              <Camera
-                ref={cameraRef}
-                isActive
-                device={device}
-                style={StyleSheet.absoluteFill}
-                photo
-                video={false}
-                torch={isFlashActive ? 'on' : 'off'}
-                photoQualityBalance="speed"
-              />
-            )}
+            <CameraView
+              ref={cameraRef}
+              style={StyleSheet.absoluteFill}
+              enableTorch={isFlashActive}
+              flash={isFlashActive ? 'on' : 'off'}
+            />
             <S.WrapperSafeAreaView>
               <S.CameraContentWrapper>
                 <S.Header>
