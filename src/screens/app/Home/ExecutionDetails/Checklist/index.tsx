@@ -11,6 +11,7 @@ import { Header } from '@/components/elements/Header';
 import { AnimatedKeyboardWrapper } from '@/components/elements/AnimatedKeyboardWrapper';
 import { ChecklistSection } from '@/components/modules/ChecklistSection';
 import { ComplementSection } from '@/components/modules/ComplementSection';
+import { ChecklistSectionSkeletonItem } from '@/components/modules/ChecklistSectionSkeletonItem';
 
 import * as S from './styles';
 
@@ -47,7 +48,9 @@ export const Checklist = () => {
 
   const renderSections = useCallback(() => {
     if (isLoading) {
-      return;
+      return Array.from({ length: 7 }).map((_, index) => (
+        <ChecklistSectionSkeletonItem key={(index + 1).toString()} />
+      ));
     }
 
     return (
