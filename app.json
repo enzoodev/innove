@@ -20,7 +20,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F7F7F8"
       },
-      "package": "com.innove"
+      "package": "com.innove",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,6 +47,11 @@
           "cameraPermission": "Permita que o Innove App acesse a câmera"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4c6008cf-d1a2-40d7-a4b3-69e282230f09"
+      }
+    }
   }
 }
