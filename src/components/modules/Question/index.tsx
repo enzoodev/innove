@@ -163,7 +163,7 @@ export const Question = memo(
                     uri={photo.photoUri}
                     index={index}
                     isLastItem={ListSeparators.getIsLastItem(index, array)}
-                    setPhoto={uri => onSetPhoto(uri, index)}
+                    setPhoto={onSetPhoto}
                     deletePhoto={() => onDeletePhoto(index)}
                   />
                 ))}
