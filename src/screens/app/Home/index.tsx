@@ -41,14 +41,12 @@ export const Home = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
-  const { executions, isRefetching, isPending, refetch } = useExecution();
   const [searchText, setSearchText] = useState('');
   const [isOpenStartExecutionModal, toggleOpenStartExecutionModal] =
     useToggle();
-  const [isOpenSyncPhotosModal, toggleOpenSyncPhotosModal] = useToggle(
-    ChecklistPhotosStorageRepository.getHasPhotos(),
-  );
+  const [isOpenSyncPhotosModal, toggleOpenSyncPhotosModal] = useToggle();
   const { syncPhotos, isLoadingSync, hasPhotos } = useSyncPhotos();
+  const { executions, isRefetching, isPending, refetch } = useExecution();
 
   const filteredTodoExecutions = useMemo(
     () =>
@@ -212,11 +210,10 @@ export const Home = () => {
   useFocusEffect(
     useCallback(() => {
       const hasPhotos = ChecklistPhotosStorageRepository.getHasPhotos();
-      if (hasPhotos && !isOpenSyncPhotosModal) {
+      if (hasPhotos) {
         toggleOpenSyncPhotosModal();
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
+    }, [toggleOpenSyncPhotosModal]),
   );
 
   return (

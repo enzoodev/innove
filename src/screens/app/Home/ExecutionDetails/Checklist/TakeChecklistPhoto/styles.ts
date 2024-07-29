@@ -111,9 +111,10 @@ export const ButtonWrapper = styled.View`
   width: 70%;
 `;
 
-export const LoadingContainer = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background-color: #060606;
+export const Title = styled.Text`
+  ${({ theme }) => css`
+    font-family: ${theme.fonts.main.semiBold};
+    font-size: ${theme.fontSizes.md}px;
+    color: #fff;
+  `};
 `;

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { useFocusEffect } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
 
 import { SyncPhotosRepository } from '@/app/repositories/api/SyncPhotosRepository';
@@ -22,15 +23,23 @@ export const useSyncPhotos = () => {
 
       toast.show('Fotos sincronizadas com sucesso!', {
         type: 'success',
+        placement: 'top',
       });
     } catch (error) {
       toast.show('Erro ao sincronizar fotos.', {
         type: 'error',
+        placement: 'top',
       });
     } finally {
       setHasPhotos(ChecklistPhotosStorageRepository.getHasPhotos());
     }
   }, [syncFn, toast]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setHasPhotos(ChecklistPhotosStorageRepository.getHasPhotos());
+    }, []),
+  );
 
   return {
     hasPhotos,

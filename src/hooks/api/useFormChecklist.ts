@@ -239,47 +239,53 @@ export const useFormChecklist = ({
 
   const onSubmit: SubmitHandler<TSaveChecklistSchema> = useCallback(
     async data => {
-      console.log(data);
-      // try {
-      //   await saveChecklistFn({
-      //     idchecklist,
-      //     idexecution: executionId,
-      //     answers: data.sections.flatMap(section =>
-      //       section.questions.map(question => ({
-      //         idquestion: question.idquestion,
-      //         idanswerstype: question.idanswerstype,
-      //         idclassification: question.idclassification,
-      //         comments: question.comments,
-      //       })),
-      //     ),
-      //   });
+      try {
+        await saveChecklistFn({
+          idchecklist,
+          idexecution: executionId,
+          answers: data.sections.flatMap(section =>
+            section.questions.map(question => ({
+              idquestion: question.idquestion,
+              idanswerstype: question.idanswerstype,
+              idclassification: question.idclassification,
+              comments: question.comments,
+            })),
+          ),
+        });
 
-      //   data.sections.forEach(section => {
-      //     section.questions.forEach(question => {
-      //       formatPhotosToSend(question.photos).forEach(photo => {
-      //         ChecklistPhotosStorageRepository.savePhoto(photo);
-      //       });
-      //     });
-      //   });
+        data.sections.forEach(section => {
+          section.questions.forEach(question => {
+            formatPhotosToSend(question.photos).forEach(photo => {
+              ChecklistPhotosStorageRepository.savePhoto(photo);
+            });
+          });
+        });
 
-      //   formatPhotosToSend(data.complement).forEach(photo => {
-      //     ChecklistPhotosStorageRepository.savePhoto(photo);
-      //   });
+        formatPhotosToSend(data.complement.photos).forEach(photo => {
+          ChecklistPhotosStorageRepository.savePhoto(photo);
+        });
 
-      //   navigation.goBack();
+        navigation.goBack();
 
-      //   toast.show('Checklist finalizado com sucesso!', {
-      //     type: 'success',
-      //     placement: 'top',
-      //   });
-      // } catch (error) {
-      //   toast.show('Não foi possível finalizar o checklist.', {
-      //     type: 'danger',
-      //     placement: 'top',
-      //   });
-      // }
+        toast.show('Checklist finalizado com sucesso!', {
+          type: 'success',
+          placement: 'top',
+        });
+      } catch (error) {
+        toast.show('Não foi possível finalizar o checklist.', {
+          type: 'danger',
+          placement: 'top',
+        });
+      }
     },
-    [],
+    [
+      executionId,
+      formatPhotosToSend,
+      idchecklist,
+      navigation,
+      saveChecklistFn,
+      toast,
+    ],
   );
 
   const handleSaveChecklist = handleSubmit(onSubmit);
