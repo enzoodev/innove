@@ -38,7 +38,11 @@ export class SyncPhotosRepository extends BaseRepository {
       const endIndex = Math.min(startIndex + chunkSize, totalOfPhotos);
 
       if (startIndex < totalOfPhotos) {
-        await this.syncChunk(photosByUser, startIndex, endIndex);
+        await SyncPhotosRepository.syncChunk(
+          photosByUser,
+          startIndex,
+          endIndex,
+        );
         startIndex = endIndex;
         await loop();
       }
