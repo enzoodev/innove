@@ -4,6 +4,8 @@ import { ThemeProvider } from 'styled-components/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { RFValue } from 'react-native-responsive-fontsize';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
@@ -36,9 +38,11 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <SafeAreaProvider>
-          <ToastProvider>
+          <ToastProvider offsetTop={RFValue(40)}>
             <AuthContextProvider>
-              <Routes onReady={onLayoutRootView} />
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Routes onReady={onLayoutRootView} />
+              </GestureHandlerRootView>
             </AuthContextProvider>
           </ToastProvider>
         </SafeAreaProvider>
