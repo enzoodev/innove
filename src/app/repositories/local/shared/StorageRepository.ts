@@ -7,6 +7,10 @@ export class StorageRepository {
   private static baseKey = '@INNOVE_STORAGE_KEY';
 
   private static makeKey(key: string): string {
+    if (key.includes(this.baseKey)) {
+      return key;
+    }
+
     return `${this.baseKey}_${key}`;
   }
 
