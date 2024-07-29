@@ -43,7 +43,7 @@
       <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <string>Permita que o Innove App acesse a câmera</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Permita que o Innove App acesse o microfone</string>
     <key>UIAppFonts</key>
