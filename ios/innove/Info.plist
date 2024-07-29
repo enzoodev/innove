@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>innove</string>
+    <string>Innove</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -43,7 +43,7 @@
       <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>Permita que o Innove App acesse a câmera</string>
+    <string>Allow $(PRODUCT_NAME) to access your camera</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Permita que o Innove App acesse o microfone</string>
     <key>UIAppFonts</key>
