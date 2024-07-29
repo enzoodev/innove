@@ -45,8 +45,11 @@ export class ChecklistPhotosStorageRepository {
     const photosByUser = keysByUser.map(key =>
       StorageRepository.get<TChecklistStoragePhoto>(key),
     );
+    const filteredPhotos = photosByUser.filter(
+      photo => !!photo,
+    ) as TChecklistStoragePhoto[];
 
-    return photosByUser as TChecklistStoragePhoto[];
+    return filteredPhotos;
   }
 
   public static getHasPhotos(): boolean {
