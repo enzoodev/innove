@@ -7,15 +7,18 @@ import { BaseRepository } from './shared/BaseRepository';
 export class SyncPhotosRepository extends BaseRepository {
   private static async syncChunk(
     photos: Array<TChecklistStoragePhoto>,
-    startIndex: number,
-    endIndex: number,
   ): Promise<void> {
+    const chunkSize = 10;
+    let photoCount = 0;
+
     const formData = new FormData();
 
-    for (let index = startIndex; index < endIndex; index += 1) {
-      const item = photos[index];
-      formData.append(`image_${index}`, item as unknown as string);
-    }
+    photos.forEach((item, index) => {
+      if (photoCount < chunkSize) {
+        formData.append(`image_${index}`, item as unknown as string);
+        photoCount += 1;
+      }
+    });
 
     const syncedPhotos = await super.create<Array<string>>({
       url: 'syncphotos',
@@ -28,22 +31,12 @@ export class SyncPhotosRepository extends BaseRepository {
   }
 
   public static async syncAll(): Promise<void> {
-    const chunkSize = 40;
-    let startIndex = 0;
-
     const loop = async () => {
       const photosByUser = ChecklistPhotosStorageRepository.getPhotosByUser();
       const totalOfPhotos = photosByUser.length;
 
-      const endIndex = Math.min(startIndex + chunkSize, totalOfPhotos);
-
-      if (startIndex < totalOfPhotos) {
-        await SyncPhotosRepository.syncChunk(
-          photosByUser,
-          startIndex,
-          endIndex,
-        );
-        startIndex = endIndex;
+      if (totalOfPhotos > 0) {
+        await SyncPhotosRepository.syncChunk(photosByUser);
         await loop();
       }
     };
