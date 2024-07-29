@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "innove",
+    "name": "Innove",
     "slug": "innove",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -38,10 +38,9 @@
         }
       ],
       [
-        "expo-camera",
+        "react-native-vision-camera",
         {
-          "cameraPermission": "Permita que o Innove App acesse a câmera",
-          "microphonePermission": "Permita que o Innove App acesse o microfone"
+          "cameraPermission": "Permita que o Innove App acesse a câmera"
         }
       ]
     ]
