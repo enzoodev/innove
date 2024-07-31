@@ -1,14 +1,20 @@
 import { HttpServices } from '@/services/HttpServices';
-import { AuthStorageRepository } from '../local/AuthStorageRepository';
+import { TokenStorageRepository } from '../local/TokenStorageRepository';
 
 export class AuthRepository {
+  public static async getUser(): Promise<TAuth> {
+    return HttpServices.get({
+      url: 'user',
+    });
+  }
+
   public static async login(params: TLoginParams): Promise<TAuth> {
     const response = await HttpServices.post<TAuth>({
       url: 'login',
       data: params,
     });
 
-    AuthStorageRepository.login(response);
+    TokenStorageRepository.save(response.token);
 
     return response;
   }
@@ -18,7 +24,7 @@ export class AuthRepository {
       url: 'logout',
     });
 
-    AuthStorageRepository.logout();
+    TokenStorageRepository.delete();
   }
 
   public static async recoverAccount(
