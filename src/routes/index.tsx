@@ -1,5 +1,5 @@
 /* eslint-disable react/style-prop-object */
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 
@@ -13,14 +13,22 @@ import { AppRoutes } from './App.routes';
 import { AuthRoutes } from './Auth.routes';
 
 type Props = {
-  onReady: () => void;
+  onHideSplash: () => void;
 };
 
-export const Routes = ({ onReady }: Props) => {
+export const Routes = ({ onHideSplash }: Props) => {
   const theme = useTheme();
-  const { isAuthenticated, handleCleanAuth } = useAuth();
+  const { isAuthenticated, handleCleanAuth, handleGetUser } = useAuth();
 
   DefaultTheme.colors.background = theme.colors.background;
+
+  const fetchUser = useCallback(async () => {
+    try {
+      await handleGetUser();
+    } finally {
+      onHideSplash();
+    }
+  }, [handleGetUser, onHideSplash]);
 
   useEffect(() => {
     HttpServices.registerInterceptTokenManager = {
@@ -29,7 +37,7 @@ export const Routes = ({ onReady }: Props) => {
   }, [handleCleanAuth]);
 
   return (
-    <NavigationContainer onReady={onReady} theme={DefaultTheme}>
+    <NavigationContainer onReady={fetchUser} theme={DefaultTheme}>
       <AppStatusBar
         translucent
         style="light"
