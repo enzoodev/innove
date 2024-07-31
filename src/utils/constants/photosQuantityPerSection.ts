@@ -1,4 +1,4 @@
 export const photosQuantityPerSection = {
-  question: 5,
+  question: 3,
   complement: 10,
 };
