@@ -14,6 +14,7 @@ import { ListSeparators } from '@/utils/ListSeparators';
 import { Header } from '@/components/elements/Header';
 import { ChecklistItem } from '@/components/modules/ChecklistItem';
 import { ChecklistSkeletonItem } from '@/components/modules/ChecklistSkeletonItem';
+import { ExecutionDetailsResume } from '@/components/modules/ExecutionDetailsResume';
 
 import * as S from './styles';
 
@@ -162,6 +163,7 @@ export const ExecutionDetails = () => {
           }}
         >
           <Header hasBackButton title="Detalhes da execução" />
+          <ExecutionDetailsResume data={execution} />
           <S.ListWrapper>
             <S.ListHeader>
               <S.ListHeaderTitle>Checklists pendentes</S.ListHeaderTitle>
