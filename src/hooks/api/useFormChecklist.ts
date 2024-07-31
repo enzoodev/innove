@@ -15,6 +15,7 @@ import {
   TSaveChecklistSchema,
 } from '@/schemas/checklist/saveChecklistSchema';
 
+import { useAuth } from '@/hooks/api/useAuth';
 import { useAppQuery } from '@/hooks/shared/useAppQuery';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 import { photosQuantityPerSection } from '@/utils/constants/photosQuantityPerSection';
@@ -58,6 +59,7 @@ export const useFormChecklist = ({
 }: UseFormChecklistParams) => {
   const toast = useToast();
   const navigation = useAppNavigation();
+  const { userId } = useAuth();
 
   const { data: answersTypes, isLoading: isLoadingAnswersTypes } = useAppQuery({
     request: () => ChecklistRepository.getAnswersTypes({ idclient }),
@@ -256,13 +258,13 @@ export const useFormChecklist = ({
         data.sections.forEach(section => {
           section.questions.forEach(question => {
             formatPhotosToSend(question.photos).forEach(photo => {
-              ChecklistPhotosStorageRepository.savePhoto(photo);
+              ChecklistPhotosStorageRepository.savePhoto(photo, userId);
             });
           });
         });
 
         formatPhotosToSend(data.complement.photos).forEach(photo => {
-          ChecklistPhotosStorageRepository.savePhoto(photo);
+          ChecklistPhotosStorageRepository.savePhoto(photo, userId);
         });
 
         navigation.goBack();
