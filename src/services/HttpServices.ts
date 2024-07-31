@@ -1,7 +1,7 @@
 import { HttpMethod } from '@/enums/HttpMethod';
+import { TokenStorageRepository } from '@/repositories/local/TokenStorageRepository';
 import { UrlBuilder } from '@/utils/UrlBuilder';
 import { parseJsonToFormData } from '@/utils/parseJsonToFormData';
-import { AuthStorageRepository } from '@/repositories/local/AuthStorageRepository';
 
 type RegisterInterceptTokenManager = {
   logout: () => void;
@@ -22,7 +22,7 @@ export class HttpServices {
     const constructedUrl = UrlBuilder.build(this.baseUrl, url, params);
     const requestBody =
       data instanceof FormData ? data : parseJsonToFormData(data);
-    const token = AuthStorageRepository.getToken();
+    const token = TokenStorageRepository.get();
 
     const response = await fetch(constructedUrl, {
       method,
