@@ -6,6 +6,7 @@ import { TokenStorageRepository } from '@/repositories/local/TokenStorageReposit
 
 export type AuthContextDataProps = {
   auth: TAuth | null;
+  userId: number;
   clientId: number;
   isAuthenticated: boolean;
   isLoadingLogin: boolean;
@@ -151,6 +152,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     () => ({
       auth,
       clientId: auth?.idclient ?? 0,
+      userId: auth?.iduser ?? 0,
       isAuthenticated,
       isLoadingLogin,
       isLoadingLogout,
