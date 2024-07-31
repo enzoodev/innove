@@ -1,19 +1,3 @@
-/*
-  iduser: number;
-        4.3) Padronização da foto de Não Conformidade: (número 3 acima)
-A foto de não conformidade deve seguir o seguinte padrão:
-nc_<idexecution>_<idchecklist>_<idquestion>_<contador>.jpeg
-exemplo: nc_5_4_23_1.jpeg e nc_5_4_23_2.jpeg
-Onde o NC é o identificador da não conformidade da questão, usar tamanho reduzido, não ultrapassar 1mb.
-
-        4.4) Padronização das fotos complementares: (número 4 acima)
-As fotos complementares deve seguir o seguinte padrão por checklist:
-comp_<idexecution>_<idchecklist>_<contador>.jpeg
-exemplo: comp_5_4_1.jpeg e comp_5_4_2.jpeg
-Onde o COMP é o identificador de complementar do checklis, usar tamanho reduzido, não ultrapassar 1mb.
-*/
-
-import { AuthStorageRepository } from './AuthStorageRepository';
 import { StorageRepository } from './shared/StorageRepository';
 
 export type TSaveChecklistStoragePhotoParams = {
@@ -33,14 +17,13 @@ export type TChecklistStoragePhoto = {
 export class ChecklistPhotosStorageRepository {
   private static storageKey = 'CHECKLIST_PHOTOS';
 
-  private static getUserKey(): string {
-    const userId = AuthStorageRepository.getUserId();
+  private static getUserKey(userId: number): string {
     return `userId:${userId}`;
   }
 
-  public static getPhotosByUser(): TChecklistStoragePhoto[] {
+  public static getPhotosByUser(userId: number): TChecklistStoragePhoto[] {
     const keys = StorageRepository.getAllKeys();
-    const userKey = this.getUserKey();
+    const userKey = this.getUserKey(userId);
     const keysByUser = keys.filter(key => key.includes(userKey));
     const photosByUser = keysByUser.map(key =>
       StorageRepository.get<TChecklistStoragePhoto>(key),
@@ -52,8 +35,8 @@ export class ChecklistPhotosStorageRepository {
     return filteredPhotos;
   }
 
-  public static getHasPhotos(): boolean {
-    const photos = this.getPhotosByUser();
+  public static getHasPhotos(userId: number): boolean {
+    const photos = this.getPhotosByUser(userId);
     return photos.length > 0;
   }
 
@@ -75,14 +58,20 @@ export class ChecklistPhotosStorageRepository {
     };
   }
 
-  private static generateKey(data: TSaveChecklistStoragePhotoParams): string {
-    const userKey = this.getUserKey();
+  private static generateKey(
+    data: TSaveChecklistStoragePhotoParams,
+    userId: number,
+  ): string {
+    const userKey = this.getUserKey(userId);
     const { name } = this.generateNameAndType(data);
     return `${this.storageKey}_${userKey}_${name}`;
   }
 
-  public static savePhoto(data: TSaveChecklistStoragePhotoParams): void {
-    const key = this.generateKey(data);
+  public static savePhoto(
+    data: TSaveChecklistStoragePhotoParams,
+    userId: number,
+  ): void {
+    const key = this.generateKey(data, userId);
     const { name, type } = this.generateNameAndType(data);
 
     StorageRepository.set(key, {
@@ -92,8 +81,8 @@ export class ChecklistPhotosStorageRepository {
     });
   }
 
-  public static deletePhoto(name: string): void {
-    const userKey = this.getUserKey();
+  public static deletePhoto(name: string, userId: number): void {
+    const userKey = this.getUserKey(userId);
     const key = `${this.storageKey}_${userKey}_${name}`;
     StorageRepository.delete(key);
   }
