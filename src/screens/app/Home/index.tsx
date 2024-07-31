@@ -20,6 +20,7 @@ import {
 import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
 import { ListSeparators } from '@/utils/ListSeparators';
 
+import { useAuth } from '@/hooks/api/useAuth';
 import { useToggle } from '@/hooks/shared/useToggle';
 import { useExecution } from '@/hooks/api/useExecution';
 import { useSyncPhotos } from '@/hooks/api/useSyncPhotos';
@@ -47,6 +48,7 @@ export const Home = () => {
   const [isOpenSyncPhotosModal, toggleOpenSyncPhotosModal] = useToggle();
   const { syncPhotos, isLoadingSync, hasPhotos } = useSyncPhotos();
   const { executions, isRefetching, isPending, refetch } = useExecution();
+  const { userId } = useAuth();
 
   const filteredTodoExecutions = useMemo(
     () =>
@@ -209,11 +211,11 @@ export const Home = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const hasPhotos = ChecklistPhotosStorageRepository.getHasPhotos();
+      const hasPhotos = ChecklistPhotosStorageRepository.getHasPhotos(userId);
       if (hasPhotos) {
         toggleOpenSyncPhotosModal();
       }
-    }, [toggleOpenSyncPhotosModal]),
+    }, [toggleOpenSyncPhotosModal, userId]),
   );
 
   return (
