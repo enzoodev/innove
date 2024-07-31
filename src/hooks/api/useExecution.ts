@@ -39,7 +39,7 @@ export const useExecution = () => {
 
         navigation.navigate('ExecutionDetails', { execution });
       } catch (error) {
-        toast.show('Não foi possível iniciar a execução.', {
+        toast.show('Não foi possível criar a inspeção.', {
           type: 'danger',
           placement: 'top',
         });
