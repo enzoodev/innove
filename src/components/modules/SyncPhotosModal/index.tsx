@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'styled-components/native';
 
+import { useAuth } from '@/hooks/api/useAuth';
+
 import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
 
 import { Button } from '@/components/elements/Button';
@@ -21,8 +23,9 @@ export const SyncPhotosModal = ({
   onClose,
   sync,
 }: Props) => {
+  const { userId } = useAuth();
   const [quantity, setQuantity] = useState(
-    ChecklistPhotosStorageRepository.getPhotosByUser().length,
+    ChecklistPhotosStorageRepository.getPhotosByUser(userId).length,
   );
   const theme = useTheme();
 
@@ -47,8 +50,10 @@ export const SyncPhotosModal = ({
       return;
     }
 
-    setQuantity(ChecklistPhotosStorageRepository.getPhotosByUser().length);
-  }, [isOpen]);
+    setQuantity(
+      ChecklistPhotosStorageRepository.getPhotosByUser(userId).length,
+    );
+  }, [isOpen, userId]);
 
   return (
     <AppModal
