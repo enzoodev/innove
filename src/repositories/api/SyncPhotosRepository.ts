@@ -7,6 +7,7 @@ import { BaseRepository } from './shared/BaseRepository';
 export class SyncPhotosRepository extends BaseRepository {
   private static async syncChunk(
     photos: Array<TChecklistStoragePhoto>,
+    userId: number,
   ): Promise<void> {
     const chunkSize = 10;
     let photoCount = 0;
@@ -26,17 +27,18 @@ export class SyncPhotosRepository extends BaseRepository {
     });
 
     syncedPhotos.forEach(item => {
-      ChecklistPhotosStorageRepository.deletePhoto(item);
+      ChecklistPhotosStorageRepository.deletePhoto(item, userId);
     });
   }
 
-  public static async syncAll(): Promise<void> {
+  public static async syncAll(userId: number): Promise<void> {
     const loop = async () => {
-      const photosByUser = ChecklistPhotosStorageRepository.getPhotosByUser();
+      const photosByUser =
+        ChecklistPhotosStorageRepository.getPhotosByUser(userId);
       const totalOfPhotos = photosByUser.length;
 
       if (totalOfPhotos > 0) {
-        await SyncPhotosRepository.syncChunk(photosByUser);
+        await SyncPhotosRepository.syncChunk(photosByUser, userId);
         await loop();
       }
     };
