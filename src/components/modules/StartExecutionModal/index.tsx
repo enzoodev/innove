@@ -50,7 +50,7 @@ export const StartExecutionModal = ({ isOpen, onClose }: Props) => {
   });
 
   const formattedLocations = locations.map(location => ({
-    label: location.nome,
+    label: `${location.nome} (${location.tipo.name})`,
     value: location.id.toString(),
   }));
 
@@ -94,11 +94,11 @@ export const StartExecutionModal = ({ isOpen, onClose }: Props) => {
   }, [isOpen]);
 
   return (
-    <AppModal title="Iniciar execução" isOpen={isOpen} onClose={onClose}>
+    <AppModal title="Criar uma inspeção" isOpen={isOpen} onClose={onClose}>
       <S.Container>
-        <Label title="Escolha um local">
+        <Label title="Escolha o tipo de inspeção">
           <SelectDropDown
-            placeholder="Local"
+            placeholder="Inspeção"
             value={selectedLocation}
             items={formattedLocations}
             onSelectValue={handleSelectLocal}
