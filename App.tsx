@@ -41,7 +41,7 @@ const App = () => {
           <ToastProvider offsetTop={RFValue(40)}>
             <AuthContextProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
-                <Routes onReady={onLayoutRootView} />
+                <Routes onHideSplash={onLayoutRootView} />
               </GestureHandlerRootView>
             </AuthContextProvider>
           </ToastProvider>
