@@ -8,15 +8,23 @@ type TExecution = {
   tipo: TExecutionType;
   datestart: string;
   dateend: string;
-  detalhes: {
-    id: string;
-    nome: string;
-  };
   idclient: number;
   status: string;
+  detalhes: TExecutionDetails;
+};
+
+type TExecutionDetails = {
+  id: string;
+  nome: string;
+  cnpj?: string;
+  razaosocial?: string;
+  datestart?: string;
+  address?: Array<TLocationAddress>;
 };
 
 type TExecutionType = {
   id: number;
-  name: string;
+  name: TExecutionName;
 };
+
+type TExecutionName = 'Equipamentos' | 'Obra' | 'Setor/Área';
