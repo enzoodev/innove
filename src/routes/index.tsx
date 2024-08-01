@@ -7,6 +7,8 @@ import { useAuth } from '@/hooks/api/useAuth';
 
 import { HttpServices } from '@/services/HttpServices';
 
+import { TokenStorageRepository } from '@/repositories/local/TokenStorageRepository';
+
 import { AppStatusBar } from '@/components/elements/AppStatusBar';
 
 import { AppRoutes } from './App.routes';
@@ -24,7 +26,10 @@ export const Routes = ({ onHideSplash }: Props) => {
 
   const fetchUser = useCallback(async () => {
     try {
-      await handleGetUser();
+      const token = TokenStorageRepository.get();
+      if (token) {
+        await handleGetUser();
+      }
     } finally {
       onHideSplash();
     }
