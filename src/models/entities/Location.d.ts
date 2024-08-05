@@ -2,6 +2,7 @@ type TLocation = {
   id: number;
   tipo: TLocationType;
   nome: string;
+  tag?: string;
   cnpj: string;
   razaosocial: string;
   datecreate: string;

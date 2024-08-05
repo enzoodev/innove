@@ -50,7 +50,7 @@ export const StartExecutionModal = ({ isOpen, onClose }: Props) => {
   });
 
   const formattedLocations = locations.map(location => ({
-    label: `${location.nome} (${location.tipo.name})`,
+    label: `${location.nome} (${location.tag ?? location.tipo.name})`,
     value: location.id.toString(),
   }));
 
