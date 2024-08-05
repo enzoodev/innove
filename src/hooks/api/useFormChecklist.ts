@@ -287,6 +287,7 @@ export const useFormChecklist = ({
       navigation,
       saveChecklistFn,
       toast,
+      userId,
     ],
   );
 
