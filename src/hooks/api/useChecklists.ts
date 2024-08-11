@@ -1,19 +1,32 @@
 import { useCallback, useMemo } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { ChecklistRepository } from '@/repositories/api/ChecklistRepository';
-import { ExecutionRepository } from '@/repositories/api/ExecutionRepository';
-import { useAppNavigation } from '../shared/useAppNavigation';
-import { useAppQuery } from '../shared/useAppQuery';
-import { useRefreshOnFocus } from '../shared/useRefreshOnFocus';
+
+import { ChecklistRepository } from '@/infrastructure/repositories/api/ChecklistRepository';
+import { ExecutionRepository } from '@/infrastructure/repositories/api/ExecutionRepository';
+import { BaseRepository } from '@/infrastructure/repositories/api/shared/BaseRepository';
+import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFactory';
+
+import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
+import { useAppQuery } from '@/hooks/shared/useAppQuery';
+import { useAuth } from '@/hooks/api/useAuth';
+
+import { UrlBuilder } from '@/utils/UrlBuilder';
 
 export const useChecklists = (params: TGetChecklistsParams) => {
   const toast = useToast();
   const navigation = useAppNavigation();
+  const { handleCleanAuth } = useAuth();
+
+  const httpServices = httpServicesFactory({ logout: handleCleanAuth });
+  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
+  const checklistRepository = new ChecklistRepository(baseRepository);
+  const executionRepository = new ExecutionRepository(baseRepository);
 
   const { data, isLoading, isPending, isRefetching, refresh, refetch } =
     useAppQuery({
-      request: () => ChecklistRepository.getAllChecklists(params),
+      request: () => checklistRepository.getAllChecklists(params),
       queryKey: 'allChecklists',
       params,
       errorMessage: 'Não foi possível buscar seus checklists.',
@@ -31,7 +44,7 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     mutateAsync: finishExecutionFn,
     isPending: isLoadingFinishExecution,
   } = useMutation({
-    mutationFn: ExecutionRepository.finishExecution,
+    mutationFn: executionRepository.finishExecution,
   });
 
   const handleFinishExecution = useCallback(async () => {
