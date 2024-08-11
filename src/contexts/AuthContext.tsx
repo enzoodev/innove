@@ -1,8 +1,11 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { AuthRepository } from '@/repositories/api/AuthRepository';
-import { TokenStorageRepository } from '@/repositories/local/TokenStorageRepository';
+
+import { AuthRepository } from '@/infrastructure/repositories/api/AuthRepository';
+import { TokenStorageRepository } from '@/infrastructure/repositories/local/TokenStorageRepository';
+import { StorageRepository } from '@/infrastructure/repositories/local/shared/StorageRepository';
+import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFactory';
 
 export type AuthContextDataProps = {
   auth: TAuth | null;
@@ -35,27 +38,52 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [auth, setAuth] = useState<TAuth | null>(null);
   const isAuthenticated = !!auth;
 
+  const tokenStorageRepository = useMemo(
+    () => new TokenStorageRepository(new StorageRepository()),
+    [],
+  );
+
+  const handleCleanAuth = useCallback(() => {
+    if (!auth) {
+      return;
+    }
+
+    setAuth(null);
+    tokenStorageRepository.delete();
+
+    toast.show('Falha na autenticação, realize o login novamente.', {
+      type: 'danger',
+      placement: 'top',
+    });
+  }, [auth, toast, tokenStorageRepository]);
+
+  const httpServices = httpServicesFactory({ logout: handleCleanAuth });
+  const authRepository = new AuthRepository(
+    httpServices,
+    tokenStorageRepository,
+  );
+
   const { mutateAsync: getUserFn, isPending: isLoadingUser } = useMutation({
-    mutationFn: AuthRepository.getUser,
+    mutationFn: authRepository.getUser,
     retry: 1,
   });
 
   const { mutateAsync: loginFn, isPending: isLoadingLogin } = useMutation({
-    mutationFn: AuthRepository.login,
+    mutationFn: authRepository.login,
   });
 
   const { mutateAsync: logoutFn, isPending: isLoadingLogout } = useMutation({
-    mutationFn: AuthRepository.logout,
+    mutationFn: authRepository.logout,
   });
 
   const { mutateAsync: recoverAccountFn, isPending: isLoadingRecoverAccount } =
     useMutation({
-      mutationFn: AuthRepository.recoverAccount,
+      mutationFn: authRepository.recoverAccount,
     });
 
   const { mutateAsync: updatePasswordFn, isPending: isLoadingUpdatePassword } =
     useMutation({
-      mutationFn: AuthRepository.updatePassword,
+      mutationFn: authRepository.updatePassword,
     });
 
   const handleGetUser = useCallback(async () => {
@@ -96,20 +124,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       });
     }
   }, [logoutFn, toast]);
-
-  const handleCleanAuth = useCallback(() => {
-    if (!auth) {
-      return;
-    }
-
-    setAuth(null);
-    TokenStorageRepository.delete();
-
-    toast.show('Falha na autenticação, realize o login novamente.', {
-      type: 'danger',
-      placement: 'top',
-    });
-  }, [auth, toast]);
 
   const handleRecoverAccount = useCallback(
     async (params: TRecoverAccountParams) => {
