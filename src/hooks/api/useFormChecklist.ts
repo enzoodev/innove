@@ -1,14 +1,18 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { ChecklistRepository } from '@/repositories/api/ChecklistRepository';
 import {
   ChecklistPhotosStorageRepository,
   TSaveChecklistStoragePhotoParams,
-} from '@/repositories/local/ChecklistPhotosStorageRepository';
+} from '@/infrastructure/repositories/local/ChecklistPhotosStorageRepository';
+import { ChecklistRepository } from '@/infrastructure/repositories/api/ChecklistRepository';
+import { StorageRepository } from '@/infrastructure/repositories/local/shared/StorageRepository';
+import { BaseRepository } from '@/infrastructure/repositories/api/shared/BaseRepository';
+import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFactory';
+
 import {
   saveChecklistSchema,
   TSaveChecklistPhotoSchema,
@@ -18,7 +22,9 @@ import {
 import { useAuth } from '@/hooks/api/useAuth';
 import { useAppQuery } from '@/hooks/shared/useAppQuery';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+
 import { photosQuantityPerSection } from '@/utils/constants/photosQuantityPerSection';
+import { UrlBuilder } from '@/utils/UrlBuilder';
 
 type UseFormChecklistParams = TGetChecklistQuestionsParams &
   TGetAnswersTypesParams & {
@@ -59,10 +65,18 @@ export const useFormChecklist = ({
 }: UseFormChecklistParams) => {
   const toast = useToast();
   const navigation = useAppNavigation();
-  const { userId } = useAuth();
+  const { userId, handleCleanAuth } = useAuth();
+
+  const httpServices = httpServicesFactory({ logout: handleCleanAuth });
+  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
+  const checklistRepository = new ChecklistRepository(baseRepository);
+  const checklistPhotosStorageRepository = useMemo(
+    () => new ChecklistPhotosStorageRepository(new StorageRepository()),
+    [],
+  );
 
   const { data: answersTypes, isLoading: isLoadingAnswersTypes } = useAppQuery({
-    request: () => ChecklistRepository.getAnswersTypes({ idclient }),
+    request: () => checklistRepository.getAnswersTypes({ idclient }),
     queryKey: 'answersTypes',
     params: { idclient },
     errorMessage: 'Não foi possível buscar as respostas possíveis.',
@@ -70,12 +84,12 @@ export const useFormChecklist = ({
 
   const { mutateAsync: getChecklistQuestionsFn, isPending: isLoadingSections } =
     useMutation({
-      mutationFn: ChecklistRepository.getChecklistQuestions,
+      mutationFn: checklistRepository.getChecklistQuestions,
     });
 
   const { mutateAsync: saveChecklistFn, isPending: isLoadingSaveChecklist } =
     useMutation({
-      mutationFn: ChecklistRepository.saveChecklist,
+      mutationFn: checklistRepository.saveChecklist,
     });
 
   const generateInitialPhotosState = useCallback(
@@ -258,13 +272,13 @@ export const useFormChecklist = ({
         data.sections.forEach(section => {
           section.questions.forEach(question => {
             formatPhotosToSend(question.photos).forEach(photo => {
-              ChecklistPhotosStorageRepository.savePhoto(photo, userId);
+              checklistPhotosStorageRepository.savePhoto(photo, userId);
             });
           });
         });
 
         formatPhotosToSend(data.complement.photos).forEach(photo => {
-          ChecklistPhotosStorageRepository.savePhoto(photo, userId);
+          checklistPhotosStorageRepository.savePhoto(photo, userId);
         });
 
         navigation.goBack();
@@ -281,6 +295,7 @@ export const useFormChecklist = ({
       }
     },
     [
+      checklistPhotosStorageRepository,
       executionId,
       formatPhotosToSend,
       idchecklist,
