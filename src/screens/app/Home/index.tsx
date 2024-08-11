@@ -17,14 +17,16 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 
-import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
-import { ListSeparators } from '@/utils/ListSeparators';
+import { ChecklistPhotosStorageRepository } from '@/infrastructure/repositories/local/ChecklistPhotosStorageRepository';
+import { StorageRepository } from '@/infrastructure/repositories/local/shared/StorageRepository';
 
 import { useAuth } from '@/hooks/api/useAuth';
 import { useToggle } from '@/hooks/shared/useToggle';
 import { useExecution } from '@/hooks/api/useExecution';
 import { useSyncPhotos } from '@/hooks/api/useSyncPhotos';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+
+import { ListSeparators } from '@/utils/ListSeparators';
 
 import { SearchInput } from '@/components/elements/SearchInput';
 import { ListEmptyCard } from '@/components/elements/ListEmptyCard';
@@ -49,6 +51,11 @@ export const Home = () => {
   const { syncPhotos, isLoadingSync, hasPhotos } = useSyncPhotos();
   const { executions, isRefetching, isPending, refetch } = useExecution();
   const { userId } = useAuth();
+
+  const checklistPhotosStorageRepository = useMemo(
+    () => new ChecklistPhotosStorageRepository(new StorageRepository()),
+    [],
+  );
 
   const filteredTodoExecutions = useMemo(
     () =>
@@ -211,11 +218,11 @@ export const Home = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const hasPhotos = ChecklistPhotosStorageRepository.getHasPhotos(userId);
+      const hasPhotos = checklistPhotosStorageRepository.getHasPhotos(userId);
       if (hasPhotos) {
         toggleOpenSyncPhotosModal();
       }
-    }, [toggleOpenSyncPhotosModal, userId]),
+    }, [checklistPhotosStorageRepository, toggleOpenSyncPhotosModal, userId]),
   );
 
   return (
