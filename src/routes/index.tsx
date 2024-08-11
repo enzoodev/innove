@@ -1,13 +1,12 @@
 /* eslint-disable react/style-prop-object */
-import { useCallback, useEffect } from 'react';
+import { useCallback, useMemo } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
 
+import { TokenStorageRepository } from '@/infrastructure/repositories/local/TokenStorageRepository';
+import { StorageRepository } from '@/infrastructure/repositories/local/shared/StorageRepository';
+
 import { useAuth } from '@/hooks/api/useAuth';
-
-import { HttpServices } from '@/services/HttpServices';
-
-import { TokenStorageRepository } from '@/repositories/local/TokenStorageRepository';
 
 import { AppStatusBar } from '@/components/elements/AppStatusBar';
 
@@ -20,26 +19,25 @@ type Props = {
 
 export const Routes = ({ onHideSplash }: Props) => {
   const theme = useTheme();
-  const { isAuthenticated, handleCleanAuth, handleGetUser } = useAuth();
+  const { isAuthenticated, handleGetUser } = useAuth();
 
   DefaultTheme.colors.background = theme.colors.background;
 
+  const tokenStorageRepository = useMemo(
+    () => new TokenStorageRepository(new StorageRepository()),
+    [],
+  );
+
   const fetchUser = useCallback(async () => {
     try {
-      const token = TokenStorageRepository.get();
+      const token = tokenStorageRepository.get();
       if (token) {
         await handleGetUser();
       }
     } finally {
       onHideSplash();
     }
-  }, [handleGetUser, onHideSplash]);
-
-  useEffect(() => {
-    HttpServices.registerInterceptTokenManager = {
-      logout: handleCleanAuth,
-    };
-  }, [handleCleanAuth]);
+  }, [handleGetUser, onHideSplash, tokenStorageRepository]);
 
   return (
     <NavigationContainer onReady={fetchUser} theme={DefaultTheme}>
