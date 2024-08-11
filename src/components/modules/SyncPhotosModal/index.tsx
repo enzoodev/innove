@@ -3,7 +3,8 @@ import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '@/hooks/api/useAuth';
 
-import { ChecklistPhotosStorageRepository } from '@/repositories/local/ChecklistPhotosStorageRepository';
+import { ChecklistPhotosStorageRepository } from '@/infrastructure/repositories/local/ChecklistPhotosStorageRepository';
+import { StorageRepository } from '@/infrastructure/repositories/local/shared/StorageRepository';
 
 import { Button } from '@/components/elements/Button';
 import { AppModal } from '@/components/elements/AppModal';
@@ -17,6 +18,10 @@ type Props = {
   sync: () => Promise<void>;
 };
 
+const checklistPhotosStorageRepository = new ChecklistPhotosStorageRepository(
+  new StorageRepository(),
+);
+
 export const SyncPhotosModal = ({
   isOpen,
   isLoading,
@@ -25,7 +30,7 @@ export const SyncPhotosModal = ({
 }: Props) => {
   const { userId } = useAuth();
   const [quantity, setQuantity] = useState(
-    ChecklistPhotosStorageRepository.getPhotosByUser(userId).length,
+    checklistPhotosStorageRepository.getPhotosByUser(userId).length,
   );
   const theme = useTheme();
 
@@ -51,9 +56,10 @@ export const SyncPhotosModal = ({
     }
 
     setQuantity(
-      ChecklistPhotosStorageRepository.getPhotosByUser(userId).length,
+      checklistPhotosStorageRepository.getPhotosByUser(userId).length,
     );
-  }, [isOpen, userId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   return (
     <AppModal
