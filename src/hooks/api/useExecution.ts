@@ -1,25 +1,37 @@
 import { useCallback } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
-import { ExecutionRepository } from '@/repositories/api/ExecutionRepository';
-import { useAppNavigation } from '../shared/useAppNavigation';
-import { useAppQuery } from '../shared/useAppQuery';
-import { useRefreshOnFocus } from '../shared/useRefreshOnFocus';
+
+import { ExecutionRepository } from '@/infrastructure/repositories/api/ExecutionRepository';
+import { BaseRepository } from '@/infrastructure/repositories/api/shared/BaseRepository';
+import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFactory';
+
+import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
+import { useAppQuery } from '@/hooks/shared/useAppQuery';
+import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
+import { useAuth } from '@/hooks/api/useAuth';
+
+import { UrlBuilder } from '@/utils/UrlBuilder';
 
 export const useExecution = () => {
   const toast = useToast();
   const navigation = useAppNavigation();
+  const { handleCleanAuth } = useAuth();
+
+  const httpServices = httpServicesFactory({ logout: handleCleanAuth });
+  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
+  const executionRepository = new ExecutionRepository(baseRepository);
 
   const { data, isLoading, isPending, isRefetching, refresh, refetch } =
     useAppQuery({
-      request: () => ExecutionRepository.getExecutions(),
+      request: () => executionRepository.getExecutions(),
       queryKey: 'executions',
       errorMessage: 'Não foi possível buscar suas execuções.',
     });
 
   const { mutateAsync: startExecutionFn, isPending: isLoadingStartExecution } =
     useMutation({
-      mutationFn: ExecutionRepository.startExecution,
+      mutationFn: executionRepository.startExecution,
     });
 
   const handleStartExecution = useCallback(
