@@ -9,10 +9,10 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
-import { theme } from '@/theme';
-import { Routes } from '@/routes';
-import { queryClient } from '@/services/queryClient';
+import { queryClient } from '@/infrastructure/services/queryClient';
 import { AuthContextProvider } from '@/contexts/AuthContext';
+import { Routes } from '@/routes';
+import { theme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
 
