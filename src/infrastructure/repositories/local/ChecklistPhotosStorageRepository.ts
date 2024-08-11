@@ -1,5 +1,5 @@
-import { StorageRepository } from './shared/StorageRepository';
-
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-useless-constructor */
 export type TSaveChecklistStoragePhotoParams = {
   executionId: string;
   checklistId: string;
@@ -14,19 +14,23 @@ export type TChecklistStoragePhoto = {
   type: string;
 };
 
-export class ChecklistPhotosStorageRepository {
-  private static storageKey = 'CHECKLIST_PHOTOS';
+export class ChecklistPhotosStorageRepository
+  implements IChecklistPhotosStorageRepository
+{
+  private storageKey = 'CHECKLIST_PHOTOS';
 
-  private static getUserKey(userId: number): string {
+  constructor(private storageRepository: IStorageRepository) {}
+
+  private getUserKey(userId: number): string {
     return `userId:${userId}`;
   }
 
-  public static getPhotosByUser(userId: number): TChecklistStoragePhoto[] {
-    const keys = StorageRepository.getAllKeys();
+  public getPhotosByUser(userId: number): TChecklistStoragePhoto[] {
+    const keys = this.storageRepository.getAllKeys();
     const userKey = this.getUserKey(userId);
     const keysByUser = keys.filter(key => key.includes(userKey));
     const photosByUser = keysByUser.map(key =>
-      StorageRepository.get<TChecklistStoragePhoto>(key),
+      this.storageRepository.get<TChecklistStoragePhoto>(key),
     );
     const filteredPhotos = photosByUser.filter(
       photo => !!photo,
@@ -35,12 +39,12 @@ export class ChecklistPhotosStorageRepository {
     return filteredPhotos;
   }
 
-  public static getHasPhotos(userId: number): boolean {
+  public getHasPhotos(userId: number): boolean {
     const photos = this.getPhotosByUser(userId);
     return photos.length > 0;
   }
 
-  public static generateNameAndType(data: TSaveChecklistStoragePhotoParams): {
+  public generateNameAndType(data: TSaveChecklistStoragePhotoParams): {
     name: string;
     type: string;
   } {
@@ -58,7 +62,7 @@ export class ChecklistPhotosStorageRepository {
     };
   }
 
-  private static generateKey(
+  private generateKey(
     data: TSaveChecklistStoragePhotoParams,
     userId: number,
   ): string {
@@ -67,23 +71,23 @@ export class ChecklistPhotosStorageRepository {
     return `${this.storageKey}_${userKey}_${name}`;
   }
 
-  public static savePhoto(
+  public savePhoto(
     data: TSaveChecklistStoragePhotoParams,
     userId: number,
   ): void {
     const key = this.generateKey(data, userId);
     const { name, type } = this.generateNameAndType(data);
 
-    StorageRepository.set(key, {
+    this.storageRepository.set(key, {
       uri: data.photoUri,
       name,
       type,
     });
   }
 
-  public static deletePhoto(name: string, userId: number): void {
+  public deletePhoto(name: string, userId: number): void {
     const userKey = this.getUserKey(userId);
     const key = `${this.storageKey}_${userKey}_${name}`;
-    StorageRepository.delete(key);
+    this.storageRepository.delete(key);
   }
 }
