@@ -30,7 +30,6 @@ yarn ios
 - **react-native**: A framework for building native apps using React.
 - **expo**: Framework and platform for universal React applications.
 - **styled-components**: Visual primitives for the component age.
-- **@tanstack/react-query**: Data-fetching library.
 - **react-native-mmkv**: A fast storage library for React Native.
 - **@react-navigation/native**: React Navigation library.
 - **react-native-reanimated**: React Native's Animated library reimplemented.
