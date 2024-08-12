@@ -1,7 +1,6 @@
 /* eslint-disable global-require */
 import React, { useCallback } from 'react';
 import { ThemeProvider } from 'styled-components/native';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,7 +8,6 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 
-import { queryClient } from '@/infrastructure/services/queryClient';
 import { AuthContextProvider } from '@/contexts/AuthContext';
 import { Routes } from '@/routes';
 import { theme } from '@/theme';
@@ -35,19 +33,17 @@ const App = () => {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <SafeAreaProvider>
-          <ToastProvider offsetTop={RFValue(40)}>
-            <AuthContextProvider>
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <Routes onHideSplash={onLayoutRootView} />
-              </GestureHandlerRootView>
-            </AuthContextProvider>
-          </ToastProvider>
-        </SafeAreaProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ThemeProvider theme={theme}>
+      <SafeAreaProvider>
+        <ToastProvider offsetTop={RFValue(40)}>
+          <AuthContextProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Routes onHideSplash={onLayoutRootView} />
+            </GestureHandlerRootView>
+          </AuthContextProvider>
+        </ToastProvider>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 };
 
