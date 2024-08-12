@@ -1,10 +1,7 @@
 /* eslint-disable react/style-prop-object */
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useTheme } from 'styled-components/native';
-
-import { TokenStorageRepository } from '@/infrastructure/repositories/local/TokenStorageRepository';
-import { StorageRepository } from '@/infrastructure/repositories/local/shared/StorageRepository';
 
 import { useAuth } from '@/hooks/api/useAuth';
 
@@ -23,21 +20,13 @@ export const Routes = ({ onHideSplash }: Props) => {
 
   DefaultTheme.colors.background = theme.colors.background;
 
-  const tokenStorageRepository = useMemo(
-    () => new TokenStorageRepository(new StorageRepository()),
-    [],
-  );
-
   const fetchUser = useCallback(async () => {
     try {
-      const token = tokenStorageRepository.get();
-      if (token) {
-        await handleGetUser();
-      }
+      await handleGetUser();
     } finally {
       onHideSplash();
     }
-  }, [handleGetUser, onHideSplash, tokenStorageRepository]);
+  }, [handleGetUser, onHideSplash]);
 
   return (
     <NavigationContainer onReady={fetchUser} theme={DefaultTheme}>
