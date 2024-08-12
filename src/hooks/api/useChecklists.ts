@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 
 import { ChecklistRepository } from '@/infrastructure/repositories/api/ChecklistRepository';
@@ -8,8 +7,7 @@ import { BaseRepository } from '@/infrastructure/repositories/api/shared/BaseRep
 import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFactory';
 
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
-import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
-import { useAppQuery } from '@/hooks/shared/useAppQuery';
+import { useFetch } from '@/hooks/shared/useFetch';
 import { useAuth } from '@/hooks/api/useAuth';
 
 import { UrlBuilder } from '@/utils/UrlBuilder';
@@ -20,17 +18,23 @@ export const useChecklists = (params: TGetChecklistsParams) => {
   const { handleCleanAuth } = useAuth();
 
   const httpServices = httpServicesFactory({ logout: handleCleanAuth });
-  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
+  const baseRepository = useMemo(
+    () => new BaseRepository(httpServices, new UrlBuilder()),
+    [httpServices],
+  );
   const checklistRepository = new ChecklistRepository(baseRepository);
-  const executionRepository = new ExecutionRepository(baseRepository);
+  const executionRepository = useMemo(
+    () => new ExecutionRepository(baseRepository),
+    [baseRepository],
+  );
 
-  const { data, isLoading, isPending, isRefetching, refresh, refetch } =
-    useAppQuery({
-      request: () => checklistRepository.getAllChecklists(params),
-      queryKey: 'allChecklists',
-      params,
-      errorMessage: 'Não foi possível buscar seus checklists.',
-    });
+  const [isLoadingFinishExecution, setIsLoadingFinishExecution] =
+    useState(false);
+
+  const { data, isLoading, isPending, isRefetching, refetch } = useFetch({
+    request: () => checklistRepository.getAllChecklists(params),
+    errorMessage: 'Não foi possível buscar seus checklists.',
+  });
 
   const hasDoneChecklist = useMemo(() => {
     if (!data?.doneChecklists) {
@@ -40,16 +44,12 @@ export const useChecklists = (params: TGetChecklistsParams) => {
     return data.doneChecklists.length > 0;
   }, [data?.doneChecklists]);
 
-  const {
-    mutateAsync: finishExecutionFn,
-    isPending: isLoadingFinishExecution,
-  } = useMutation({
-    mutationFn: executionRepository.finishExecution,
-  });
-
   const handleFinishExecution = useCallback(async () => {
     try {
-      await finishExecutionFn({ idexecution: params.idexecution });
+      setIsLoadingFinishExecution(true);
+      await executionRepository.finishExecution({
+        idexecution: params.idexecution,
+      });
       navigation.goBack();
 
       toast.show('Execução finalizada com sucesso!', {
@@ -61,10 +61,10 @@ export const useChecklists = (params: TGetChecklistsParams) => {
         type: 'danger',
         placement: 'top',
       });
+    } finally {
+      setIsLoadingFinishExecution(false);
     }
-  }, [finishExecutionFn, navigation, params.idexecution, toast]);
-
-  useRefreshOnFocus(refresh);
+  }, [executionRepository, navigation, params.idexecution, toast]);
 
   return {
     toDoChecklists: data?.toDoChecklists ?? [],
