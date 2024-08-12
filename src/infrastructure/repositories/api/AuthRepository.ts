@@ -7,6 +7,12 @@ export class AuthRepository implements IAuthRepository {
   ) {}
 
   public async getUser(): Promise<TAuth | null> {
+    const isLogged = !!this.tokenStorageRepository.get();
+
+    if (!isLogged) {
+      return null;
+    }
+
     return this.httpServices.get<TAuth>({
       url: 'user',
     });
