@@ -3,7 +3,7 @@ import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFact
 import { BaseRepository } from '@/infrastructure/repositories/api/shared/BaseRepository';
 
 import { useAuth } from '@/hooks/api/useAuth';
-import { useAppQuery } from '@/hooks/shared/useAppQuery';
+import { useFetch } from '@/hooks/shared/useFetch';
 
 import { UrlBuilder } from '@/utils/UrlBuilder';
 
@@ -15,10 +15,8 @@ export const useLocations = (params: TGetLocationsParams) => {
   const locationRepository = new LocationRepository(baseRepository);
 
   const { data, isLoading, isPending, isRefetching, refresh, refetch } =
-    useAppQuery({
+    useFetch({
       request: () => locationRepository.getLocations(params),
-      params,
-      queryKey: 'locations',
       errorMessage: 'Não foi possível buscar os locais.',
     });
 
