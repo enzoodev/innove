@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,7 +19,7 @@ import {
 } from '@/schemas/checklist/saveChecklistSchema';
 
 import { useAuth } from '@/hooks/api/useAuth';
-import { useAppQuery } from '@/hooks/shared/useAppQuery';
+import { useFetch } from '@/hooks/shared/useFetch';
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
 
 import { photosQuantityPerSection } from '@/utils/constants/photosQuantityPerSection';
@@ -68,29 +67,25 @@ export const useFormChecklist = ({
   const { userId, handleCleanAuth } = useAuth();
 
   const httpServices = httpServicesFactory({ logout: handleCleanAuth });
-  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
-  const checklistRepository = new ChecklistRepository(baseRepository);
+  const checklistRepository = useMemo(
+    () =>
+      new ChecklistRepository(
+        new BaseRepository(httpServices, new UrlBuilder()),
+      ),
+    [httpServices],
+  );
   const checklistPhotosStorageRepository = useMemo(
     () => new ChecklistPhotosStorageRepository(new StorageRepository()),
     [],
   );
 
-  const { data: answersTypes, isLoading: isLoadingAnswersTypes } = useAppQuery({
+  const [isLoadingSections, setIsLoadingSections] = useState(true);
+  const [isLoadingSaveChecklist, setIsLoadingSaveChecklist] = useState(false);
+
+  const { data: answersTypes, isLoading: isLoadingAnswersTypes } = useFetch({
     request: () => checklistRepository.getAnswersTypes({ idclient }),
-    queryKey: 'answersTypes',
-    params: { idclient },
     errorMessage: 'Não foi possível buscar as respostas possíveis.',
   });
-
-  const { mutateAsync: getChecklistQuestionsFn, isPending: isLoadingSections } =
-    useMutation({
-      mutationFn: checklistRepository.getChecklistQuestions,
-    });
-
-  const { mutateAsync: saveChecklistFn, isPending: isLoadingSaveChecklist } =
-    useMutation({
-      mutationFn: checklistRepository.saveChecklist,
-    });
 
   const generateInitialPhotosState = useCallback(
     (
@@ -225,7 +220,11 @@ export const useFormChecklist = ({
 
   const handleFetchQuestions = useCallback(async () => {
     try {
-      const sections = await getChecklistQuestionsFn({ idchecklist, idlocal });
+      setIsLoadingSections(true);
+      const sections = await checklistRepository.getChecklistQuestions({
+        idchecklist,
+        idlocal,
+      });
       const formattedSections = sections.map((item, index) => ({
         isOpen: index === 0,
         subtitle: item.subtitle,
@@ -243,10 +242,12 @@ export const useFormChecklist = ({
         type: 'danger',
         placement: 'top',
       });
+    } finally {
+      setIsLoadingSections(false);
     }
   }, [
+    checklistRepository,
     generateInitialPhotosState,
-    getChecklistQuestionsFn,
     idchecklist,
     idlocal,
     setValue,
@@ -256,7 +257,8 @@ export const useFormChecklist = ({
   const onSubmit: SubmitHandler<TSaveChecklistSchema> = useCallback(
     async data => {
       try {
-        await saveChecklistFn({
+        setIsLoadingSaveChecklist(true);
+        await checklistRepository.saveChecklist({
           idchecklist,
           idexecution: executionId,
           answers: data.sections.flatMap(section =>
@@ -292,15 +294,17 @@ export const useFormChecklist = ({
           type: 'danger',
           placement: 'top',
         });
+      } finally {
+        setIsLoadingSaveChecklist(false);
       }
     },
     [
       checklistPhotosStorageRepository,
+      checklistRepository,
       executionId,
       formatPhotosToSend,
       idchecklist,
       navigation,
-      saveChecklistFn,
       toast,
       userId,
     ],
