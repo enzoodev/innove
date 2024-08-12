@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 
 import { ExecutionRepository } from '@/infrastructure/repositories/api/ExecutionRepository';
@@ -7,8 +6,7 @@ import { BaseRepository } from '@/infrastructure/repositories/api/shared/BaseRep
 import { httpServicesFactory } from '@/infrastructure/factories/httpServicesFactory';
 
 import { useAppNavigation } from '@/hooks/shared/useAppNavigation';
-import { useAppQuery } from '@/hooks/shared/useAppQuery';
-import { useRefreshOnFocus } from '@/hooks/shared/useRefreshOnFocus';
+import { useFetch } from '@/hooks/shared/useFetch';
 import { useAuth } from '@/hooks/api/useAuth';
 
 import { UrlBuilder } from '@/utils/UrlBuilder';
@@ -17,27 +15,28 @@ export const useExecution = () => {
   const toast = useToast();
   const navigation = useAppNavigation();
   const { handleCleanAuth } = useAuth();
+  const [isLoadingStartExecution, setIsLoadingStartExecution] = useState(false);
 
   const httpServices = httpServicesFactory({ logout: handleCleanAuth });
-  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
-  const executionRepository = new ExecutionRepository(baseRepository);
+  const executionRepository = useMemo(
+    () =>
+      new ExecutionRepository(
+        new BaseRepository(httpServices, new UrlBuilder()),
+      ),
+    [httpServices],
+  );
 
   const { data, isLoading, isPending, isRefetching, refresh, refetch } =
-    useAppQuery({
+    useFetch({
       request: () => executionRepository.getExecutions(),
-      queryKey: 'executions',
       errorMessage: 'Não foi possível buscar suas execuções.',
-    });
-
-  const { mutateAsync: startExecutionFn, isPending: isLoadingStartExecution } =
-    useMutation({
-      mutationFn: executionRepository.startExecution,
     });
 
   const handleStartExecution = useCallback(
     async (params: TStartExecutionParams) => {
       try {
-        const execution = await startExecutionFn(params);
+        setIsLoadingStartExecution(true);
+        const execution = await executionRepository.startExecution(params);
 
         if (!execution) {
           refresh();
@@ -55,12 +54,12 @@ export const useExecution = () => {
           type: 'danger',
           placement: 'top',
         });
+      } finally {
+        setIsLoadingStartExecution(false);
       }
     },
-    [navigation, refresh, startExecutionFn, toast],
+    [executionRepository, navigation, refresh, toast],
   );
-
-  useRefreshOnFocus(refresh);
 
   return {
     executions: {
