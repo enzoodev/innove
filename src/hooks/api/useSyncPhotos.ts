@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { useFocusEffect } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
 
@@ -18,27 +17,28 @@ export const useSyncPhotos = () => {
   const { userId, handleCleanAuth } = useAuth();
 
   const httpServices = httpServicesFactory({ logout: handleCleanAuth });
-  const baseRepository = new BaseRepository(httpServices, new UrlBuilder());
   const checklistPhotosStorageRepository = useMemo(
     () => new ChecklistPhotosStorageRepository(new StorageRepository()),
     [],
   );
-  const syncPhotosRepository = new SyncPhotosRepository(
-    baseRepository,
-    checklistPhotosStorageRepository,
+  const syncPhotosRepository = useMemo(
+    () =>
+      new SyncPhotosRepository(
+        new BaseRepository(httpServices, new UrlBuilder()),
+        checklistPhotosStorageRepository,
+      ),
+    [checklistPhotosStorageRepository, httpServices],
   );
 
   const [hasPhotos, setHasPhotos] = useState(
     checklistPhotosStorageRepository.getHasPhotos(userId),
   );
-
-  const { mutateAsync: syncFn, isPending: isLoadingSync } = useMutation({
-    mutationFn: syncPhotosRepository.syncAll,
-  });
+  const [isLoadingSync, setIsLoadingSync] = useState(false);
 
   const syncPhotos = useCallback(async () => {
     try {
-      await syncFn(userId);
+      setIsLoadingSync(true);
+      await syncPhotosRepository.syncAll(userId);
 
       toast.show('Fotos sincronizadas com sucesso!', {
         type: 'success',
@@ -51,8 +51,9 @@ export const useSyncPhotos = () => {
       });
     } finally {
       setHasPhotos(checklistPhotosStorageRepository.getHasPhotos(userId));
+      setIsLoadingSync(false);
     }
-  }, [checklistPhotosStorageRepository, syncFn, toast, userId]);
+  }, [checklistPhotosStorageRepository, syncPhotosRepository, toast, userId]);
 
   useFocusEffect(
     useCallback(() => {
