@@ -1,5 +1,4 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { useToast } from 'react-native-toast-notifications';
 
 import { AuthRepository } from '@/infrastructure/repositories/api/AuthRepository';
@@ -36,6 +35,11 @@ export const AuthContext = React.createContext<AuthContextDataProps>(
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const toast = useToast();
   const [auth, setAuth] = useState<TAuth | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+  const [isLoadingLogout, setIsLoadingLogout] = useState(false);
+  const [isLoadingRecoverAccount, setIsLoadingRecoverAccount] = useState(false);
+  const [isLoadingUpdatePassword, setIsLoadingUpdatePassword] = useState(false);
   const isAuthenticated = !!auth;
 
   const tokenStorageRepository = useMemo(
@@ -44,10 +48,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   );
 
   const handleCleanAuth = useCallback(() => {
-    if (!auth) {
-      return;
-    }
-
     setAuth(null);
     tokenStorageRepository.delete();
 
@@ -55,80 +55,68 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       type: 'danger',
       placement: 'top',
     });
-  }, [auth, toast, tokenStorageRepository]);
+  }, [toast, tokenStorageRepository]);
 
   const httpServices = httpServicesFactory({ logout: handleCleanAuth });
-  const authRepository = new AuthRepository(
-    httpServices,
-    tokenStorageRepository,
+
+  const authRepository = useMemo(
+    () => new AuthRepository(httpServices, tokenStorageRepository),
+    [httpServices, tokenStorageRepository],
   );
-
-  const { mutateAsync: getUserFn, isPending: isLoadingUser } = useMutation({
-    mutationFn: authRepository.getUser,
-    retry: 1,
-  });
-
-  const { mutateAsync: loginFn, isPending: isLoadingLogin } = useMutation({
-    mutationFn: authRepository.login,
-  });
-
-  const { mutateAsync: logoutFn, isPending: isLoadingLogout } = useMutation({
-    mutationFn: authRepository.logout,
-  });
-
-  const { mutateAsync: recoverAccountFn, isPending: isLoadingRecoverAccount } =
-    useMutation({
-      mutationFn: authRepository.recoverAccount,
-    });
-
-  const { mutateAsync: updatePasswordFn, isPending: isLoadingUpdatePassword } =
-    useMutation({
-      mutationFn: authRepository.updatePassword,
-    });
 
   const handleGetUser = useCallback(async () => {
     try {
-      const data = await getUserFn();
+      setIsLoadingUser(true);
+      const data = await authRepository.getUser();
       setAuth(data);
     } catch (error) {
       toast.show('Não foi possível carregar buscar seus dados.', {
         type: 'danger',
         placement: 'top',
       });
+    } finally {
+      setIsLoadingUser(false);
     }
-  }, [getUserFn, toast]);
+  }, [authRepository, toast]);
 
   const handleLogin = useCallback(
     async (params: TLoginParams) => {
       try {
-        const data = await loginFn(params);
+        setIsLoadingLogin(true);
+        const data = await authRepository.login(params);
         setAuth(data);
       } catch (error) {
         toast.show('Não foi possível entrar na sua conta.', {
           type: 'danger',
           placement: 'top',
         });
+      } finally {
+        setIsLoadingLogin(false);
       }
     },
-    [loginFn, toast],
+    [authRepository, toast],
   );
 
   const handleLogout = useCallback(async () => {
     try {
-      await logoutFn();
+      setIsLoadingLogout(true);
+      await authRepository.logout();
       setAuth(null);
     } catch (error) {
       toast.show('Não foi possível fazer sair da sua conta.', {
         type: 'danger',
         placement: 'top',
       });
+    } finally {
+      setIsLoadingLogout(false);
     }
-  }, [logoutFn, toast]);
+  }, [authRepository, toast]);
 
   const handleRecoverAccount = useCallback(
     async (params: TRecoverAccountParams) => {
       try {
-        await recoverAccountFn(params);
+        setIsLoadingRecoverAccount(true);
+        await authRepository.recoverAccount(params);
         return true;
       } catch (error) {
         toast.show('Não foi possível recuperar sua conta.', {
@@ -137,15 +125,18 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         });
 
         return false;
+      } finally {
+        setIsLoadingRecoverAccount(false);
       }
     },
-    [recoverAccountFn, toast],
+    [authRepository, toast],
   );
 
   const handleUpdatePassword = useCallback(
     async (params: TUpdatePasswordParams) => {
       try {
-        await updatePasswordFn(params);
+        setIsLoadingUpdatePassword(true);
+        await authRepository.updatePassword(params);
         toast.show('Senha alterada com sucesso!', {
           type: 'success',
           placement: 'top',
@@ -157,9 +148,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           placement: 'top',
         });
         return false;
+      } finally {
+        setIsLoadingUpdatePassword(false);
       }
     },
-    [updatePasswordFn, toast],
+    [authRepository, toast],
   );
 
   const value = useMemo(
